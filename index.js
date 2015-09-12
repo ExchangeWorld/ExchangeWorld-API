@@ -32,6 +32,13 @@ server.use(compression());
 // 	res.sendFile('index.html', { root : 'build' });
 // });
 
+server.all('*', function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+});
+
 
 /*USE TO CREATE NEW DATABASE*/
 //server.use('/api/CreateAllTables', require('./libs/CreateAllTable.js'));
