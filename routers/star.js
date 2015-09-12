@@ -3,7 +3,7 @@ var router  = express.Router();
 
 // Including tables
 var stars = require('../ORM/Stars');
-var goods = require('../ORM/Goods')
+var goods = require('../ORM/Goods');
 
 // Get users that star the goods
 router.get('/to', function(req, res, next) {
