@@ -39,6 +39,11 @@ var Goods = sequelize.define('goods', {
 		allowNull: false,
 		defaultValue: -1
 	},
+	rate: {
+		type: Sequelize.FLOAT,
+		allowNull: true,
+		defaultValue: 0,
+	},
 	// 0 means not exchanged yet, 1 means exchanged
 	status: {
 		type: Sequelize.INTEGER,

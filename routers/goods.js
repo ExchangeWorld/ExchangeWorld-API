@@ -175,6 +175,44 @@ router.put('/edit', function(req, res, next) {
 		});
 });
 
+// Rate a good
+router.put('/rate', function(req, res, next) {
+
+	// Necessary PUT body params:
+	//
+	// gid
+	// rate
+	//
+
+	var _gid  = parseInt(req.body.gid, 10);
+	var _rate = parseFloat(req.body.rate);
+
+	if (_rate != _rate) {
+		res.json({
+			error: 'rate is NaN'
+		});
+	}
+
+	goods.findOne({
+			where: {
+				gid: _gid
+			}
+		})
+		.then(function(_goods) {
+			_goods.rate = _rate;
+			_goods.save().then(function() {});
+			return _goods;
+		})
+		.then(function(_goods) {
+			res.json(_goods);
+		})
+		.catch(function(err) {
+			res.json({
+				error: err
+			});
+		});
+})
+
 // Delete a good (but not really delete it)
 router.delete('/delete', function(req, res, next) {
 
