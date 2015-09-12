@@ -75,6 +75,72 @@ router.get('/of', function(req, res, next) {
 		});
 });
 
+router.get('/of2', function(req, res, next) {
+
+	var _owner_uid = parseInt(req.query.owner_uid, 10);
+
+	goods.hasMany(exchanges, {
+		as: 'goods1',
+		foreignKey: 'goods1_gid'
+	});
+
+	goods.hasMany(exchanges, {
+		as: 'goods2',
+		foreignKey: 'goods2_gid'
+	});
+
+	goods
+		.findAll({
+			where: {
+				owner_uid: _owner_uid,
+				status: 0,
+				deleted: 0
+			}
+		})
+		.then(function(_goods) {
+			var tmp_gids = _goods.map(function(g,i,arr){return g.gid});
+			console.log('tmp_gids', tmp_gids);
+			return exchanges.findAll({
+				where: {
+					$and: [{
+						$or: [{
+							goods1_gid: {
+								$in: tmp_gids
+							}
+						}, {
+							goods2_gid: {
+								$in: tmp_gids
+							}
+						}]
+					}, {
+						status: 'initiated'
+					}]
+				},
+				include: [{
+					as: 'goods1',
+					model: goods,
+					where: {
+						gid: Sequelize.col('exchanges.goods1_gid')
+					},
+					required: true
+				}, {
+					as: 'goods2',
+					model: goods,
+					where: {
+						gid: Sequelize.col('exchanges.goods2_gid')
+					},
+					required: true
+				}]
+			});
+		})
+		.then(function(result) {
+			res.json(result);
+		})
+		.catch(function(err) {
+			res.send({error: err});
+		});
+});
+
 router.get('/', function(req, res, next) {
 
 	// Available query params
