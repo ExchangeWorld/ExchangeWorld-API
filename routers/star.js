@@ -3,6 +3,7 @@ var router  = express.Router();
 
 // Including tables
 var stars = require('../ORM/Stars');
+var goods = require('../ORM/Goods')
 
 // Get users that star the goods
 router.get('/to', function(req, res, next) {
@@ -42,13 +43,19 @@ router.get('/by', function(req, res, next) {
 
 	var _starring_user_uid = req.query.starring_user_uid;
 
+	stars.hasOne(goods, {foreignKey: 'goods_gid'});
+
 	stars
 		.sync({force: false})
 		.then(function() {
 			return stars.findAll({
 				where: {
 					starring_user_uid: _starring_user_uid
-				}
+				},
+				include: [{
+					model: goods,
+					required: true
+				}]
 			});
 		})
 		.then(function(result) {
