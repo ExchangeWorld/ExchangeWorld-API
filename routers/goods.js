@@ -7,33 +7,15 @@ var users    = require('../ORM/Users');
 var comments = require('../ORM/Comments');
 
 // Get a good by given goods_gid
-// Or get goods by given owner_uid
 router.get('/', function(req, res, next) {
 
 	// Available query params:
 	//
 	// gid
-	// owner_uid
 	//
 
 	// Get property:value in ?x=y&z=w....
-	var _gid       = parseInt(req.query.gid, 10);
-	var _owner_uid = parseInt(req.query.owner_uid, 10);
-
-	// If gid or owner_uid in query are not defined, then set them to zero or emptyString
-	if (!_gid > 0) {
-		_gid = 0;
-	}
-
-	if (!_owner_uid > 0) {
-		_owner_uid = 0;
-	}
-
-	// If gid or owner_uid appear together, then return empty json
-	// Because we want RESTful looking for either the gid of one good or one owner's goods
-	if (_gid > 0 && _owner_uid > 0) {
-		res.json({});
-	}
+	var _gid = parseInt(req.query.gid, 10);
 
 	// Set association between tables (users, goods) and (goods, comments)
 	users.hasMany(goods, {foreignKey: 'owner_uid'});
@@ -45,24 +27,40 @@ router.get('/', function(req, res, next) {
 	goods
 		.sync({force: false})
 		.then(function() {
-
-			/*
-			 * SELECT `goods`. * , `users`.*, `comments`.*
-			 *   FROM `goods`, `users`, `comments`
-			 *  WHERE `goods`.`gid` = '_gid'
-			 *    AND `goods`.`owner_uid` = `users`.`uid`
-			 *    AND `goods`.`owner_uid` = `comments`.`commenter_uid`
-			 */
-
 			return goods.findAll({
 				where: {
-					$or: [{
-						gid: _gid
-					}, {
-						owner_uid: _owner_uid
-					}]
+					gid: _gid
 				},
 				include: [users, comments]
+			});
+		})
+		.then(function(result) {
+			res.json(result);
+		})
+		.catch(function(err) {
+			res.send({error: err});
+		});
+});
+
+// Get goods by given owner_uid
+router.get('/of', function(req, res, next) {
+
+	// Available query params:
+	//
+	// owner_uid
+	//
+
+	// Get property:value in ?x=y&z=w....
+	var _owner_uid = parseInt(req.query.owner_uid, 10);
+
+	// Emit a find operation with orm model in table `goods`
+	goods
+		.sync({force: false})
+		.then(function() {
+			return goods.findAll({
+				where: {
+					owner_uid: _owner_uid
+				}
 			});
 		})
 		.then(function(result) {
