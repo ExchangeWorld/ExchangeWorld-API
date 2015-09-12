@@ -43,7 +43,7 @@ router.get('/by', function(req, res, next) {
 
 	var _starring_user_uid = req.query.starring_user_uid;
 
-	stars.hasOne(goods, {foreignKey: 'goods_gid'});
+	stars.belongsTo(goods, {foreignKey: 'goods_gid'});
 
 	stars
 		.sync({force: false})
