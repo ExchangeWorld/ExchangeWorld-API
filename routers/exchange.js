@@ -1,5 +1,6 @@
-var express = require('express');
-var router  = express.Router();
+var express   = require('express');
+var Sequelize = require('sequelize');
+var router    = express.Router();
 
 // Including tables
 var exchanges = require('../ORM/Exchanges');
@@ -75,18 +76,16 @@ router.get('/of', function(req, res, next) {
 		});
 });
 
-router.get('/of2', function(req, res, next) {
+router.get('/ofn', function(req, res, next) {
 
 	var _owner_uid = parseInt(req.query.owner_uid, 10);
 
-	goods.hasMany(exchanges, {
-		as: 'goods1',
-		foreignKey: 'goods1_gid'
+	goods.belongsToMany(exchanges, {
+		through: 'exchanges_goods'
 	});
 
-	goods.hasMany(exchanges, {
-		as: 'goods2',
-		foreignKey: 'goods2_gid'
+	exchanges.belongsToMany(goods, {
+		through: 'exchanges_goods'
 	});
 
 	goods
@@ -99,7 +98,7 @@ router.get('/of2', function(req, res, next) {
 		})
 		.then(function(_goods) {
 			var tmp_gids = _goods.map(function(g,i,arr){return g.gid});
-			console.log('tmp_gids', tmp_gids);
+
 			return exchanges.findAll({
 				where: {
 					$and: [{
@@ -116,21 +115,22 @@ router.get('/of2', function(req, res, next) {
 						status: 'initiated'
 					}]
 				},
-				include: [{
-					as: 'goods1',
-					model: goods,
-					where: {
-						gid: Sequelize.col('exchanges.goods1_gid')
-					},
-					required: true
-				}, {
-					as: 'goods2',
-					model: goods,
-					where: {
-						gid: Sequelize.col('exchanges.goods2_gid')
-					},
-					required: true
-				}]
+				logging: true,
+				// include: [{
+				// 	as: 'goods1',
+				// 	model: goods,
+				// 	// where: {
+				// 	// 	gid: Sequelize.col('exchanges.goods1_gid')
+				// 	// },
+				// 	// required: true
+				// }, {
+				// 	as: 'goods2',
+				// 	model: goods,
+				// 	// where: {
+				// 	// 	gid: Sequelize.col('exchanges.goods2_gid')
+				// 	// },
+				// 	// required: true
+				// }]
 			});
 		})
 		.then(function(result) {
