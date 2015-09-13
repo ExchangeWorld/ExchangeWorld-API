@@ -24,16 +24,10 @@ router.get('/', function(req, res, next) {
 	_from   = (_from == _from ? _from : 0);
 	_number = (_number == _number ? _number : 10);
 
-	messages
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return exchanges.findOne({
-					where: {
-						eid: _eid
-					}
-				});
+	exchanges.findOne({
+			where: {
+				eid: _eid
+			}
 		})
 		.then(function(_exchange) {
 			return messages.findAll({
@@ -69,23 +63,16 @@ router.post('/', function(req, res, next) {
 	var _sender_uid = parseInt(req.body.sender_uid, 10);
 	var _content    = req.body.content;
 
-	messages
-		.sync({
-			force: false
-		})
-		.then(function() {
-
-			return exchanges.findOne({
-					where: {
-						eid: _eid
-					}
-				});
+	exchanges.findOne({
+			where: {
+				eid: _eid
+			}
 		})
 		.then(function(_exchange) {
 			return messages.create({
-				sender_uid  : _sender_uid,
+				sender_uid: _sender_uid,
 				chatroom_cid: _exchange.chatroom_cid,
-				content     : _content
+				content: _content
 			});
 		})
 		.then(function(result) {
@@ -94,7 +81,6 @@ router.post('/', function(req, res, next) {
 		.catch(function(err) {
 			res.send(err);
 		});
-
 });
 
 /**
@@ -110,18 +96,12 @@ router.put('/read', function(req, res, next) {
 	// Get property:value in PUT body
 	var _mid = parseInt(req.body.mid, 10);
 
-	messages
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return messages.update({
-				unread: false
-			}, {
-				where: {
-					mid: _mid
-				}
-			});
+	messages.update({
+			unread: false
+		}, {
+			where: {
+				mid: _mid
+			}
 		})
 		.then(function(result) {
 			res.json(result);
