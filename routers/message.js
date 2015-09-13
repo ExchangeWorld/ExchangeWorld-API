@@ -28,24 +28,25 @@ router.get('/', function(req, res, next) {
 		foreignKey: 'sender_uid'
 	});
 
-	messages
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return messages.findAll({
-				where: {
-					receiver_uid: _receiver_uid,
-					sender_uid  : (_sender_uid == null ? {$ne:null} : {$eq:_sender_uid}),
-					chatroom_cid: -1
-				},
-				order: [
-					['mid', 'DESC']
-				],
-				include: [users],
-				offset : _from,
-				limit  : _number
-			});
+	messages.findAll({
+			where: {
+				receiver_uid: _receiver_uid,
+				sender_uid: (_sender_uid == null ? {
+					$ne: null
+				} : {
+					$eq: _sender_uid
+				}),
+				chatroom_cid: -1
+			},
+			order: [
+				['mid', 'DESC']
+			],
+			include: [{
+				model: users,
+				required: true
+			}],
+			offset: _from,
+			limit: _number
 		})
 		.then(function(result) {
 			res.json(result);
@@ -53,7 +54,6 @@ router.get('/', function(req, res, next) {
 		.catch(function(err) {
 			res.send(err);
 		});
-
 });
 
 router.get('/between', function(req, res, next) {
@@ -74,31 +74,25 @@ router.get('/between', function(req, res, next) {
 	_from   = (_from == _from ? _from : 0);
 	_number = (_number == _number ? _number : 10);
 
-	messages
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return messages.findAll({
-				where: {
-					$and: [{
-						$or: [{
-							receiver_uid: _user1_uid,
-							sender_uid: _user2_uid
-						}, {
-							receiver_uid: _user2_uid,
-							sender_uid: _user1_uid
-						}]
+	messages.findAll({
+			where: {
+				$and: [{
+					$or: [{
+						receiver_uid: _user1_uid,
+						sender_uid: _user2_uid
 					}, {
-						chatroom_cid: -1
+						receiver_uid: _user2_uid,
+						sender_uid: _user1_uid
 					}]
-				},
-				order: [
-					['mid', 'ASC']
-				],
-				offset: _from,
-				limit: _number
-			});
+				}, {
+					chatroom_cid: -1
+				}]
+			},
+			order: [
+				['mid', 'ASC']
+			],
+			offset: _from,
+			limit: _number
 		})
 		.then(function(result) {
 			res.json(result);
@@ -114,16 +108,10 @@ router.post('/', function(req, res, next) {
 	var _sender_uid   = parseInt(req.body.sender_uid, 10);
 	var _content      = req.body.content;
 
-	messages
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return messages.create({
-				receiver_uid: _receiver_uid,
-				sender_uid  : _sender_uid,
-				content     : _content
-			});
+	messages.create({
+			receiver_uid: _receiver_uid,
+			sender_uid: _sender_uid,
+			content: _content
 		})
 		.then(function(result) {
 			res.json(result);
@@ -131,7 +119,6 @@ router.post('/', function(req, res, next) {
 		.catch(function(err) {
 			res.send(err);
 		});
-
 });
 
 /**
@@ -147,18 +134,12 @@ router.put('/read', function(req, res, next) {
 	// Get property:value in PUT body
 	var _mid = parseInt(req.body.mid, 10);
 
-	messages
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return messages.update({
-				unread: false
-			}, {
-				where: {
-					mid: _mid
-				}
-			});
+	messages.update({
+			unread: false
+		}, {
+			where: {
+				mid: _mid
+			}
 		})
 		.then(function(result) {
 			res.json(result);
