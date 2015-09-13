@@ -178,8 +178,8 @@ router.get('/', function(req, res, next) {
 				}]
 			})
 			.then(function(_goods) {
-				var __goods = _goods.map(function(gg,i,a){return gg.dataValues});
-				result.dataValues.goods = __goods;
+				// var __goods = _goods.map(function(gg,i,a){return gg.dataValues});
+				result.dataValues.goods = _goods;
 				return result;
 			})
 			.then(function(result) {
