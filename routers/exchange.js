@@ -159,10 +159,8 @@ router.get('/', function(req, res, next) {
 
 	exchanges.findOne({
 			where: {
-				$and: [{
-					eid: _eid,
-					status: 'initiated'
-				}]
+				eid: _eid,
+				status: 'initiated'
 			}
 		})
 		.then(function(result) {
@@ -188,9 +186,7 @@ router.get('/', function(req, res, next) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send([{
-				error: err
-			}]);
+			res.json({error: err});
 		});
 });
 
