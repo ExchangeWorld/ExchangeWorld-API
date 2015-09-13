@@ -175,13 +175,12 @@ router.get('/', function(req, res, next) {
 					}]
 				},
 				include: [{
-					model: users,
-					required: true
+					model: users
 				}]
 			});
 		})
-		.then(function(goods) {
-			result[0].dataValues.goods = goods;
+		.then(function(_goods) {
+			result[0].dataValues.goods = _goods;
 			res.json(result);
 		})
 		.catch(function(err) {
