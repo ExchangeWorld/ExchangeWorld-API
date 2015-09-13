@@ -68,6 +68,41 @@ router.get('/by', function(req, res, next) {
 		});
 });
 
+// Get queues of a person
+router.get('/by/person', function(req, res, next) {
+
+	// Available query params:
+	// 
+	// queuer_user_uid
+	//
+
+	goods.findAll({
+		where: {
+			owner_uid: queuer_user_uid,
+			status: 0,
+			deleted: 0
+		}
+	})
+	.then(function(_goods) {
+
+		var _tmp_gids = _goods.map(function(g,i,arr){return g.gid});
+
+		return queues.findAll({
+			where: {
+				queuer_goods_gid: {
+					$in: _tmp_gids
+				}
+			}
+		});
+	})
+	.then(function(result) {
+		res.json(result);
+	})
+	.catch(function(err) {
+		res.json({error: err});
+	});
+})
+
 // Post a queue (queuer_goods_gid -> host_goods_gid)
 router.post('/post', function(req, res, next) {
 
