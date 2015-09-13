@@ -157,7 +157,7 @@ router.get('/', function(req, res, next) {
 	users.hasMany(goods, {foreignKey: 'owner_uid'});
 	goods.belongsTo(users, {foreignKey: 'owner_uid'});
 
-	exchanges.findOne({
+	exchanges.findAll({
 			where: {
 				eid: _eid,
 				status: 'initiated'
@@ -167,9 +167,9 @@ router.get('/', function(req, res, next) {
 			goods.findAll({
 				where: {
 					$or: [{
-						gid: result.goods1_gid
+						gid: result[0].dataValues.goods1_gid
 					}, {
-						gid: result.goods2_gid
+						gid: result[0].dataValues.goods2_gid
 					}]
 				},
 				include: [{
@@ -179,7 +179,7 @@ router.get('/', function(req, res, next) {
 			})
 			.then(function(_goods) {
 				// var __goods = _goods.map(function(gg,i,a){return gg.dataValues});
-				result.dataValues.goods = _goods;
+				result[0].dataValues.goods = _goods;
 				return result;
 			})
 			.then(function(result) {
