@@ -37,7 +37,7 @@ router.post('/image', function(req, res, next) {
 	var hashData = getSHA256(base64Data);
 
 	// The file path pointing to the image file
-	var filePath = './app/images/' + hashData + '.' + imgFormat.replace(/image\//, '');
+	var filePath = '../ExchangeWorld/build/images/' + hashData + '.' + imgFormat.replace(/image\//, '');
 
 	// Write to file with the filePath
 	// And if there is another person who uploaded a same base64 image,
