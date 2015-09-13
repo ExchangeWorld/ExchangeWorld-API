@@ -34,29 +34,17 @@ router.get('/', function(req, res, next) {
 	followings.belongsTo(users, {foreignKey: 'my_uid'});
 
 	// Emit a find operation with orm model in table `users`
-	users
-		.sync({force: false})
-		.then(function() {
-
-			/*
-			 * SELECT `goods`. * , `users`.*
-			 *   FROM `goods`, `users`
-			 *  WHERE `users`.`uid` = '_uid'
-			 *    AND `users`.`uid` = `goods`.`owner_uid`
-			 *    AND `users`.`uid` = `followers`.`my_uid`
-			 *    AND `users`.`uid` = `follwings`.`my_uid`
-			 */
-
-			return users.findOne({
-				where: {
-					uid : _uid
-				},
-				include:[
-					{model: goods},
-					{model: followers},
-					{model: followings}
-				]
-			});
+	users.findOne({
+			where: {
+				uid: _uid
+			},
+			include: [{
+				model: goods
+			}, {
+				model: followers
+			}, {
+				model: followings
+			}]
 		})
 		.then(function(result) {
 			if (result == null) {
@@ -68,7 +56,9 @@ router.get('/', function(req, res, next) {
 			}
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 			//console.log
 			//res.json({});
 		});
@@ -92,23 +82,19 @@ router.put('/edit', function(req, res, next) {
 	var _introduction = req.body.introduction;
 	var _wishlist     = req.body.wishlist;
 
-	users
-		.sync({force: false})
-		.then(function () {
-			return users.findOne({
-				where: {
-					uid: _uid
-				}
-			});
+	users.findOne({
+			where: {
+				uid: _uid
+			}
 		})
 		.then(function(result) {
 			if (result == null) {
 				return {};
 			} else {
-				result.name         = _name;
-				result.email        = _email;
+				result.name = _name;
+				result.email = _email;
 				result.introduction = _introduction;
-				result.wishlist     = _wishlist;
+				result.wishlist = _wishlist;
 				result.save().then(function() {});
 				return result;
 			}
@@ -117,9 +103,10 @@ router.put('/edit', function(req, res, next) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
-
 });
 
 module.exports = router;
