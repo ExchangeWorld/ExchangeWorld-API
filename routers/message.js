@@ -28,32 +28,54 @@ router.get('/', function(req, res, next) {
 		foreignKey: 'sender_uid'
 	});
 
-	messages.findAll({
-			where: {
-				receiver_uid: _receiver_uid,
-				sender_uid: (_sender_uid == null ? {
-					$ne: null
-				} : {
-					$eq: _sender_uid
-				}),
-				chatroom_cid: -1
-			},
-			order: [
-				['mid', 'DESC']
-			],
-			include: [{
-				model: users,
-				required: true
-			}],
-			offset: _from,
-			limit: _number
-		})
-		.then(function(result) {
-			res.json(result);
-		})
-		.catch(function(err) {
-			res.send(err);
-		});
+	if (_sender_uid == null) {
+		messages.findAll({
+				where: {
+					receiver_uid: _receiver_uid,
+					chatroom_cid: -1
+				},
+				order: [
+					['mid', 'DESC']
+				],
+				include: [{
+					model: users,
+					required: true
+				}],
+				// logging: true,
+				// offset: _from,
+				// limit: _number
+			})
+			.then(function(result) {
+				res.json(result);
+			})
+			.catch(function(err) {
+				res.send(err);
+			});
+	} else {
+		messages.findAll({
+				where: {
+					receiver_uid: _receiver_uid,
+					sender_uid: _sender_uid,
+					chatroom_cid: -1
+				},
+				order: [
+					['mid', 'DESC']
+				],
+				include: [{
+					model: users,
+					required: true
+				}],
+				// logging: true,
+				// offset: _from,
+				// limit: _number
+			})
+			.then(function(result) {
+				res.json(result);
+			})
+			.catch(function(err) {
+				res.send(err);
+			});
+	}
 });
 
 router.get('/between', function(req, res, next) {

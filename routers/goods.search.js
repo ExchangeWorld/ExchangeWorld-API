@@ -45,12 +45,12 @@ router.get('/', function(req, res, next) {
 			where: {
 				$and: [{
 					name: (name === '' ? {
-						$like: '%'
+						$ilike: '%'
 					} : {
-						$like: '%' + name + '%'
+						$ilike: '%' + name + '%'
 					}),
 					category: (category === '' ? {
-						$like: '%'
+						$ilike: '%'
 					} : category)
 				}],
 				position_x: {

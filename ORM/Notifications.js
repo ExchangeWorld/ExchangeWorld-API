@@ -18,7 +18,7 @@ var Notifications = sequelize.define('notifications', {
 		type: Sequelize.INTEGER.UNSIGNED,
 		allowNull: false
 	},
-	trigger: {
+	trigger_url: {
 		type: Sequelize.STRING,
 		allowNull: false
 	},

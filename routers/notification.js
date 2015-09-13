@@ -18,28 +18,31 @@ router.get('/belongsTo', function(req, res, next) {
 	var _from         = parseInt(req.query.from, 10);
 	var _number       = parseInt(req.query.number, 10);
 
+	_from   = (_from == _from ? _from : 0);
+	_number = (_number == _number ? _number : 10);
+
 	notifications.belongsTo(users, {foreignKey: 'sender_uid'});
 
-	 notifications.findAll({
-	 		where: {
-	 			receiver_uid: _receiver_uid
-	 		},
-	 		order: [
-	 			['nid', 'DESC']
-	 		],
-	 		include: [{
-	 			model: users,
-	 			required: true
-	 		}],
-	 		offset: _from,
-	 		limit: _number
-	 	})
-	 	.then(function(result) {
-	 		res.json(result);
-	 	})
-	 	.catch(function(err) {
-	 		res.json(err);
-	 	});
+	notifications.findAll({
+			where: {
+				receiver_uid: _receiver_uid
+			},
+			order: [
+				['nid', 'DESC']
+			],
+			include: [{
+				model: users,
+				required: true
+			}],
+			offset: _from,
+			limit: _number
+		})
+		.then(function(result) {
+			res.json(result);
+		})
+		.catch(function(err) {
+			res.json(err);
+		});
 });
 
 router.get('/', function(req, res, next) {
@@ -68,13 +71,13 @@ router.post('/', function(req, res, next) {
 
 	var _sender_uid   = parseInt(req.body.sender_uid);
 	var _receiver_uid = parseInt(req.body.receiver_uid);
-	var _trigger      = req.body.trigger;
+	var _trigger_url  = req.body.trigger_url;
 	var _content      = req.body.content;
 
 		notifications.create({
 			sender_uid   : _sender_uid,
 			receiver_uid : _receiver_uid,
-			trigger      : _trigger,
+			trigger_url  : _trigger_url,
 			content      : _content
 		})
 		.then(function(result) {
