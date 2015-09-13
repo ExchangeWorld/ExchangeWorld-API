@@ -44,7 +44,7 @@ var Goods = sequelize.define('goods', {
 		allowNull: true,
 		defaultValue: 0,
 	},
-	// 0 means not exchanged yet, 1 means exchanged
+	// 0 means not exchanged yet, 1 means exchanged, 2 means exchanging
 	status: {
 		type: Sequelize.INTEGER,
 		allowNull: false,

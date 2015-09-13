@@ -25,7 +25,7 @@ router.get('/of', function(req, res, next) {
 					host_goods_gid: _host_goods_gid
 				},
 				include:[
-					{model: goods}
+					{model: goods, required: true}
 				]
 			});
 		})
@@ -49,13 +49,18 @@ router.get('/by', function(req, res, next) {
 
 	var _queuer_goods_gid = req.query.queuer_goods_gid;
 
+	queues.belongsTo(goods, {foreignKey: 'queuer_goods_gid'});
+
 	queues
 		.sync({force: false})
 		.then(function() {
 			return queues.findAll({
 				where: {
 					queuer_goods_gid: _queuer_goods_gid
-				}
+				},
+				include:[
+					{model: goods, required: true}
+				]
 			});
 		})
 		.then(function(result) {
@@ -76,9 +81,13 @@ router.get('/by/person', function(req, res, next) {
 	// queuer_user_uid
 	//
 
+	var _queuer_user_uid = req.query.queuer_user_uid;
+
+	queues.belongsTo(goods, {foreignKey: 'queuer_goods_gid'});
+
 	goods.findAll({
 		where: {
-			owner_uid: queuer_user_uid,
+			owner_uid: _queuer_user_uid,
 			status: 0,
 			deleted: 0
 		}
@@ -92,7 +101,10 @@ router.get('/by/person', function(req, res, next) {
 				queuer_goods_gid: {
 					$in: _tmp_gids
 				}
-			}
+			},
+			include:[
+				{model: goods, required: true}
+			]
 		});
 	})
 	.then(function(result) {

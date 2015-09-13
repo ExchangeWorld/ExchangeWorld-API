@@ -5,8 +5,8 @@ var router    = express.Router();
 // Including tables
 var exchanges = require('../ORM/Exchanges');
 var chatrooms = require('../ORM/Chatrooms') 
-var users     = require('../ORM/Users.js');
-var goods     = require('../ORM/Goods.js');
+var users     = require('../ORM/Users');
+var goods     = require('../ORM/Goods');
 
 // These routes are really dangerous
 // Only use them when you know what are you doing
