@@ -178,7 +178,9 @@ router.get('/', function(req, res, next) {
 				}]
 			})
 			.then(function(_goods) {
-				result['goods'] = _goods;
+				result.goods = _goods;
+				console.log(_goods);
+				console.log(result);
 				return result;
 			})
 			.then(function(result) {
