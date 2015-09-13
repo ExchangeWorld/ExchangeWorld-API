@@ -11,6 +11,9 @@ var multer = require('multer');
 
 var server = express();
 
+var orm_startup = require('./libs/orm_startup');
+orm_startup();
+
 // log all requests to the console
 if (process.env.NODE_ENV !== 'production') server.use(morgan('dev'));
 

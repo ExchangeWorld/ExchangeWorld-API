@@ -18,30 +18,22 @@ router.get('/', function(req, res, next) {
 	followers.belongsTo(users, {foreignKey: 'follower_uid'});
 
 	// Emit a find operation with orm in table `followers`
-	followers
-		.sync({force: false})
-		.then(function() {
-
-			/*
-			 * SELECT *
-			 * FROM `followers`
-			 * WHERE `followers`.`my_uid` = _my_uid
-			 */
-
-			return followers.findAll({
-				where: {
-					my_uid : _my_uid
-				},
-				include:[
-					{model: users}
-				]
-			});
+	followers.findAll({
+			where: {
+				my_uid: _my_uid
+			},
+			include: [{
+				model: users,
+				required: true
+			}]
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 
@@ -60,15 +52,11 @@ router.post('/post', function(req, res, next) {
 	// Create instance
 	// But if there is already the pair(my_uid, follower_uid)
 	// Then don't create another
-	followers
-		.sync({force: false})
-		.then(function() {
-			return followers.findOne({
-				where: {
-					my_uid: _my_uid,
-					follower_uid: _follower_uid
-				}
-			});
+	followers.findOne({
+			where: {
+				my_uid: _my_uid,
+				follower_uid: _follower_uid
+			}
 		})
 		.then(function(isThereAlready) {
 			if (isThereAlready != null) {
@@ -84,7 +72,9 @@ router.post('/post', function(req, res, next) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 
@@ -100,21 +90,19 @@ router.delete('/delete', function(req, res, next) {
 	var _my_uid       = parseInt(req.query.my_uid, 10);
 	var _follower_uid = parseInt(req.query.follower_uid, 10);
 
-	followers
-		.sync({force: false})
-		.then(function() {
-			return followers.destroy({
-				where:{
-					my_uid: _my_uid,
-					follower_uid: _follower_uid
-				}
-			});
+	followers.destroy({
+			where: {
+				my_uid: _my_uid,
+				follower_uid: _follower_uid
+			}
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 

@@ -20,30 +20,26 @@ router.get('/belongsTo', function(req, res, next) {
 
 	notifications.belongsTo(users, {foreignKey: 'sender_uid'});
 
-	notifications
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return notifications.findAll({
-				where: {
-					receiver_uid: _receiver_uid
-				},
-				order: [
-					['nid', 'DESC']
-				],
-				include: [users],
-				offset: _from,
-				limit: _number
-			});
-		})
-		.then(function(result) {
-			res.json(result);
-		})
-		.catch(function(err) {
-			res.json(err);
-		});
-
+	 notifications.findAll({
+	 		where: {
+	 			receiver_uid: _receiver_uid
+	 		},
+	 		order: [
+	 			['nid', 'DESC']
+	 		],
+	 		include: [{
+	 			model: users,
+	 			required: true
+	 		}],
+	 		offset: _from,
+	 		limit: _number
+	 	})
+	 	.then(function(result) {
+	 		res.json(result);
+	 	})
+	 	.catch(function(err) {
+	 		res.json(err);
+	 	});
 });
 
 router.get('/', function(req, res, next) {
@@ -55,16 +51,10 @@ router.get('/', function(req, res, next) {
 
 	var _nid = parseInt(req.query.nid, 10);
 
-	notifications
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return notifications.findAll({
-				where: {
-					nid: _nid
-				},
-			});
+	notifications.findAll({
+			where: {
+				nid: _nid
+			},
 		})
 		.then(function(result) {
 			res.json(result);
@@ -72,7 +62,6 @@ router.get('/', function(req, res, next) {
 		.catch(function(err) {
 			res.json(err);
 		});
-
 });
 
 router.post('/', function(req, res, next) {
@@ -82,17 +71,11 @@ router.post('/', function(req, res, next) {
 	var _trigger      = req.body.trigger;
 	var _content      = req.body.content;
 
-	notifications
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return notifications.create({
-				sender_uid   : _sender_uid,
-				receiver_uid : _receiver_uid,
-				trigger      : _trigger,
-				content      : _content
-			});
+		notifications.create({
+			sender_uid   : _sender_uid,
+			receiver_uid : _receiver_uid,
+			trigger      : _trigger,
+			content      : _content
 		})
 		.then(function(result) {
 			res.json(result);
@@ -100,7 +83,6 @@ router.post('/', function(req, res, next) {
 		.catch(function(err) {
 			res.json(err);
 		});
-
 });
 
 /**
@@ -118,22 +100,20 @@ router.put('/', function(req, res, next) {
 	var _nid    = parseInt(req.body.nid, 10);
 	var _unread = Boolean(req.body.unread);
 
-	notifications
-		.sync({force: false})
-		.then(function() {
-			return notifications.update(
-				{unread: _unread}, 
-				{
-					where: {nid: _nid}
-				}
-			)
-			// .then(function() {});
+	notifications.update({
+			unread: _unread
+		}, {
+			where: {
+				nid: _nid
+			}
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 

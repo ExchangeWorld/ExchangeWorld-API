@@ -26,18 +26,13 @@ router.post('/register', function(req, res, next) {
 
 	// Create user instance
 	users
-		.sync({
-			force: false
+		.create({
+			fb_id: _id,
+			name: _name,
+			email: _email,
+			photo_path: _photo_path
 		})
-		.then(function() {
-			users.create({
-				fb_id: _id,
-				name: _name,
-				email: _email,
-				photo_path: _photo_path
-			});
-		})
-		.then(function() {
+		.then(function(result) {
 			var _salt = sec_ran
 				.randomArray(3)
 				.reduce(function(pre, cur, index, array) {
@@ -47,20 +42,16 @@ router.post('/register', function(req, res, next) {
 
 			var _answer = getSHA256(_password + ' and this is a fucking hash with ' + _salt);
 
-			auths
-				.sync({
-					force: false
-				})
-				.then(function() {
-					return auths.create({
-						user_identity: _id,
-						salt: _salt,
-						answer: _answer
-					});
+			auths.create({
+					user_identity: _id,
+					salt: _salt,
+					answer: _answer
 				})
 				.catch(function(err) {
 					res.json(err);
 				});
+
+			return result;
 		})
 		.then(function(result) {
 			res.json(result);
@@ -100,18 +91,13 @@ var login_function = function(req, res, next) {
 			} else {
 
 				tokens
-					.sync({
-						force: false
-					})
-					.then(function() {
-						return tokens.create({
-							token: jwt.sign({
-								identity: _id,
-								password: _password
-							}, '事實上我們做了快一年', {
-								expiresInMinutes: 10
-							})
-						});
+					.create({
+						token: jwt.sign({
+							identity: _id,
+							password: _password
+						}, '事實上我們做了快一年', {
+							expiresInMinutes: 10
+						})
 					})
 					.then(function(result) {
 						res.json({
@@ -137,16 +123,10 @@ var token_function = function(req, res, next) {
 	var _token = req.query.token || '';
 
 	tokens
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return tokens
-				.findOne({
-					where: {
-						token: _token
-					}
-				});
+		.findOne({
+			where: {
+				token: _token
+			}
 		})
 		.then(function(result) {
 

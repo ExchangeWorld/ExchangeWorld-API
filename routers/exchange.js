@@ -16,23 +16,20 @@ router.get('/allExchange', function(req, res, next) {
 	// Set association between tables (users, goods) 
 	users.hasMany(goods, {foreignKey: 'owner_uid'});
 	goods.belongsTo(users, {foreignKey: 'owner_uid'});
-
-	exchanges
-		.sync({force: false})
-		.then(function() {
-			return exchanges.findAll({
-				where: {
-					status :'initiated'
-				}
-			});
+	
+	exchanges.findAll({
+			where: {
+				status: 'initiated'
+			}
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
-
 });
 
 router.get('/of', function(req, res, next) {
@@ -51,7 +48,7 @@ router.get('/of', function(req, res, next) {
 		})
 		.then(function(_goods) {
 			var tmp_gids = _goods.map(function(g,i,arr){return g.gid});
-			console.log('tmp_gids', tmp_gids);
+
 			return exchanges.findAll({
 				where: {
 					$and: [{
@@ -99,7 +96,9 @@ router.get('/ofn', function(req, res, next) {
 			}
 		})
 		.then(function(_goods) {
-			var tmp_gids = _goods.map(function(g,i,arr){return g.gid});
+			var tmp_gids = _goods.map(function(g, i, arr) {
+				return g.gid
+			});
 
 			return exchanges.findAll({
 				where: {
@@ -139,7 +138,9 @@ router.get('/ofn', function(req, res, next) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 
@@ -156,46 +157,38 @@ router.get('/', function(req, res, next) {
 	users.hasMany(goods, {foreignKey: 'owner_uid'});
 	goods.belongsTo(users, {foreignKey: 'owner_uid'});
 
-	exchanges
-		.sync({force: false})
-		.then(function() {
-			return exchanges.findAll({
-				where: {
-					$and:[{
-						eid: _eid,
-						status :'initiated'
-					}]
-				}
-			});
+	exchanges.findAll({
+			where: {
+				$and: [{
+					eid: _eid,
+					status: 'initiated'
+				}]
+			}
 		})
 		.then(function(result) {
-			
-			goods
-				.sync({force: false})
-				.then(function() {
-					return goods.findAll({
-						where: {
-							$or: [{
-								gid: result[0].dataValues.goods1_gid 
-							}, {
-								gid: result[0].dataValues.goods2_gid 
-							}]
-						},
-						include: [users]
-					});
-				})
-				.then(function(goods) {
-					result[0].dataValues.goods = goods;
-					res.json(result);
-				})
-				.catch(function(err) {
-					res.send([{error: err}]);
-				});
+			return goods.findAll({
+				where: {
+					$or: [{
+						gid: result[0].dataValues.goods1_gid
+					}, {
+						gid: result[0].dataValues.goods2_gid
+					}]
+				},
+				include: [{
+					model: users,
+					required: true
+				}]
+			});
+		})
+		.then(function(goods) {
+			result[0].dataValues.goods = goods;
+			res.json(result);
 		})
 		.catch(function(err) {
-			res.send([{error: err}]);
+			res.send([{
+				error: err
+			}]);
 		});
-
 });
 
 // Create a new exchange
@@ -218,34 +211,21 @@ router.post('/create', function(req, res, next) {
 
 	// Create instance
 	// If there is already a pair (goods1_gid, goods2_gid) then do nothing
-	exchanges
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return exchanges.findOne({
-				where: {
-					$and: [{
-						goods1_gid: _goods1_gid
-					}, {
-						goods2_gid: _goods2_gid
-					}]
-				}
-			});
+	exchanges.findOne({
+			where: {
+				$and: [{
+					goods1_gid: _goods1_gid
+				}, {
+					goods2_gid: _goods2_gid
+				}]
+			}
 		})
 		.then(function(isThereAlready) {
 			if (isThereAlready != null) {
 				res.json(isThereAlready);
 			} else {
-
-				chatrooms
-					.sync({
-						force: false
-					})
-					.then(function() {
-						return chatrooms.create({
-							members: ''
-						});
+				chatrooms.create({
+						members: ''
 					})
 					.then(function(the_chatroom) {
 						return exchanges.create({
@@ -255,7 +235,7 @@ router.post('/create', function(req, res, next) {
 						});
 					})
 					.then(function(result) {
-						
+
 						var _goods1_gid = result.goods1_gid;
 
 						goods.findOne({
@@ -271,7 +251,7 @@ router.post('/create', function(req, res, next) {
 						return result;
 					})
 					.then(function(result) {
-						
+
 						var _goods2_gid = result.goods2_gid;
 
 						goods.findOne({
@@ -290,7 +270,9 @@ router.post('/create', function(req, res, next) {
 						res.json(result);
 					})
 					.catch(function(err) {
-						res.json({error: err});
+						res.json({
+							error: err
+						});
 					});
 			}
 		});
@@ -319,50 +301,48 @@ router.put('/complete', function(req, res, next) {
 	// First, any exchanges with goods1_gid and goods2_gid, \
 	// their status will be set to 'dropped'.
 	// Find instance and update its status to 'completed' then save
-	exchanges
-		.sync({force: false})
-		.then(function() {
-			return exchanges.update(
-			{status: 'dropped'}, 
-			{where: {
-					$or: [{
-						goods1_gid: _goods1_gid
-					}, {
-						goods2_gid: _goods2_gid
-					}]
-				}
-			})
-			.then(function() {});
-		})
-		.then(function(tmp) {
-			return exchanges.findOne({
-				where: {
-					goods1_gid: _goods1_gid,
-					goods2_gid: _goods2_gid
-				}
-			});
-		})
-		.then(function(result) {
-			if (result == null) {
-				return {};
-			} else {
-				if (result.goods1_agree == false || result.goods2_agree == false) {
-					return {};
-				}
-				result.status = 'completed';
-				result.save().then(function() {});
-				return result;
+	exchanges.update({
+		status: 'dropped'
+	}, {
+		where: {
+			$or: [{
+				goods1_gid: _goods1_gid
+			}, {
+				goods2_gid: _goods2_gid
+			}]
+		}
+	})
+	.then(function(tmp) {
+		return exchanges.findOne({
+			where: {
+				goods1_gid: _goods1_gid,
+				goods2_gid: _goods2_gid
 			}
-		})
-		.then(function(result) {
-			res.json(result);
+		});
+	})
+	.then(function(result) {
+		if (result == null) {
+			return {};
+		} else {
+			if (result.goods1_agree == false || result.goods2_agree == false) {
+				return {};
+			}
+			result.status = 'completed';
+			result.save().then(function() {});
 			return result;
-		}, function(err) {
-			res.send({error: err});
-		})
-		.then(function(result) {
-			if (result != {}) {
-				goods.findOne({
+		}
+	})
+	.then(function(result) {
+		res.json(result);
+		return result;
+	}, function(err) {
+		res.send({
+			error: err
+		});
+	})
+	.then(function(result) {
+		if (result != {}) {
+			goods.findOne({
 					where: {
 						gid: result.goods1_gid
 					}
@@ -371,12 +351,12 @@ router.put('/complete', function(req, res, next) {
 					goods1.status = 1;
 					goods1.save().then(function() {});
 				})
-			}
-			return result;
-		})
-		.then(function(result) {
-			if (result != {}) {
-				goods.findOne({
+		}
+		return result;
+	})
+	.then(function(result) {
+		if (result != {}) {
+			goods.findOne({
 					where: {
 						gid: result.goods2_gid
 					}
@@ -385,8 +365,9 @@ router.put('/complete', function(req, res, next) {
 					goods2.status = 1;
 					goods2.save().then(function() {});
 				})
-			}
-		});
+		}
+	});
+
 });
 
 // Drop an exchange
@@ -408,18 +389,14 @@ router.put('/drop', function(req, res, next) {
 	var _goods2_gid = Math.max(__goods1_gid, __goods2_gid);
 
 	// Find instance and update its status to 'dropped' then save
-	exchanges
-		.sync({force: false})
-		.then(function() {
-			return exchanges.findOne({
-				where: {
-					$and: [{
-						goods1_gid: _goods1_gid
-					}, {
-						goods2_gid: _goods2_gid
-					}]
-				}
-			});
+	exchanges.findOne({
+			where: {
+				$and: [{
+					goods1_gid: _goods1_gid
+				}, {
+					goods2_gid: _goods2_gid
+				}]
+			}
 		})
 		.then(function(result) {
 			if (result == null) {
@@ -437,32 +414,34 @@ router.put('/drop', function(req, res, next) {
 		.then(function(result) {
 			if (result != {}) {
 				goods.findOne({
-					where: {
-						gid: result.goods1_gid
-					}
-				})
-				.then(function(goods1) {
-					goods1.status = 0;
-					goods1.save().then(function() {});
-				})
+						where: {
+							gid: result.goods1_gid
+						}
+					})
+					.then(function(goods1) {
+						goods1.status = 0;
+						goods1.save().then(function() {});
+					})
 			}
 			return result;
 		})
 		.then(function(result) {
 			if (result != {}) {
 				goods.findOne({
-					where: {
-						gid: result.goods2_gid
-					}
-				})
-				.then(function(goods2) {
-					goods2.status = 0;
-					goods2.save().then(function() {});
-				})
+						where: {
+							gid: result.goods2_gid
+						}
+					})
+					.then(function(goods2) {
+						goods2.status = 0;
+						goods2.save().then(function() {});
+					})
 			}
 		})
 		.catch(function(err) {
-			res.json({error: err});
+			res.json({
+				error: err
+			});
 		});
 });
 
@@ -479,19 +458,11 @@ router.put('/agree', function(req, res, next) {
 	var _goods_gid = parseInt(req.body.goods_gid, 10);
 	var _agree     = (req.body.agree == 'true' || req.body.agree == true ? true : false);
 
-	exchanges
-		.sync({
-			force: false
-		})
-		.then(function() {
-			return exchanges.findOne({
-				where: {
-					$and: [{
-						eid   : _eid,
-						status: 'initiated'
-					}]
-				}
-			});
+	exchanges.findOne({
+			where: {
+				eid: _eid,
+				status: 'initiated'
+			}
 		})
 		.then(function(result) {
 			if (result == null) {
@@ -518,9 +489,6 @@ router.put('/agree', function(req, res, next) {
 				error: err
 			});
 		});
-
 });
-
-
 
 module.exports = router;

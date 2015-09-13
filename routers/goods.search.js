@@ -41,31 +41,35 @@ router.get('/', function(req, res, next) {
 	goods.belongsTo(users, {foreignKey: 'owner_uid'});
 
 	// Emit a find operation with orm model in table `goods`
-	goods
-		.sync({force: false})
-		.then(function() {
-
-			return goods.findAll({
-				where: {
-					$and: [{
-						name:     (name     === '' ? {$like: '%'} : {$like: '%' + name + '%'}),
-						category: (category === '' ? {$like: '%'} : category)
-					}],
-					position_x: {
-						gt:boundArray[1],
-						lt:boundArray[3] 
-					},
-					position_y: {
-						gt:boundArray[0],
-						lt:boundArray[2]
-					},
-					status: {
-						$in: [0, 2]
-					},
-					deleted: 0
+	goods.findAll({
+			where: {
+				$and: [{
+					name: (name === '' ? {
+						$like: '%'
+					} : {
+						$like: '%' + name + '%'
+					}),
+					category: (category === '' ? {
+						$like: '%'
+					} : category)
+				}],
+				position_x: {
+					gt: boundArray[1],
+					lt: boundArray[3]
 				},
-				include: [{model: users, required: true}]
-			});
+				position_y: {
+					gt: boundArray[0],
+					lt: boundArray[2]
+				},
+				status: {
+					$in: [0, 2]
+				},
+				deleted: 0
+			},
+			include: [{
+				model: users,
+				required: true
+			}]
 		})
 		.then(function(result) {
 			res.json(result);

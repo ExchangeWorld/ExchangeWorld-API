@@ -13,27 +13,26 @@ router.get('/of', function(req, res, next) {
 	// host_goods_gid
 	//
 
-	var _host_goods_gid = req.query.host_goods_gid;
+	var _host_goods_gid = parseInt(req.query.host_goods_gid, 10);
 
 	queues.belongsTo(goods, {foreignKey: 'queuer_goods_gid'});
 
-	queues
-		.sync({force: false})
-		.then(function() {
-			return queues.findAll({
-				where: {
-					host_goods_gid: _host_goods_gid
-				},
-				include:[
-					{model: goods, required: true}
-				]
-			});
+	queues.findAll({
+			where: {
+				host_goods_gid: _host_goods_gid
+			},
+			include: [{
+				model: goods,
+				required: true
+			}]
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 
@@ -47,28 +46,26 @@ router.get('/by', function(req, res, next) {
 	// queuer_goods_gid
 	//
 
-	var _queuer_goods_gid = req.query.queuer_goods_gid;
+	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);
 
 	queues.belongsTo(goods, {foreignKey: 'queuer_goods_gid'});
 
-	queues
-		.sync({force: false})
-		.then(function() {
-			return queues.findAll({
-				where: {
-					queuer_goods_gid: _queuer_goods_gid
-				},
-				include:[
-					{model: goods, required: true}
-				]
-			});
+	queues.findAll({
+			where: {
+				queuer_goods_gid: _queuer_goods_gid
+			},
+			include: [{
+				model: goods,
+				required: true
+			}]
 		})
 		.then(function(result) {
 			res.json(result);
-			
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 			//res.json({error: err});
 		});
 });
@@ -81,7 +78,7 @@ router.get('/by/person', function(req, res, next) {
 	// queuer_user_uid
 	//
 
-	var _queuer_user_uid = req.query.queuer_user_uid;
+	var _queuer_user_uid = parseInt(req.query.queuer_user_uid, 10);
 
 	queues.belongsTo(goods, {foreignKey: 'queuer_goods_gid'});
 
@@ -124,8 +121,8 @@ router.post('/post', function(req, res, next) {
 	// queuer_goods_gid 
 	//
 
-	var _host_goods_gid   = req.body.host_goods_gid;
-	var _queuer_goods_gid = req.body.queuer_goods_gid;
+	var _host_goods_gid   = parseInt(req.body.host_goods_gid, 10);
+	var _queuer_goods_gid = parseInt(req.body.queuer_goods_gid, 10);
 
 	goods.findOne({
 		where: {
@@ -163,24 +160,22 @@ router.delete('/delete', function(req, res, next) {
 	// queuer_goods_gid 
 	//
 	
-	var _host_goods_gid   = req.query.host_goods_gid;
-	var _queuer_goods_gid = req.query.queuer_goods_gid;
+	var _host_goods_gid   = parseInt(req.query.host_goods_gid, 10);
+	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);
 
-	queues
-		.sync({force: false})
-		.then(function() {
-			return queues.destroy({
-				where: {
-					host_goods_gid  : _host_goods_gid,
-					queuer_goods_gid: _queuer_goods_gid
-				}
-			});
+	queues.destroy({
+			where: {
+				host_goods_gid: _host_goods_gid,
+				queuer_goods_gid: _queuer_goods_gid
+			}
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 			//res.json({error: err});
 		});
 });
