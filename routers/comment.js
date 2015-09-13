@@ -18,24 +18,24 @@ router.get('/of/goods', function(req, res, next) {
 	users.hasMany(comments, {foreignKey: 'commenter_uid'});
 	comments.belongsTo(users, {foreignKey: 'commenter_uid'});
 
-	comments
-		.sync({force: false})
-		.then(function() {
-			return comments.findAll({
-				where: {
-					goods_gid: _goods_gid
-				},
-				order : 'cid ASC',
-				include: [users]
-			});
+	comments.findAll({
+			where: {
+				goods_gid: _goods_gid
+			},
+			order: 'cid ASC',
+			include: [{
+				model: users,
+				required: true
+			}]
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
-
 });
 
 // Get Comments of a user
@@ -48,20 +48,18 @@ router.get('/of/user', function(req, res, next) {
 
 	var _commenter_uid = parseInt(req.query.commenter_uid, 10);
 
-	comments
-		.sync({force: false})
-		.then(function() {
-			return comments.findAll({
-				where: {
-					commenter_uid: _commenter_uid
-				}
-			});
+	comments.findAll({
+			where: {
+				commenter_uid: _commenter_uid
+			}
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 
@@ -78,14 +76,10 @@ router.post('/post', function(req, res, next) {
 	var _commenter_uid = parseInt(req.body.commenter_uid, 10);
 	var _content       = req.body.content;
 
-	comments
-		.sync({force: false})
-		.then(function() {
-			return comments.create({
-				goods_gid: _goods_gid,
-				commenter_uid: _commenter_uid,
-				content: _content
-			});
+	comments.create({
+			goods_gid: _goods_gid,
+			commenter_uid: _commenter_uid,
+			content: _content
 		})
 		.then(function(result) {
 			if (result == null) {
@@ -95,9 +89,10 @@ router.post('/post', function(req, res, next) {
 			}
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
-
 });
 
 // Edit a comment
@@ -112,14 +107,10 @@ router.put('/edit', function(req, res, next) {
 	var _cid     = parseInt(req.body.cid, 10);
 	var _content = req.body.content;
 
-	comments
-		.sync({force: false})
-		.then(function() {
-			return comments.findOne({
-				where: {
-					cid: _cid
-				}
-			});
+	comments.findOne({
+			where: {
+				cid: _cid
+			}
 		})
 		.then(function(result) {
 			result.content = _content;
@@ -134,7 +125,9 @@ router.put('/edit', function(req, res, next) {
 			}
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 			//res.send({error:err});
 		});
 });
@@ -149,20 +142,18 @@ router.delete('/delete', function(req, res, next) {
 
 	var _cid = parseInt(req.query.cid, 10);
 
-	comments
-		.sync({force: false})
-		.then(function() {
-			return comments.destroy({
-				where: {
-					cid: _cid
-				}
-			});
+	comments.destroy({
+			where: {
+				cid: _cid
+			}
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 
