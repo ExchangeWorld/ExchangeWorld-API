@@ -166,7 +166,7 @@ router.get('/', function(req, res, next) {
 			}
 		})
 		.then(function(result) {
-			return goods.findAll({
+			var _goods = goods.findAll({
 				where: {
 					$or: [{
 						gid: result.goods1_gid
@@ -179,9 +179,12 @@ router.get('/', function(req, res, next) {
 					required: true
 				}]
 			});
+
+			result['goods'] = _goods;
+
+			return result;
 		})
-		.then(function(_goods) {
-			result.goods = _goods;
+		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
