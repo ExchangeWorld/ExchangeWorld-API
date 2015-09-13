@@ -127,21 +127,30 @@ router.post('/post', function(req, res, next) {
 	var _host_goods_gid   = req.body.host_goods_gid;
 	var _queuer_goods_gid = req.body.queuer_goods_gid;
 
-	queues
-		.sync({force: false})
-		.then(function() {
+	goods.findOne({
+		where: {
+			gid: _queuer_goods_gid,
+			status: 2
+		}
+	})
+	.then(function(result) {
+		if (result != null) {
+			return {};
+		} else {
 			return queues.create({
-				host_goods_gid  : _host_goods_gid,
+				host_goods_gid: _host_goods_gid,
 				queuer_goods_gid: _queuer_goods_gid
 			});
-		})
-		.then(function(result) {
-			res.json(result);
-		})
-		.catch(function(err) {
-			res.send({error: err});
-			//res.json({error: err});
+		}
+	})
+	.then(function(result) {
+		res.json(result);
+	})
+	.catch(function(err) {
+		res.send({
+			error: err
 		});
+	});
 
 });
 

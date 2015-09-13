@@ -59,7 +59,9 @@ router.get('/', function(req, res, next) {
 						gt:boundArray[0],
 						lt:boundArray[2]
 					},
-					status: 0,
+					status: {
+						$in: [0, 2]
+					},
 					deleted: 0
 				},
 				include: [{model: users, required: true}]

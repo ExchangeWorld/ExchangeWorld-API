@@ -43,7 +43,9 @@ router.get('/of', function(req, res, next) {
 		.findAll({
 			where: {
 				owner_uid: _owner_uid,
-				status: 0,
+				status: {
+					$in: [0, 2]
+				},
 				deleted: 0
 			}
 		})
@@ -167,7 +169,7 @@ router.get('/', function(req, res, next) {
 			});
 		})
 		.then(function(result) {
-			console.log(result);
+			
 			goods
 				.sync({force: false})
 				.then(function() {
@@ -253,7 +255,42 @@ router.post('/create', function(req, res, next) {
 						});
 					})
 					.then(function(result) {
+						
+						var _goods1_gid = result.goods1_gid;
+
+						goods.findOne({
+								where: {
+									gid: _goods1_gid
+								}
+							})
+							.then(function(_goods) {
+								_goods.status = 2;
+								_goods.save().then(function() {});
+							});
+
+						return result;
+					})
+					.then(function(result) {
+						
+						var _goods2_gid = result.goods2_gid;
+
+						goods.findOne({
+								where: {
+									gid: _goods2_gid
+								}
+							})
+							.then(function(_goods) {
+								_goods.status = 2;
+								_goods.save().then(function() {});
+							});
+
+						return result;
+					})
+					.then(function(result) {
 						res.json(result);
+					})
+					.catch(function(err) {
+						res.json({error: err});
 					});
 			}
 		});
@@ -395,6 +432,37 @@ router.put('/drop', function(req, res, next) {
 		})
 		.then(function(result) {
 			res.json(result);
+			return result;
+		})
+		.then(function(result) {
+			if (result != {}) {
+				goods.findOne({
+					where: {
+						gid: result.goods1_gid
+					}
+				})
+				.then(function(goods1) {
+					goods1.status = 0;
+					goods1.save().then(function() {});
+				})
+			}
+			return result;
+		})
+		.then(function(result) {
+			if (result != {}) {
+				goods.findOne({
+					where: {
+						gid: result.goods2_gid
+					}
+				})
+				.then(function(goods2) {
+					goods2.status = 0;
+					goods2.save().then(function() {});
+				})
+			}
+		})
+		.catch(function(err) {
+			res.json({error: err});
 		});
 });
 
