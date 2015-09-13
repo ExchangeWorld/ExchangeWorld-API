@@ -32,8 +32,7 @@ router.get('/', function(req, res, next) {
 				model: users,
 				required: true
 			}, {
-				model: comments,
-				required: true
+				model: comments
 			}]
 		})
 		.then(function(result) {
