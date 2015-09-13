@@ -18,30 +18,22 @@ router.get('/', function(req, res, next) {
 	followings.belongsTo(users, {foreignKey: 'following_uid'});
 
 	// Emit a find operation with orm in table `followings`
-	followings
-		.sync({force: false})
-		.then(function() {
-
-			/*
-			 * SELECT *
-			 * FROM `followings`
-			 * WHERE `followings`.`my_uid` = _my_uid
-			 */
-
-			return followings.findAll({
-				where: {
-					my_uid : _my_uid
-				},
-				include:[
-					{model: users}
-				]
-			});
+	followings.findAll({
+			where: {
+				my_uid: _my_uid
+			},
+			include: [{
+				model: users,
+				required: true
+			}]
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 
@@ -57,15 +49,11 @@ router.post('/post', function(req, res, next) {
 	var _my_uid        = parseInt(req.body.my_uid, 10);
 	var _following_uid = parseInt(req.body.following_uid, 10);
 
-	followings
-		.sync({force: false})
-		.then(function() {
-			return followings.findOne({
-				where: {
-					my_uid: _my_uid,
-					following_uid: _following_uid
-				}
-			});
+	followings.findOne({
+			where: {
+				my_uid: _my_uid,
+				following_uid: _following_uid
+			}
 		})
 		.then(function(isThereAlready) {
 			if (isThereAlready != null) {
@@ -81,9 +69,10 @@ router.post('/post', function(req, res, next) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
-
 });
 
 // Delete a following by given my_uid and the uid which my_uid follow
@@ -98,21 +87,19 @@ router.delete('/delete', function(req, res, next) {
 	var _my_uid        = parseInt(req.query.my_uid, 10);
 	var _following_uid = parseInt(req.query.following_uid, 10);
 
-	followings
-		.sync({force: false})
-		.then(function() {
-			return followings.destroy({
-				where:{
-					my_uid: _my_uid,
-					following_uid: _following_uid
-				}
-			});
+	followings.destroy({
+			where: {
+				my_uid: _my_uid,
+				following_uid: _following_uid
+			}
 		})
 		.then(function(result) {
 			res.json(result);
 		})
 		.catch(function(err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		});
 });
 
