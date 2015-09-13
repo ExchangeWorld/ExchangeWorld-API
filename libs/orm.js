@@ -4,8 +4,8 @@ var DBLogin   = require('./DBLogin');
 // Export a orm model with some config
 var sequelize = new Sequelize('exchangeworld', DBLogin.ID, DBLogin.password, {
 	host: 'localhost',
-	dialect: 'mysql',
-	// dialect: 'postgres',
+	// dialect: 'mysql',
+	dialect: 'postgres',
 
 	// We will use another async-logger soon
 	logging: false,
@@ -14,7 +14,7 @@ var sequelize = new Sequelize('exchangeworld', DBLogin.ID, DBLogin.password, {
 
 	// When server fired, check all the schema
 	// BUT NOT while every visit
-	// sync: { force: true },
+	// sync: { force: false },
 
 	pool: {
 		maxConnections: 16,
