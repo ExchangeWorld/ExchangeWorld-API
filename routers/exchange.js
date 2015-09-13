@@ -164,7 +164,7 @@ router.get('/', function(req, res, next) {
 			}
 		})
 		.then(function(result) {
-			var _goods = goods.findAll({
+			goods.findAll({
 				where: {
 					$or: [{
 						gid: result.goods1_gid
@@ -176,17 +176,17 @@ router.get('/', function(req, res, next) {
 					model: users,
 					required: true
 				}]
+			})
+			.then(function(_goods) {
+				result['goods'] = _goods;
+				return result;
+			})
+			.then(function(result) {
+				res.json(result);
+			})
+			.catch(function(err) {
+				res.json({error: err});
 			});
-
-			result['goods'] = _goods;
-
-			return result;
-		})
-		.then(function(result) {
-			res.json(result);
-		})
-		.catch(function(err) {
-			res.json({error: err});
 		});
 });
 
