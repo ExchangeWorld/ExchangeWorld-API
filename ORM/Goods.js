@@ -18,7 +18,7 @@ var Goods = sequelize.define('goods', {
 		allowNull: false
 	},
 	photo_path: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: true
 	},
 	category: {
