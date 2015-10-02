@@ -48,7 +48,7 @@ router.get('/by', function(req, res, next) {
 
 	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);
 
-	queues.belongsTo(goods, {foreignKey: 'queuer_goods_gid'});
+	queues.belongsTo(goods, {foreignKey: 'host_goods_gid'});
 
 	queues.findAll({
 			where: {

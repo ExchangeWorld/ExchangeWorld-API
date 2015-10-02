@@ -47,7 +47,8 @@ router.post('/image', function(req, res, next) {
 		if (err) {
 			res.send({error: err});
 		} else {
-			res.send('images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
+			// res.send('images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
+			res.send('http://dream.cs.nccu.edu.tw/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
 		}
 	});
 });
