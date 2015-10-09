@@ -56,6 +56,10 @@ var Goods = sequelize.define('goods', {
 		allowNull: false,
 		defaultValue: 0
 	}
+}, {
+	timestamps: true,
+	createdAt: 'timestamp',
+	updatedAt: false,
 });
 
 module.exports = Goods;

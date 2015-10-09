@@ -14,6 +14,10 @@ var Chatrooms = sequelize.define('chatrooms', {
 		type: Sequelize.STRING,
 		allowNull: true
 	}
+}, {
+	timestamps: true,
+	createdAt: 'timestamp',
+	updatedAt: false,
 });
 
 module.exports = Chatrooms;

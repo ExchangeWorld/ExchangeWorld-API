@@ -43,6 +43,10 @@ var Exchanges = sequelize.define('exchanges', {
 		allowNull: false,
 		defaultValue: 'initiated'
 	}
+}, {
+	timestamps: true,
+	createdAt: 'timestamp',
+	updatedAt: false,
 });
 
 module.exports = Exchanges;

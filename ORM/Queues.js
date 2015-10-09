@@ -20,7 +20,10 @@ var Queues = sequelize.define('queues', {
 	}
 }, {
 	// prevent sequelize auto-append 's' after tablename
-	freezeTableName: true
+	freezeTableName: true,
+	timestamps: true,
+	createdAt: 'timestamp',
+	updatedAt: false,
 });
 
 module.exports = Queues;

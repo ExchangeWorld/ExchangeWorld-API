@@ -21,7 +21,10 @@ var Followings = sequelize.define('followings', {
 	}
 }, {
 	// prevent sequelize auto-append 's' after tablename
-	freezeTableName: true
+	freezeTableName: true,
+	timestamps: true,
+	createdAt: 'timestamp',
+	updatedAt: false,
 });
 
 module.exports = Followings;

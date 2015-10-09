@@ -56,10 +56,10 @@ router.post('/register', function(req, res, next) {
 	// photo_path
 	//
 
-	var _fb_id     = req.body.fb_id;
-	var _name      = req.body.name;
-	var _email     = req.body.email || ''; 
-	var _photo_path = req.body.photo_path;
+	var _fb_id      = req.body.fb_id;
+	var _name       = req.body.name;
+	var _email      = req.body.email || ''; 
+	var _photo_path = req.body.photo_path || '';
 
 	// Create instance
 	users.create({
@@ -67,7 +67,6 @@ router.post('/register', function(req, res, next) {
 			name: _name,
 			email: _email,
 			photo_path: _photo_path
-
 		})
 		.then(function(result) {
 			res.json(result);

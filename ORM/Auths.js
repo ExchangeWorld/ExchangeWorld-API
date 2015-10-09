@@ -23,6 +23,10 @@ var Auths = sequelize.define('auths', {
 		type: Sequelize.STRING,
 		allowNull: false
 	}
+}, {
+	timestamps: true,
+	createdAt: 'timestamp',
+	updatedAt: false,
 });
 
 module.exports = Auths;

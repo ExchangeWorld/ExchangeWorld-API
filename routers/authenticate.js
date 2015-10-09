@@ -15,14 +15,21 @@ router.post('/register', function(req, res, next) {
 
 	// **WARNING**
 	// fb_id will be id
-	// user_acess_token will be password
+	// and the password for fb will be from a hash func
 	// **WARNING**
 
+	var _fb = ((req.body.fb || '') == 'true') ? true : false;
 	var _id = req.body.identity;
-	var _password = req.body.password;
+	var _password = req.body.password || '';
 	var _name = req.body.name;
 	var _email = req.body.email || '';
 	var _photo_path = req.body.photo_path || '';
+
+	// Create password for fb 
+	if (_fb == true) {
+		var id_length = _id.length;
+		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' +  _id.substring(0, id_length - 2));
+	}
 
 	// Create user instance
 	users
@@ -33,12 +40,17 @@ router.post('/register', function(req, res, next) {
 			photo_path: _photo_path
 		})
 		.then(function(result) {
-			var _salt = sec_ran
-				.randomArray(3)
-				.reduce(function(pre, cur, index, array) {
-					return pre * cur;
-				})
-				.toString(16);
+
+			if (_password == '') {
+				throw new Error('Password cannot be empty.');
+			}
+
+			var _salt = JSON.stringify(sec_ran
+				.randomArray(7));
+				// .reduce(function(pre, cur, index, array) {
+				// 	return pre * cur;
+				// })
+				// .toString(16);
 
 			var _answer = getSHA256(_password + ' and this is a fucking hash with ' + _salt);
 
@@ -129,6 +141,10 @@ var token_function = function(req, res, next) {
 			}
 		})
 		.then(function(result) {
+
+			// if (_token == '') {
+			// 	throw new Error('Empty token.');
+			// }
 
 			if (result != null && result != undefined) {
 				jwt.verify(result.token, '事實上我們做了快一年', function(err, decoded) {
