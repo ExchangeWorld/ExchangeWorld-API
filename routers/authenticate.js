@@ -41,9 +41,9 @@ router.post('/register', function(req, res, next) {
 		})
 		.then(function(result) {
 
-			if (_password == '') {
-				throw new Error('Password cannot be empty.');
-			}
+			// if (_password == '') {
+			// 	throw new Error('Password cannot be empty.');
+			// }
 
 			var _salt = JSON.stringify(sec_ran
 				.randomArray(7));
@@ -77,8 +77,14 @@ router.post('/register', function(req, res, next) {
 // Login
 var login_function = function(req, res, next) {
 
+	var _fb = ((req.query.fb || '') == 'true') ? true : false;
 	var _id = req.query.identity;
-	var _password = req.query.password;
+	var _password = req.query.password || '';
+
+	if (_fb == true) {
+		var id_length = _id.length;
+		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' +  _id.substring(0, id_length - 2));
+	}
 
 	auths
 		.findOne({
