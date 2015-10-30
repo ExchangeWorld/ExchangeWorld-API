@@ -3,8 +3,9 @@ var DBLogin   = require('./DBLogin');
 
 // Export a orm model with some config
 var sequelize = new Sequelize('exchangeworld', DBLogin.ID, DBLogin.password, {
-	host: 'localhost',
-	// dialect: 'mysql',
+	host: 'exwd.csie.org',
+	port: 45432,
+
 	dialect: 'postgres',
 
 	// We will use another async-logger soon
