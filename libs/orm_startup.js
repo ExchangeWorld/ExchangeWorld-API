@@ -1,6 +1,5 @@
 var startup = () => {
-
-	var orms = []
+	var orms = [];
 
 	orms.push(require('../ORM/Auths.js'));
 	orms.push(require('../ORM/Chatrooms.js'));
@@ -16,12 +15,12 @@ var startup = () => {
 	orms.push(require('../ORM/Tokens.js'));
 	orms.push(require('../ORM/Users'));
 
-	orms.forEach((o) => {
+	orms.forEach(o => {
 		o.sync({
-				force: false
-			})
-			.then(() => console.log(o, 'sync complete'));
+			force: false
+		})
+		.then(() => console.log(o, 'sync complete'));
 	});
-}
+};
 
 module.exports = startup;
