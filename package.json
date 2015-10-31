@@ -107,6 +107,7 @@
     "express": "^4.7.2",
     "imagemin-pngcrush": "^4.1.0",
     "jsonwebtoken": "^5.0.5",
+    "lazy.js": "^0.4.2",
     "lodash": "^3.10.0",
     "memcached": "^2.1.0",
     "moment": "^2.10.6",
