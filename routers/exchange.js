@@ -53,25 +53,17 @@ router.get('/of/user', (req, res) => {
 			include: [{
 				model: goods,
 				as: 'goods_one',
-				include: [{
-					model: users,
-					as: 'owner',
-					where: {
-						uid: _owner_uid
-					},
-					required: false
-				}]
+				where: {
+					owner_uid: _owner_uid
+				},
+				required: false
 			}, {
 				model: goods,
 				as: 'goods_two',
-				include: [{
-					model: users,
-					as: 'owner',
-					where: {
-						uid: _owner_uid
-					},
-					required: false
-				}]
+				where: {
+					owner_uid: _owner_uid
+				},
+				required: false
 			}]
 		})
 		.then(result => {
@@ -275,16 +267,9 @@ router.put('/complete', (req, res) => {
 			}
 		})
 		.then(result => {
-			res.json(result);
-			return result;
-		}, err => {
-			res.send({
-				error: err
-			});
-		})
-		.then(result => {
 			if (result != {}) {
-				goods.findOne({
+				goods
+					.findOne({
 						where: {
 							gid: result.goods_one_gid
 						}
@@ -298,7 +283,8 @@ router.put('/complete', (req, res) => {
 		})
 		.then(result => {
 			if (result != {}) {
-				goods.findOne({
+				goods
+					.findOne({
 						where: {
 							gid: result.goods_two_gid
 						}
@@ -308,6 +294,16 @@ router.put('/complete', (req, res) => {
 						goods2.save().then(() => {});
 					})
 			}
+			return result;
+		})
+		.then(result => {
+			res.json(result);
+			return result;
+		})
+		.catch(err => {
+			res.send({
+				error: err
+			});
 		});
 
 });
@@ -351,10 +347,6 @@ router.put('/drop', (req, res) => {
 			}
 		})
 		.then(result => {
-			res.json(result);
-			return result;
-		})
-		.then(result => {
 			if (result != {}) {
 				goods
 					.findOne({
@@ -371,7 +363,8 @@ router.put('/drop', (req, res) => {
 		})
 		.then(result => {
 			if (result != {}) {
-				goods.findOne({
+				goods
+					.findOne({
 						where: {
 							gid: result.goods_two_gid
 						}
@@ -381,6 +374,11 @@ router.put('/drop', (req, res) => {
 						goods2.save().then(() => {});
 					})
 			}
+			return result;
+		})
+		.then(result => {
+			res.json(result);
+			return result;
 		})
 		.catch(err => {
 			res.send({
