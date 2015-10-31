@@ -1,12 +1,12 @@
 var express = require('express');
-var router  = express.Router();
+var router = express.Router();
 
 // Including tables
 var followings = require('../ORM/Followings');
-var users      = require('../ORM/Users.js');
+var users = require('../ORM/Users');
 
 // Get ther followings by given my_uid
-router.get('/', function(req, res, next) {
+router.get('/', (req, res) => {
 
 	// Available query params:
 	//
@@ -15,22 +15,26 @@ router.get('/', function(req, res, next) {
 
 	var _my_uid = parseInt(req.query.my_uid, 10);
 
-	followings.belongsTo(users, {foreignKey: 'following_uid'});
-
 	// Emit a find operation with orm in table `followings`
-	followings.findAll({
+	followings
+		.findAll({
 			where: {
 				my_uid: _my_uid
 			},
 			include: [{
 				model: users,
+				as: 'my',
+				required: true
+			}, {
+				model: users,
+				as: 'following',
 				required: true
 			}]
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
@@ -38,7 +42,7 @@ router.get('/', function(req, res, next) {
 });
 
 // Post a following by given my_uid and the uid which my_uid follow
-router.post('/post', function(req, res, next) {
+router.post('/post', (req, res) => {
 
 	// Necessay POST body params:
 	//
@@ -46,29 +50,31 @@ router.post('/post', function(req, res, next) {
 	// following_uid
 	//
 
-	var _my_uid        = parseInt(req.body.my_uid, 10);
+	var _my_uid = parseInt(req.body.my_uid, 10);
 	var _following_uid = parseInt(req.body.following_uid, 10);
 
-	followings.findOne({
+	followings
+		.findOne({
 			where: {
 				my_uid: _my_uid,
 				following_uid: _following_uid
 			}
 		})
-		.then(function(isThereAlready) {
+		.then(isThereAlready => {
 			if (isThereAlready != null) {
 				return isThereAlready;
 			} else {
-				return followings.create({
-					my_uid: _my_uid,
-					following_uid: _following_uid
-				});
+				return followings
+					.create({
+						my_uid: _my_uid,
+						following_uid: _following_uid
+					});
 			}
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
@@ -76,27 +82,28 @@ router.post('/post', function(req, res, next) {
 });
 
 // Delete a following by given my_uid and the uid which my_uid follow
-router.delete('/delete', function(req, res, next) {
+router.delete('/delete', (req, res) => {
 
-	// Necessay POST query params:
+	// Necessay DELETE query params:
 	//
 	// my_uid
 	// following_uid
 	//
 
-	var _my_uid        = parseInt(req.query.my_uid, 10);
+	var _my_uid = parseInt(req.query.my_uid, 10);
 	var _following_uid = parseInt(req.query.following_uid, 10);
 
-	followings.destroy({
+	followings
+		.destroy({
 			where: {
 				my_uid: _my_uid,
 				following_uid: _following_uid
 			}
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
