@@ -1,18 +1,19 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
 
 // Define the schema of table `goods`
 var Goods = sequelize.define('goods', {
 	gid: {
 		type: Sequelize.INTEGER.UNSIGNED,
 		allowNull: false,
+		unique: true,
 		autoIncrement: true,
 		primaryKey: true
 	},
-	owner_uid: {
-		type: Sequelize.INTEGER.UNSIGNED,
-		allowNull: false
-	},
+	// owner_uid: {
+	// 	type: Sequelize.INTEGER.UNSIGNED,
+	// 	allowNull: false
+	// },
 	name: {
 		type: Sequelize.STRING,
 		allowNull: false
@@ -45,7 +46,7 @@ var Goods = sequelize.define('goods', {
 		defaultValue: 0,
 	},
 	// 0 means not exchanged yet, 1 means exchanged, 2 means exchanging
-	status: {
+	exchanged: {
 		type: Sequelize.INTEGER,
 		allowNull: false,
 		defaultValue: 0
@@ -56,10 +57,6 @@ var Goods = sequelize.define('goods', {
 		allowNull: false,
 		defaultValue: 0
 	}
-}, {
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false,
 });
 
 module.exports = Goods;

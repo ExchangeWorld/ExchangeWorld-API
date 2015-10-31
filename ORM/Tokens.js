@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
 
 // Define the schema of table `tokens`
 var Tokens = sequelize.define('tokens', {
@@ -14,10 +14,6 @@ var Tokens = sequelize.define('tokens', {
 		type: Sequelize.STRING,
 		allowNull: false
 	}
-}, {
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false,
 });
 
 module.exports = Tokens;

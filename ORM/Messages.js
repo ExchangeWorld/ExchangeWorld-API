@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
 
 // Define the schema of table `messages`
 var Messages = sequelize.define('messages', {
@@ -10,20 +10,15 @@ var Messages = sequelize.define('messages', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	sender_uid: {
-		type: Sequelize.INTEGER.UNSIGNED,
-		allowNull: false
-	},
-	receiver_uid: {
-		type: Sequelize.INTEGER.UNSIGNED,
-		defaultValue: 0,
-		allowNull: true
-	},
-	chatroom_cid: {
-		type: Sequelize.INTEGER,
-		defaultValue: -1,
-		allowNull: false
-	},
+	// sender_uid: {
+	// 	type: Sequelize.INTEGER.UNSIGNED,
+	// 	allowNull: false
+	// },
+	// receiver_uid: {
+	// 	type: Sequelize.INTEGER.UNSIGNED,
+	// 	defaultValue: 0,
+	// 	allowNull: true
+	// },
 	content: {
 		type: Sequelize.TEXT,
 		allowNull: false
@@ -33,10 +28,6 @@ var Messages = sequelize.define('messages', {
 		defaultValue: true,
 		allowNull: false
 	}
-}, {
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false
 });
 
 module.exports = Messages;

@@ -1,8 +1,8 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
 
+// 'follower' is following me
 // Define the schema of table `followers`
-// 'Follower' is following me
 var Followers = sequelize.define('followers', {
 	fid: {
 		type: Sequelize.INTEGER.UNSIGNED,
@@ -11,20 +11,14 @@ var Followers = sequelize.define('followers', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	my_uid: {
-		type: Sequelize.INTEGER.UNSIGNED, // my uid
-		allowNull: false
-	},
-	follower_uid: {
-		type: Sequelize.INTEGER.UNSIGNED, // follower's uid
-		allowNull: false
-	}
-}, {
-	// prevent sequelize auto-append 's' after tablename
-	freezeTableName: true,
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false,
+	// my_uid: {
+	// 	type: Sequelize.INTEGER.UNSIGNED,
+	// 	allowNull: false
+	// },
+	// follower_uid: {
+	// 	type: Sequelize.INTEGER.UNSIGNED,
+	// 	allowNull: false
+	// }
 });
 
 module.exports = Followers;

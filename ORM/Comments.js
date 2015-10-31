@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
 
 // Define the schema of table `comments`
 var Comments = sequelize.define('comments', {
@@ -10,22 +10,10 @@ var Comments = sequelize.define('comments', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	goods_gid: {
-		type: Sequelize.INTEGER.UNSIGNED,
-		allowNull: false
-	},
-	commenter_uid: {
-		type: Sequelize.INTEGER.UNSIGNED,
-		allowNull: false
-	},
 	content: {
 		type: Sequelize.TEXT,
 		allowNull: false
 	}
-}, {
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false,
 });
 
 module.exports = Comments;

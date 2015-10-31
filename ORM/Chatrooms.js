@@ -1,23 +1,19 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
 
 // Define the schema of table `chatrooms`
 var Chatrooms = sequelize.define('chatrooms', {
 	cid: {
-		type: Sequelize.INTEGER,
+		type: Sequelize.INTEGER.UNSIGNED,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,
 		primaryKey: true
 	},
 	members: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: true
 	}
-}, {
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false,
 });
 
 module.exports = Chatrooms;

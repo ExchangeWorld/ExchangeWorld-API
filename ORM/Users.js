@@ -1,15 +1,16 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
 
 // Define the schema of table `users`
 var Users = sequelize.define('users', {
 	uid: {
 		type: Sequelize.INTEGER.UNSIGNED,
 		allowNull: false,
-		primaryKey: true,
-		autoIncrement: true
+		unique: true,
+		autoIncrement: true,
+		primaryKey: true
 	},
-	fb_id: {
+	identity: {
 		type: Sequelize.STRING,
 		allowNull: false,
 		unique: true
@@ -20,10 +21,10 @@ var Users = sequelize.define('users', {
 	},
 	email: {
 		type: Sequelize.STRING,
-		allowNull: true 
+		allowNull: true
 	},
 	photo_path: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: true
 	},
 	introduction: {
@@ -34,12 +35,6 @@ var Users = sequelize.define('users', {
 		type: Sequelize.TEXT,
 		allowNull: true
 	}
-}, {
-	// prevent sequelize auto-append 's' after tablename
-	freezeTableName: true,
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false,
 });
 
 module.exports = Users;

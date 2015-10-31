@@ -1,5 +1,7 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
+
+// starring_user_uid is who star the goods
 
 // Define the schema of table `stars`
 var Stars = sequelize.define('stars', {
@@ -10,20 +12,14 @@ var Stars = sequelize.define('stars', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	goods_gid: {
-		type: Sequelize.INTEGER.UNSIGNED, // which goods is starred
-		allowNull: false
-	},
-	starring_user_uid: {
-		type: Sequelize.INTEGER.UNSIGNED, // who stars the goods
-		allowNull: false
-	}
-}, {
-	// prevent sequelize auto-append 's' after tablename
-	freezeTableName: true,
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false,
+	// goods_gid: {
+	// 	type: Sequelize.INTEGER.UNSIGNED,
+	// 	allowNull: false
+	// },
+	// starring_user_uid: {
+	// 	type: Sequelize.INTEGER.UNSIGNED,
+	// 	allowNull: false
+	// }
 });
 
 module.exports = Stars;

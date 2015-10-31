@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
 
 // Define the schema of table `auths`
 var Auths = sequelize.define('auths', {
@@ -23,10 +23,6 @@ var Auths = sequelize.define('auths', {
 		type: Sequelize.STRING,
 		allowNull: false
 	}
-}, {
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false,
 });
 
 module.exports = Auths;

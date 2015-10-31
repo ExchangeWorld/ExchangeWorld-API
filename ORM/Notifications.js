@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/orm');
+var sequelize = require('../libs/sequelize');
 
 // Define the schema of table `notifications`
 var Notifications = sequelize.define('notifications', {
@@ -10,14 +10,14 @@ var Notifications = sequelize.define('notifications', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	sender_uid: {
-		type: Sequelize.INTEGER.UNSIGNED,
-		allowNull: false
-	},
-	receiver_uid: {
-		type: Sequelize.INTEGER.UNSIGNED,
-		allowNull: false
-	},
+	// sender_uid: {
+	// 	type: Sequelize.INTEGER.UNSIGNED,
+	// 	allowNull: false
+	// },
+	// receiver_uid: {
+	// 	type: Sequelize.INTEGER.UNSIGNED,
+	// 	allowNull: false
+	// },
 	trigger_url: {
 		type: Sequelize.STRING,
 		allowNull: false
@@ -31,10 +31,6 @@ var Notifications = sequelize.define('notifications', {
 		defaultValue: true,
 		allowNull: false
 	}
-}, {
-	timestamps: true,
-	createdAt: 'timestamp',
-	updatedAt: false,
 });
 
 module.exports = Notifications;

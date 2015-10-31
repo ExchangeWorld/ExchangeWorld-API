@@ -1,15 +1,17 @@
+'use strict';
+
 var Sequelize = require('sequelize');
-var DBLogin   = require('./DBLogin');
+var dblogin = require('./dblogin');
 
 // Export a orm model with some config
-var sequelize = new Sequelize('exchangeworld', DBLogin.ID, DBLogin.password, {
+var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, {
 	host: 'exwd.csie.org',
 	port: 45432,
 
 	dialect: 'postgres',
 
 	// We will use another async-logger soon
-	logging: false,
+	logging: true,
 
 	// maxConcurrentQueries: 200,
 
@@ -24,7 +26,12 @@ var sequelize = new Sequelize('exchangeworld', DBLogin.ID, DBLogin.password, {
 	},
 
 	define: {
-		timestamps: false,
+		timestamps: true,
+		createdAt: 'timestamp',
+		updatedAt: false,
+		deletedAt: false,
+		freezeTableName: true,
+		underscored: true,
 		charset: 'utf8',
 		collate: 'utf8_general_ci'
 	}
