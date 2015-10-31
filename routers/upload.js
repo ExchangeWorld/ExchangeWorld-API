@@ -48,7 +48,7 @@ router.post('/image', function(req, res, next) {
 			res.send({error: err});
 		} else {
 			// res.send('images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
-			res.send('http://dream.cs.nccu.edu.tw/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
+			res.send('http://exwd.csie.org/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
 		}
 	});
 });
