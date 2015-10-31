@@ -11,7 +11,7 @@ var tokens = require('../ORM/Tokens');
 // Register a new user
 // And return a token (jwt generated)
 // Override the registering in /api/user/register
-router.post('/register', function(req, res, next) {
+router.post('/register', (req, res) => {
 
 	// **WARNING**
 	// fb_id will be id
@@ -25,32 +25,23 @@ router.post('/register', function(req, res, next) {
 	var _email = req.body.email || '';
 	var _photo_path = req.body.photo_path || '';
 
-	// Create password for fb 
-	if (_fb == true) {
+	// Create password for fb
+	if (_fb === true) {
 		var id_length = _id.length;
-		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' +  _id.substring(0, id_length - 2));
+		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' + _id.substring(0, id_length - 2));
 	}
 
 	// Create user instance
 	users
 		.create({
-			fb_id: _id,
+			identity: _id,
 			name: _name,
 			email: _email,
 			photo_path: _photo_path
 		})
-		.then(function(result) {
+		.then(result => {
 
-			// if (_password == '') {
-			// 	throw new Error('Password cannot be empty.');
-			// }
-
-			var _salt = JSON.stringify(sec_ran
-				.randomArray(7));
-				// .reduce(function(pre, cur, index, array) {
-				// 	return pre * cur;
-				// })
-				// .toString(16);
+			var _salt = JSON.stringify(sec_ran.randomArray(7));
 
 			var _answer = getSHA256(_password + ' and this is a fucking hash with ' + _salt);
 
@@ -59,31 +50,31 @@ router.post('/register', function(req, res, next) {
 					salt: _salt,
 					answer: _answer
 				})
-				.catch(function(err) {
+				.catch(err => {
 					res.json(err);
 				});
 
 			return result;
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.json(err);
 		});
 
 });
 
 // Login
-var login_function = function(req, res, next) {
+var login_function = (req, res) => {
 
 	var _fb = ((req.query.fb || '') == 'true') ? true : false;
 	var _id = req.query.identity;
 	var _password = req.query.password || '';
 
-	if (_fb == true) {
+	if (_fb === true) {
 		var id_length = _id.length;
-		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' +  _id.substring(0, id_length - 2));
+		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' + _id.substring(0, id_length - 2));
 	}
 
 	auths
@@ -92,14 +83,14 @@ var login_function = function(req, res, next) {
 				user_identity: _id
 			}
 		})
-		.then(function(test_user) {
+		.then(test_user => {
 			if (test_user != undefined && getSHA256(_password + ' and this is a fucking hash with ' + test_user.salt) === test_user.answer) {
 				return test_user;
 			} else {
 				return 'not a user';
 			}
 		})
-		.then(function(test_user) {
+		.then(test_user => {
 
 			if (test_user === 'not a user') {
 				res.json({
@@ -113,22 +104,22 @@ var login_function = function(req, res, next) {
 						token: jwt.sign({
 							identity: _id,
 							password: _password
-						}, '事實上我們做了快一年', {
+						}, '事實上我們做了一年', {
 							expiresInMinutes: 10
 						})
 					})
-					.then(function(result) {
+					.then(result => {
 						res.json({
 							authentication: 'success',
 							token: result.token
 						});
 					})
-					.catch(function(err) {
+					.catch(err => {
 						res.json(err);
 					});
 			}
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.json(err);
 		});
 };
@@ -136,7 +127,7 @@ router.get('/login', login_function);
 
 
 // Token middleware
-var token_function = function(req, res, next) {
+var token_function = (req, res, next) => {
 
 	var _token = req.query.token || '';
 
@@ -146,17 +137,13 @@ var token_function = function(req, res, next) {
 				token: _token
 			}
 		})
-		.then(function(result) {
-
-			// if (_token == '') {
-			// 	throw new Error('Empty token.');
-			// }
+		.then(result => {
 
 			if (result != null && result != undefined) {
-				jwt.verify(result.token, '事實上我們做了快一年', function(err, decoded) {
+				jwt.verify(result.token, '事實上我們做了一年', (err, decoded) => {
 					if (err) {
 						res.json({
-							authentication: 'fail',
+							authentication: 'timeout',
 							err: err
 						});
 					} else {
@@ -165,20 +152,20 @@ var token_function = function(req, res, next) {
 				});
 
 			} else {
-				// res.json({
-				// 	authentication: 'fail',
-				// });
-				next();
+				res.json({
+					authentication: 'fail',
+				});
+				// next();
 			}
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.json(err);
 		});
 };
 router.get('/', token_function);
 
 // Hashcode generation function
-var getSHA256 = (function(strToEncrypt) {
+var getSHA256 = (strToEncrypt => {
 
 	var crypto = require('crypto');
 	var sha256 = crypto.createHash('sha256');
