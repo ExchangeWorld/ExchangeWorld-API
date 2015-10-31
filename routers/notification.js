@@ -5,9 +5,9 @@ var router = express.Router();
 
 // Including tables
 var notifications = require('../ORM/Notifications');
-var users         = require('../ORM/Users');
+var users = require('../ORM/Users');
 
-router.get('/belongsTo', function(req, res, next) {
+router.get('/belongsTo', (req, res) => {
 
 	// Available GET params:
 	//
@@ -17,15 +17,14 @@ router.get('/belongsTo', function(req, res, next) {
 	//
 
 	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
-	var _from         = parseInt(req.query.from, 10);
-	var _number       = parseInt(req.query.number, 10);
+	var _from = parseInt(req.query.from, 10);
+	var _number = parseInt(req.query.number, 10);
 
-	_from   = (_from == _from ? _from : 0);
+	_from = (_from == _from ? _from : 0);
 	_number = (_number == _number ? _number : 10);
 
-	notifications.belongsTo(users, {foreignKey: 'sender_uid'});
-
-	notifications.findAll({
+	notifications
+		.findAll({
 			where: {
 				receiver_uid: _receiver_uid
 			},
@@ -34,20 +33,25 @@ router.get('/belongsTo', function(req, res, next) {
 			],
 			include: [{
 				model: users,
-				required: true
+				as: 'sender'
+			}, {
+				model: users,
+				as: 'receiver'
 			}],
 			offset: _from,
 			limit: _number
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
-			res.json(err);
+		.catch(err => {
+			res.send({
+				error: err
+			});
 		});
 });
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res) => {
 
 	// Available GET params:
 	//
@@ -56,44 +60,53 @@ router.get('/', function(req, res, next) {
 
 	var _nid = parseInt(req.query.nid, 10);
 
-	notifications.findAll({
+	notifications
+		.findAll({
 			where: {
 				nid: _nid
 			},
+			include: [{
+				all: true
+			}]
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
-			res.json(err);
+		.catch(err => {
+			res.send({
+				error: err
+			});
 		});
 });
 
-router.post('/', function(req, res, next) {
+router.post('/', (req, res) => {
 
-	var _sender_uid   = parseInt(req.body.sender_uid);
+	var _sender_uid = parseInt(req.body.sender_uid);
 	var _receiver_uid = parseInt(req.body.receiver_uid);
-	var _trigger_url  = req.body.trigger_url;
-	var _content      = req.body.content;
+	var _trigger_url = req.body.trigger_url;
+	var _content = req.body.content;
 
-		notifications.create({
-			sender_uid   : _sender_uid,
-			receiver_uid : _receiver_uid,
-			trigger_url  : _trigger_url,
-			content      : _content
+	notifications
+		.create({
+			sender_uid: _sender_uid,
+			receiver_uid: _receiver_uid,
+			trigger_url: _trigger_url,
+			content: _content
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
-			res.json(err);
+		.catch(err => {
+			res.send({
+				error: err
+			});
 		});
 });
 
 /**
  * use to update read/unread
  */
-router.put('/', function(req, res, next) {
+router.put('/', (req, res) => {
 
 	// Available PUT body params:
 	//
@@ -102,20 +115,21 @@ router.put('/', function(req, res, next) {
 	//
 
 	// Get property:value in PUT body
-	var _nid    = parseInt(req.body.nid, 10);
+	var _nid = parseInt(req.body.nid, 10);
 	var _unread = Boolean(req.body.unread);
 
-	notifications.update({
+	notifications
+		.update({
 			unread: _unread
 		}, {
 			where: {
 				nid: _nid
 			}
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
