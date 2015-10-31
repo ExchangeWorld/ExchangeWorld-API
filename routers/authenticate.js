@@ -51,7 +51,7 @@ router.post('/register', (req, res) => {
 					answer: _answer
 				})
 				.catch(err => {
-					res.json({
+					res.send({
 						error: err
 					});
 				});
@@ -62,7 +62,7 @@ router.post('/register', (req, res) => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
@@ -119,14 +119,14 @@ var login_function = (req, res) => {
 						});
 					})
 					.catch(err => {
-						res.json({
+						res.send({
 							error: err
 						});
 					});
 			}
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
@@ -167,7 +167,7 @@ var token_function = (req, res, next) => {
 			}
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});

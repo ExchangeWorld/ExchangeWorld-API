@@ -30,7 +30,7 @@ router.get('/of/goods', (req, res) => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
@@ -61,7 +61,7 @@ router.get('/of/user', (req, res) => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
@@ -94,7 +94,7 @@ router.post('/post', (req, res) => {
 			}
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
@@ -131,7 +131,7 @@ router.put('/edit', (req, res) => {
 			}
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
@@ -157,7 +157,7 @@ router.delete('/delete', (req, res) => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});

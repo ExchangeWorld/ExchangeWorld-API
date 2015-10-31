@@ -47,7 +47,7 @@ router.get('/exchange', (req, res) => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
@@ -85,7 +85,7 @@ router.post('/exchange', (req, res) => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
@@ -113,7 +113,7 @@ router.put('/read', (req, res) => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
