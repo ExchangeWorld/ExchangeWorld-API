@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var router  = express.Router();
 
@@ -58,7 +60,7 @@ router.post('/register', function(req, res, next) {
 
 	var _fb_id      = req.body.fb_id;
 	var _name       = req.body.name;
-	var _email      = req.body.email || ''; 
+	var _email      = req.body.email || '';
 	var _photo_path = req.body.photo_path || '';
 
 	// Create instance

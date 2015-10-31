@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var Sequelize = require('sequelize');
 var router = express.Router();

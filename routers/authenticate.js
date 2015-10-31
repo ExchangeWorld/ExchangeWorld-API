@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var sec_ran = require('secure-random');
