@@ -1,13 +1,13 @@
 'use strict';
 
 var express = require('express');
-var router  = express.Router();
+var router = express.Router();
 
 // Including tables
 var messages = require('../ORM/Messages');
-var users    = require('../ORM/Users');
+var users = require('../ORM/Users');
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res) => {
 
 	// Available GET params:
 	//
@@ -18,69 +18,81 @@ router.get('/', function(req, res, next) {
 	//
 
 	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
-	var _sender_uid   = parseInt(req.query.sender_uid, 10);
-	var _from         = parseInt(req.query.from, 10);
-	var _number       = parseInt(req.query.number, 10);
+	var _sender_uid = parseInt(req.query.sender_uid, 10);
+	var _from = parseInt(req.query.from, 10);
+	var _number = parseInt(req.query.number, 10);
 
 	_sender_uid = (_sender_uid == _sender_uid ? _sender_uid : null);
-	_from       = (_from == _from ? _from : 0);
-	_number     = (_number == _number ? _number : 10);
-
-	messages.belongsTo(users, {
-		foreignKey: 'sender_uid'
-	});
+	_from = (_from == _from ? _from : 0);
+	_number = (_number == _number ? _number : 10);
 
 	if (_sender_uid == null) {
-		messages.findAll({
+		messages
+			.findAll({
 				where: {
 					receiver_uid: _receiver_uid,
-					chatroom_cid: -1
+					chatroom_cid: 0
 				},
 				order: [
 					['mid', 'DESC']
 				],
 				include: [{
 					model: users,
+					as: 'receiver'
+					required: true
+				}, {
+					model: users,
+					as: 'sender'
 					required: true
 				}],
 				// logging: true,
 				// offset: _from,
 				// limit: _number
 			})
-			.then(function(result) {
+			.then(result => {
 				res.json(result);
 			})
-			.catch(function(err) {
-				res.send(err);
+			.catch(err => {
+				res.send({
+					error: err
+				});
 			});
 	} else {
-		messages.findAll({
+		messages
+			.findAll({
 				where: {
 					receiver_uid: _receiver_uid,
 					sender_uid: _sender_uid,
-					chatroom_cid: -1
+					chatroom_cid: 0
 				},
 				order: [
 					['mid', 'DESC']
 				],
 				include: [{
 					model: users,
+					as: 'receiver'
+					required: true
+				}, {
+					model: users,
+					as: 'sender'
 					required: true
 				}],
 				// logging: true,
 				// offset: _from,
 				// limit: _number
 			})
-			.then(function(result) {
+			.then(result => {
 				res.json(result);
 			})
-			.catch(function(err) {
-				res.send(err);
+			.catch(err => {
+				res.send({
+					error: err
+				});
 			});
 	}
 });
 
-router.get('/between', function(req, res, next) {
+router.get('/between', (req, res) => {
 
 	// Available GET params:
 	//
@@ -92,13 +104,14 @@ router.get('/between', function(req, res, next) {
 
 	var _user1_uid = parseInt(req.query.user1_uid, 10);
 	var _user2_uid = parseInt(req.query.user2_uid, 10);
-	var _from      = parseInt(req.query.from, 10);
-	var _number    = parseInt(req.query.number, 10);
+	var _from = parseInt(req.query.from, 10);
+	var _number = parseInt(req.query.number, 10);
 
-	_from   = (_from == _from ? _from : 0);
+	_from = (_from == _from ? _from : 0);
 	_number = (_number == _number ? _number : 10);
 
-	messages.findAll({
+	messages
+		.findAll({
 			where: {
 				$and: [{
 					$or: [{
@@ -110,7 +123,7 @@ router.get('/between', function(req, res, next) {
 					}]
 
 				}, {
-					chatroom_cid: -1
+					chatroom_cid: 0
 				}]
 			},
 			order: [
@@ -119,37 +132,43 @@ router.get('/between', function(req, res, next) {
 			offset: _from,
 			limit: _number
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
-			res.send(err);
+		.catch(err => {
+			res.send({
+				error: err
+			});
 		});
 });
 
-router.post('/', function(req, res, next) {
+router.post('/', (req, res) => {
 
 	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
-	var _sender_uid   = parseInt(req.body.sender_uid, 10);
-	var _content      = req.body.content;
+	var _sender_uid = parseInt(req.body.sender_uid, 10);
+	var _content = req.body.content;
 
-	messages.create({
+	messages
+		.create({
 			receiver_uid: _receiver_uid,
 			sender_uid: _sender_uid,
-			content: _content
+			content: _content,
+			chatroom_cid: 0
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
-			res.send(err);
+		.catch(err => {
+			res.send({
+				error: err
+			});
 		});
 });
 
 /**
  * use to update read/unread
  */
-router.put('/read', function(req, res, next) {
+router.put('/read', (req, res) => {
 
 	// Available PUT body params:
 	//
@@ -159,17 +178,18 @@ router.put('/read', function(req, res, next) {
 	// Get property:value in PUT body
 	var _mid = parseInt(req.body.mid, 10);
 
-	messages.update({
+	messages
+		.update({
 			unread: false
 		}, {
 			where: {
 				mid: _mid
 			}
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
