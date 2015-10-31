@@ -51,7 +51,9 @@ router.post('/register', (req, res) => {
 					answer: _answer
 				})
 				.catch(err => {
-					res.json(err);
+					res.json({
+						error: err
+					});
 				});
 
 			return result;
@@ -60,7 +62,9 @@ router.post('/register', (req, res) => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.json(err);
+			res.json({
+				error: err
+			});
 		});
 
 });
@@ -115,12 +119,16 @@ var login_function = (req, res) => {
 						});
 					})
 					.catch(err => {
-						res.json(err);
+						res.json({
+							error: err
+						});
 					});
 			}
 		})
 		.catch(err => {
-			res.json(err);
+			res.json({
+				error: err
+			});
 		});
 };
 router.get('/login', login_function);
@@ -159,7 +167,9 @@ var token_function = (req, res, next) => {
 			}
 		})
 		.catch(err => {
-			res.json(err);
+			res.json({
+				error: err
+			});
 		});
 };
 router.get('/', token_function);
