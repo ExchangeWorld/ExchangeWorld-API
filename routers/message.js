@@ -38,11 +38,11 @@ router.get('/', (req, res) => {
 				],
 				include: [{
 					model: users,
-					as: 'sender'
+					as: 'sender',
 					required: true
 				}, {
 					model: users,
-					as: 'receiver'
+					as: 'receiver',
 					required: true
 				}],
 				// logging: true,
@@ -70,11 +70,11 @@ router.get('/', (req, res) => {
 				],
 				include: [{
 					model: users,
-					as: 'sender'
+					as: 'sender',
 					required: true
 				}, {
 					model: users,
-					as: 'receiver'
+					as: 'receiver',
 					required: true
 				}],
 				// logging: true,
