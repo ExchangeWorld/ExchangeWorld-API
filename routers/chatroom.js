@@ -39,8 +39,12 @@ router.get('/exchange', (req, res) => {
 						chatroom_cid: _exchange.chatroom_cid
 					},
 					order: [
-						['mid', 'ASC']
+						['mid', 'DESC']
 					],
+					include: [{
+						model: users,
+						as: 'sender'
+					}],
 					offset: _from,
 					limit: _number
 				});

@@ -25,14 +25,22 @@ router.get('/all', (req, res) => {
 				include: [{
 					model: users,
 					as: 'owner',
-				}]
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
 			}, {
 				model: goods,
 				as: 'goods_two',
 				include: [{
 					model: users,
 					as: 'owner',
-				}]
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
 			}]
 		})
 		.then(result => {
@@ -46,7 +54,7 @@ router.get('/all', (req, res) => {
 });
 
 // Get exchanges of an user
-router.get('/of/user', (req, res) => {
+router.get('/of/user/exchaning', (req, res) => {
 
 	var _owner_uid = parseInt(req.query.owner_uid, 10);
 
@@ -55,15 +63,25 @@ router.get('/of/user', (req, res) => {
 			include: [{
 				model: goods,
 				as: 'goods_one',
+				include: [{
+					model: users,
+					as: 'owner'
+				}],
 				where: {
-					owner_uid: _owner_uid
+					owner_uid: _owner_uid,
+					exchanged: 2
 				},
 				required: false
 			}, {
 				model: goods,
 				as: 'goods_two',
+				include: [{
+					model: users,
+					as: 'owner'
+				}],
 				where: {
-					owner_uid: _owner_uid
+					owner_uid: _owner_uid,
+					exchanged: 2
 				},
 				required: false
 			}]

@@ -199,27 +199,24 @@ router.put('/rate', (req, res) => {
 		res.send({
 			error: 'rate is NaN'
 		});
-	}
-
-	goods
-		.findOne({
-			where: {
-				gid: _gid
-			}
-		})
-		.then(_goods => {
-			_goods.rate = _rate;
-			_goods.save().then(() => {});
-			return _goods;
-		})
-		.then(_goods => {
-			res.json(_goods);
-		})
-		.catch(err => {
-			res.json({
-				error: err
+	} else {
+		goods
+			.update({
+				rate: _rate
+			}, {
+				where: {
+					gid: _gid
+				}
+			})
+			.then(_goods => {
+				res.json(_goods);
+			})
+			.catch(err => {
+				res.json({
+					error: err
+				});
 			});
-		});
+	}
 })
 
 // Delete a good (but not really delete it)
@@ -234,18 +231,11 @@ router.delete('/delete', (req, res) => {
 	var _gid = parseInt(req.query.gid, 10);
 
 	goods
-		.findOne({
+		.update({
+			deleted: 1
+		}, {
 			where: {
 				gid: _gid
-			}
-		})
-		.then(result => {
-			if (result == null) {
-				return {};
-			} else {
-				result.deleted = 1;
-				result.save().then(() => {});
-				return result;
 			}
 		})
 		.then(result => {

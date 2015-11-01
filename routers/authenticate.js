@@ -47,7 +47,8 @@ router.post('/register', (req, res) => {
 
 			var _answer = getSHA256(_password + ' and this is a fucking hash with ' + _salt);
 
-			auths.create({
+			auths
+				.create({
 					user_identity: _id,
 					salt: _salt,
 					answer: _answer
@@ -165,7 +166,6 @@ var token_function = (req, res, next) => {
 				res.json({
 					authentication: 'fail',
 				});
-				// next();
 			}
 		})
 		.catch(err => {

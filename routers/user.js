@@ -41,7 +41,10 @@ router.get('/', (req, res) => {
 				}, {
 					identity: _identity
 				}]
-			}
+			},
+			include: [{
+				all: true
+			}]
 		})
 		.then(result => {
 			res.json(result);
