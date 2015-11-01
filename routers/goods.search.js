@@ -71,7 +71,13 @@ router.get('/', (req, res) => {
 			// 	required: true
 			// }]
 			include: [{
-				all: true
+				model: users,
+				as: 'owner',
+				required: true
+			}, {
+				model: comments,
+				as: 'comments',
+				// required: true
 			}]
 		})
 		.then(result => {

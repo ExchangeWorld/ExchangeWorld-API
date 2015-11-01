@@ -5,6 +5,7 @@ var router = express.Router();
 
 // Including tables
 var users = require('../ORM/Users');
+var goods = require('../ORM/Goods');
 
 // Get a user
 router.get('/', (req, res) => {
@@ -43,7 +44,8 @@ router.get('/', (req, res) => {
 				}]
 			},
 			include: [{
-				all: true
+				model: goods,
+				as: 'goods'
 			}]
 		})
 		.then(result => {

@@ -25,24 +25,24 @@ router.get('/', (req, res) => {
 			where: {
 				gid: _gid
 			},
-			// include: [{
-			// 	model: users,
-			// 	as: 'owner',
-			// 	required: true
-			// }, {
-			// 	model: comments,
-			// 	as: 'comments',
-			// 	required: true
-			// }]
 			include: [{
-				all: true
+				model: users,
+				as: 'owner',
+				required: true
+			}, {
+				model: comments,
+				as: 'comments',
+				// required: true
 			}]
+			// include: [{
+			// 	all: true
+			// }]
 		})
 		.then(result => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.json({
 				error: err
 			});
 		});
@@ -65,14 +65,14 @@ router.get('/of', (req, res) => {
 			where: {
 				owner_uid: _owner_uid
 			},
-			// include: [{
-			// 	model: comments,
-			// 	as: 'comments',
-			// 	required: true
-			// }]
 			include: [{
-				all: true
+				model: comments,
+				as: 'comments',
+				// required: true
 			}]
+			// include: [{
+			// 	all: true
+			// }]
 		})
 		.then(result => {
 			res.json(result);

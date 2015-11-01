@@ -8,5 +8,5 @@ set_relationships();
 module.exports =
 	sequelize
 	.sync({
-		force: true
+		force: false
 	});

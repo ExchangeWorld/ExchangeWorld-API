@@ -17,7 +17,7 @@ var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, 
 
 	// When server fired, check all the schema
 	// BUT NOT while every visit
-	sync: { force: true },
+	// sync: { force: true },
 
 	pool: {
 		maxConnections: 16,
