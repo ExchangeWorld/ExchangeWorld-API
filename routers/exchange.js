@@ -2,6 +2,7 @@
 
 var express = require('express');
 var Sequelize = require('sequelize');
+var _ = require('lazy.js');
 var router = express.Router();
 
 // Including tables
@@ -54,7 +55,8 @@ router.get('/all', (req, res) => {
 });
 
 // Get exchanges of an user
-router.get('/of/user/exchaning', (req, res) => {
+// But not very well QAQ
+router.get('/of/user/exchanging', (req, res) => {
 
 	var _owner_uid = parseInt(req.query.owner_uid, 10);
 
@@ -65,31 +67,48 @@ router.get('/of/user/exchaning', (req, res) => {
 				as: 'goods_one',
 				include: [{
 					model: users,
-					as: 'owner'
-				}],
-				where: {
-					owner_uid: _owner_uid,
-					exchanged: 2
-				},
-				required: false
+					as: 'owner',
+					where: {
+						uid: _owner_uid
+					},
+					required: false
+				}]
 			}, {
 				model: goods,
 				as: 'goods_two',
 				include: [{
 					model: users,
-					as: 'owner'
-				}],
-				where: {
-					owner_uid: _owner_uid,
-					exchanged: 2
-				},
-				required: false
+					as: 'owner',
+					where: {
+						uid: _owner_uid
+					},
+					required: false
+				}]
 			}]
 		})
 		.then(result => {
-			res.json(result);
+			res.json(_(JSON.parse(JSON.stringify(result)))
+				.map(r => {
+
+					if (r['goods_one']['owner'] == null) {
+						r['owner_goods'] = r['goods_two'];
+						r['other_goods'] = r['goods_one'];
+					} else {
+						r['owner_goods'] = r['goods_one'];
+						r['other_goods'] = r['goods_two'];
+					}
+
+					delete r['owner_goods']['owner'];
+					delete r['other_goods']['owner'];
+					delete r['goods_one'];
+					delete r['goods_two'];
+
+					return r;
+				})
+				.toArray());
 		})
 		.catch(err => {
+			// console.log(err);
 			res.send({
 				error: err
 			});

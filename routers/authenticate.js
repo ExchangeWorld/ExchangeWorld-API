@@ -153,10 +153,18 @@ var token_function = (req, res, next) => {
 			if (result != null && result != undefined) {
 				jwt.verify(result.token, '事實上我們做了一年', (err, decoded) => {
 					if (err) {
-						res.json({
-							authentication: 'timeout',
-							err: err
-						});
+						tokens
+							.destroy({
+								where: {
+									token: _token
+								}
+							})
+							.then(result => {
+								res.json({
+									authentication: 'timeout',
+									err: err
+								});
+							});
 					} else {
 						next();
 					}

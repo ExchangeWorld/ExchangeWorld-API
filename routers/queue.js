@@ -6,7 +6,7 @@ var router = express.Router();
 // Including tables
 var queues = require('../ORM/Queues');
 var goods = require('../ORM/Goods');
-var users = require('../ORM/Users')
+var users = require('../ORM/Users');
 
 // Get queues of a goods
 router.get('/of/goods', (req, res) => {
@@ -242,9 +242,7 @@ router.post('/post', (req, res) => {
 			if (result == {}) {
 				res.json(result);
 			} else {
-				result.spread((user, created) => {
-					res.json(user);
-				});
+				res.json(result[0]);
 			}
 		})
 		.catch(err => {

@@ -42,7 +42,7 @@ router.get('/', (req, res) => {
 			res.json(result);
 		})
 		.catch(err => {
-			res.json({
+			res.send({
 				error: err
 			});
 		});
