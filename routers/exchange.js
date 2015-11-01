@@ -72,7 +72,11 @@ router.get('/of/user/exchanging', (req, res) => {
 						uid: _owner_uid
 					},
 					required: false
-				}]
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
 			}, {
 				model: goods,
 				as: 'goods_two',
@@ -83,7 +87,11 @@ router.get('/of/user/exchanging', (req, res) => {
 						uid: _owner_uid
 					},
 					required: false
-				}]
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
 			}]
 		})
 		.then(result => {
@@ -137,14 +145,22 @@ router.get('/', (req, res) => {
 				include: [{
 					model: users,
 					as: 'owner',
-				}]
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
 			}, {
 				model: goods,
 				as: 'goods_two',
 				include: [{
 					model: users,
 					as: 'owner',
-				}]
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
 			}]
 		})
 		.then(result => {
