@@ -1,16 +1,16 @@
 'use strict';
 
 var express = require('express');
-var router  = express.Router();
+var router = express.Router();
 
 // Including tables
-var users      = require('../ORM/Users');
-var goods      = require('../ORM/Goods');
-var followers  = require('../ORM/Followers');
+var users = require('../ORM/Users');
+var goods = require('../ORM/Goods');
+var followers = require('../ORM/Followers');
 var followings = require('../ORM/Followings');
 
 // Get a profile
-router.get('/', function(req, res, next) {
+router.get('/', (req, res) => {
 
 	// Available query params:
 	//
@@ -20,76 +20,62 @@ router.get('/', function(req, res, next) {
 	// Get property:value in ?x=y&z=w....
 	var _uid = parseInt(req.query.uid, 10);
 
-	/*
-	 * Set association between tables (users, goods, followers, followings)
-	 *
-	 * USER
-	 *  |---(1:M)--- GOODS
-	 *  |---(1:M)--- FOLLOWING
-	 *  `---(1:M)--- FOLLOWER
-	 */
-	users.hasMany(goods, {foreignKey: 'owner_uid'});
-	users.hasMany(followers, {foreignKey: 'my_uid'});
-	users.hasMany(followings, {foreignKey: 'my_uid'});
-	goods.belongsTo(users, {foreignKey: 'owner_uid'});
-	followers.belongsTo(users, {foreignKey: 'my_uid'});
-	followings.belongsTo(users, {foreignKey: 'my_uid'});
-
 	// Emit a find operation with orm model in table `users`
-	users.findOne({
+	users
+		.findOne({
 			where: {
 				uid: _uid
 			},
 			include: [{
-				model: goods
+				model: goods,
+				as: 'goods'
 			}, {
-				model: followers
+				model: followers,
+				as: 'followers_my'
 			}, {
-				model: followings
+				model: followings,
+				as: 'followings_my'
 			}]
 		})
-		.then(function(result) {
+		.then(result => {
 			if (result == null) {
 				res.json({});
 			} else {
-				var data = [];
-				data.push(result);
 				res.json(data);
 			}
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
-			//console.log
-			//res.json({});
 		});
 });
 
 // Edit a profile
-router.put('/edit', function(req, res, next) {
+router.put('/edit', (req, res) => {
 
 	// Available PUT body params:
-    //
-    // uid
-    // name
-    // email
+	//
+	// uid
+	// name
+	// email
 	// introduction
 	// wishlist
 	//
 
-	var _uid          = parseInt(req.body.uid, 10);
-	var _name         = req.body.name;
-	var _email        = req.body.email;
+	var _uid = parseInt(req.body.uid, 10);
+	var _name = req.body.name;
+	var _email = req.body.email;
 	var _introduction = req.body.introduction;
-	var _wishlist     = req.body.wishlist;
+	var _wishlist = req.body.wishlist;
 
-	users.findOne({
+	users
+		.findOne({
 			where: {
 				uid: _uid
 			}
 		})
-		.then(function(result) {
+		.then(result => {
 			if (result == null) {
 				return {};
 			} else {
@@ -97,14 +83,14 @@ router.put('/edit', function(req, res, next) {
 				result.email = _email;
 				result.introduction = _introduction;
 				result.wishlist = _wishlist;
-				result.save().then(function() {});
+				result.save().then(() => {});
 				return result;
 			}
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
