@@ -1,14 +1,15 @@
 'use strict';
 
 var express = require('express');
-var router  = express.Router();
+var router = express.Router();
 
 // Including tables
 var stars = require('../ORM/Stars');
 var goods = require('../ORM/Goods');
+var users = require('../ORM/Users')
 
 // Get users that star the goods
-router.get('/to', function(req, res, next) {
+router.get('/to', (req, res) => {
 
 	// Available query params
 	//
@@ -17,15 +18,20 @@ router.get('/to', function(req, res, next) {
 
 	var _goods_gid = parseInt(req.query.goods_gid, 10);
 
-	stars.findAll({
+	stars
+		.findAll({
 			where: {
 				goods_gid: _goods_gid
-			}
+			},
+			include: [{
+				model: users,
+				as: 'starring_user'
+			}]
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
@@ -33,7 +39,7 @@ router.get('/to', function(req, res, next) {
 });
 
 // Get goods that user stars
-router.get('/by', function(req, res, next) {
+router.get('/by', (req, res) => {
 
 	// Available query params
 	//
@@ -42,30 +48,31 @@ router.get('/by', function(req, res, next) {
 
 	var _starring_user_uid = parseInt(req.query.starring_user_uid, 10);
 
-	stars.belongsTo(goods, {foreignKey: 'goods_gid'});
-
-	stars.findAll({
+	stars
+		.findAll({
 			where: {
 				starring_user_uid: _starring_user_uid
 			},
 			include: [{
 				model: goods,
-				required: true
+				as: 'goods',
+				where: {
+					deleted: 0
+				}
 			}]
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
-			//res.json({error: err});
 		});
 });
 
 // Make a star to a goods
-router.post('/post', function(req, res, next) {
+router.post('/post', (req, res) => {
 
 	// Necessary POST body params
 	//
@@ -73,26 +80,26 @@ router.post('/post', function(req, res, next) {
 	// starring_user_uid
 	//
 
-	var _goods_gid         = parseInt(req.body.goods_gid, 10);
+	var _goods_gid = parseInt(req.body.goods_gid, 10);
 	var _starring_user_uid = parseInt(req.body.starring_user_uid, 10);
 
-	stars.create({
+	stars
+		.create({
 			goods_gid: _goods_gid,
 			starring_user_uid: _starring_user_uid
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
+		.catch(err => {
 			res.send({
 				error: err
 			});
-			//res.json({error: err});
 		});
 });
 
 // Delete a star
-router.delete('/delete', function(req, res, next) {
+router.delete('/delete', (req, res) => {
 
 	// Necessary DELETE query params
 	//
@@ -100,20 +107,20 @@ router.delete('/delete', function(req, res, next) {
 	// starring_user_uid
 	//
 
-	var _goods_gid         = parseInt(req.query.goods_gid, 10);
+	var _goods_gid = parseInt(req.query.goods_gid, 10);
 	var _starring_user_uid = parseInt(req.query.starring_user_uid, 10);
 
-	stars.destroy({
+	stars
+		.destroy({
 			where: {
 				goods_gid: _goods_gid,
 				starring_user_uid: _starring_user_uid
 			}
 		})
-		.then(function(result) {
+		.then(result => {
 			res.json(result);
 		})
-		.catch(function(err) {
-			//res.json({error: err});
+		.catch(err => {
 			res.send({
 				error: err
 			});
