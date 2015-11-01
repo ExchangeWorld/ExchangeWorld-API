@@ -16,11 +16,11 @@ var Auths = sequelize.define('auths', {
 		allowNull: false
 	},
 	salt: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: false
 	},
 	answer: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: false
 	}
 });

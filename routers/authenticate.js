@@ -112,7 +112,7 @@ var login_function = (req, res) => {
 							identity: _id,
 							password: _password
 						}, '事實上我們做了一年', {
-							expiresInMinutes: 10
+							expiresIn: '1h'
 						})
 					})
 					.then(result => {

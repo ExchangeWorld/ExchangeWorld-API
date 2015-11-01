@@ -11,7 +11,7 @@ var Tokens = sequelize.define('tokens', {
 		primaryKey: true
 	},
 	token: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: false
 	}
 });

@@ -1,6 +1,6 @@
 'use strict';
 
-// var Auths = require('../ORM/Auths');
+var Auths = require('../ORM/Auths');
 var Chatrooms = require('../ORM/Chatrooms');
 var Comments = require('../ORM/Comments');
 var Exchanges = require('../ORM/Exchanges');
@@ -11,7 +11,7 @@ var Messages = require('../ORM/Messages');
 var Notifications = require('../ORM/Notifications');
 var Queues = require('../ORM/Queues');
 var Stars = require('../ORM/Stars');
-// var Tokens = require('../ORM/Tokens');
+var Tokens = require('../ORM/Tokens');
 var Users = require('../ORM/Users');
 
 module.exports = () => {
