@@ -1,14 +1,14 @@
 'use strict';
 
 var express = require('express');
-var fs      = require('fs');
-var router  = express.Router();
+var fs = require('fs');
+var router = express.Router();
 
 // Including tables for photoPath
 var goods = require('../ORM/Goods');
 
 // Handle posting image
-router.post('/image', function(req, res, next) {
+router.post('/image', (req, res) => {
 
 	/*
 	 * POST body looks like:
@@ -47,7 +47,9 @@ router.post('/image', function(req, res, next) {
 	// Finally, send the "static file path" back
 	fs.writeFile(filePath, dataBuffer, function(err) {
 		if (err) {
-			res.send({error: err});
+			res.send({
+				error: err
+			});
 		} else {
 			// res.send('images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
 			res.send('http://exwd.csie.org/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
