@@ -35,7 +35,6 @@
   "dependencies": {
     "async": "^1.4.2",
     "body-parser": "^1.13.2",
-    "bower": "^1.4.1",
     "compression": "^1.5.1",
     "express": "^4.7.2",
     "imagemin-pngcrush": "^4.1.0",
