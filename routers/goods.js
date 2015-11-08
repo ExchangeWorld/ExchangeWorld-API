@@ -59,7 +59,8 @@ router.get('/of', function(req, res, next) {
 	// Emit a find operation with orm model in table `goods`
 	goods.findAll({
 			where: {
-				owner_uid: _owner_uid
+				owner_uid: _owner_uid,
+				deleted: 0
 			}
 		})
 		.then(function(result) {
