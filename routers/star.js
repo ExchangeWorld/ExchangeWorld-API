@@ -48,6 +48,9 @@ router.get('/by', function(req, res, next) {
 			},
 			include: [{
 				model: goods,
+				where: {
+					deleted: 0
+				},
 				required: true
 			}]
 		})
