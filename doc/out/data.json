@@ -10,6 +10,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "../routers/chatroom.js": {
+            "name": "../routers/chatroom.js",
+            "modules": {},
+            "classes": {
+                "Chatroom": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "../routers/message.js": {
             "name": "../routers/message.js",
             "modules": {},
@@ -38,6 +47,18 @@
             "file": "../routers/authenticate.js",
             "line": 1,
             "description": "Provides some methods related to any authentications"
+        },
+        "Chatroom": {
+            "name": "Chatroom",
+            "shortname": "Chatroom",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/chatroom.js",
+            "line": 1,
+            "description": "Provides some methods related to chatroom"
         }
     },
     "elements": {},
@@ -141,6 +162,88 @@
                 "\n<pre>\n{\n\tauthentication: 'fail',\n}\n</pre>"
             ],
             "class": "Authenticate"
+        },
+        {
+            "file": "../routers/chatroom.js",
+            "line": 17,
+            "description": "Get chatroom's messages of an Exchange",
+            "itemtype": "method",
+            "name": "GET api/chatroom/exchange",
+            "params": [
+                {
+                    "name": "eid",
+                    "description": "The ID of exchange",
+                    "type": "Integer"
+                },
+                {
+                    "name": "from",
+                    "description": "From what number of messages",
+                    "type": "Integer=0"
+                },
+                {
+                    "name": "number",
+                    "description": "How many messages to get",
+                    "type": "Integer=10"
+                }
+            ],
+            "return": {
+                "description": "Messages including `sender`",
+                "type": "JSON"
+            },
+            "class": "Chatroom"
+        },
+        {
+            "file": "../routers/chatroom.js",
+            "line": 71,
+            "description": "Post a chatroom's message of an Exchange",
+            "itemtype": "method",
+            "name": "POST api/chatroom/exchange",
+            "params": [
+                {
+                    "name": "eid",
+                    "description": "The ID of exchange",
+                    "type": "Integer"
+                },
+                {
+                    "name": "sender_uid",
+                    "description": "Who post the message",
+                    "type": "Integer"
+                },
+                {
+                    "name": "content",
+                    "description": "The content of the message",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "New created message object",
+                "type": "JSON"
+            },
+            "class": "Chatroom"
+        },
+        {
+            "file": "../routers/chatroom.js",
+            "line": 110,
+            "description": "Read a chatroom's message",
+            "itemtype": "method",
+            "name": "PUT api/chatroom/read",
+            "params": [
+                {
+                    "name": "cid",
+                    "description": "The ID of chatroom",
+                    "type": "Integer"
+                },
+                {
+                    "name": "receiver_uid",
+                    "description": "Who received the message (Not sender!)",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Updated message object",
+                "type": "JSON"
+            },
+            "class": "Chatroom"
         },
         {
             "file": "../routers/message.js",

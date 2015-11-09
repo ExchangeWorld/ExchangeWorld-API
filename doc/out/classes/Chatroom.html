@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Authenticate</title>
+    <title>Chatroom</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -77,12 +77,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Authenticate Class</h1>
+<h1>Chatroom Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/.._routers_authenticate.js.html#l1"><code>..&#x2F;routers&#x2F;authenticate.js:1</code></a>
+            Defined in: <a href="../files/.._routers_chatroom.js.html#l1"><code>..&#x2F;routers&#x2F;chatroom.js:1</code></a>
         </div>
 
 
@@ -90,7 +90,7 @@
 
 
 <div class="box intro">
-    <p>Provides some methods related to any authentications</p>
+    <p>Provides some methods related to chatroom</p>
 
 </div>
 
@@ -111,15 +111,15 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_GET *?token=...">GET *?token=...</a>
+                                <a href="#method_GET api/chatroom/exchange">GET api/chatroom/exchange</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_GET api/authenticate/login">GET api/authenticate/login</a>
+                                <a href="#method_POST api/chatroom/exchange">POST api/chatroom/exchange</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_POST api/authenticate/register">POST api/authenticate/register</a>
+                                <a href="#method_PUT api/chatroom/read">PUT api/chatroom/read</a>
 
                             </li>
                     </ul>
@@ -132,100 +132,19 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_GET *?token=..." class="method item">
-    <h3 class="name"><code>GET *?token=...</code></h3>
+<div id="method_GET api/chatroom/exchange" class="method item">
+    <h3 class="name"><code>GET api/chatroom/exchange</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>TOKEN</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON | Nothing</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_authenticate.js.html#l177"><code>..&#x2F;routers&#x2F;authenticate.js:177</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Token validation</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">TOKEN</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON | Nothing</span>:
-                    <p>If failed, return JSON</p>
-
-            </div>
-        </div>
-
-
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre>
-{
-    authentication: 'timeout',
-    err: err
-}
-</pre><pre>
-{
-    authentication: 'fail',
-}
-</pre>
-            </div>
-        </div>
-</div>
-<div id="method_GET api/authenticate/login" class="method item">
-    <h3 class="name"><code>GET api/authenticate/login</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>fb</code>
+                        <code>eid</code>
                 </li>
                 <li class="arg">
-                        <code>identity</code>
+                        <code>from</code>
                 </li>
                 <li class="arg">
-                        <code>password</code>
+                        <code>number</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -243,7 +162,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_authenticate.js.html#l90"><code>..&#x2F;routers&#x2F;authenticate.js:90</code></a>
+        <a href="../files/.._routers_chatroom.js.html#l17"><code>..&#x2F;routers&#x2F;chatroom.js:17</code></a>
         </p>
 
 
@@ -251,7 +170,7 @@
     </div>
 
     <div class="description">
-        <p>Login</p>
+        <p>Get chatroom's messages of an Exchange</p>
 
     </div>
 
@@ -260,34 +179,34 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">fb</code>
-                        <span class="type">Boolean=false</span>
+                        <code class="param-name">eid</code>
+                        <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>If the login is with FB</p>
+                        <p>The ID of exchange</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">identity</code>
-                        <span class="type">String</span>
+                        <code class="param-name">from</code>
+                        <span class="type">Integer=0</span>
 
 
                     <div class="param-description">
-                        <p>The user ID. If it's with FB, fb_id as identity</p>
+                        <p>From what number of messages</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">password</code>
-                        <span class="type">String=''</span>
+                        <code class="param-name">number</code>
+                        <span class="type">Integer=10</span>
 
 
                     <div class="param-description">
-                        <p>Password. If it's with FB, password will be checked by hash</p>
+                        <p>How many messages to get</p>
 
                     </div>
 
@@ -300,52 +219,26 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Token</p>
+                    <p>Messages including <code>sender</code></p>
 
             </div>
         </div>
 
 
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre>
-{
-    authentication: 'success',
-    token: result.token
-}
-</pre><pre>
-{
-    authentication: 'fail',
-    token: null
-}
-</pre>
-            </div>
-        </div>
 </div>
-<div id="method_POST api/authenticate/register" class="method item">
-    <h3 class="name"><code>POST api/authenticate/register</code></h3>
+<div id="method_POST api/chatroom/exchange" class="method item">
+    <h3 class="name"><code>POST api/chatroom/exchange</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>fb</code>
+                        <code>eid</code>
                 </li>
                 <li class="arg">
-                        <code>identity</code>
+                        <code>sender_uid</code>
                 </li>
                 <li class="arg">
-                        <code>password</code>
-                </li>
-                <li class="arg">
-                        <code>name</code>
-                </li>
-                <li class="arg">
-                        <code>email</code>
-                </li>
-                <li class="arg">
-                        <code>photo_path</code>
+                        <code>content</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -363,7 +256,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_authenticate.js.html#l19"><code>..&#x2F;routers&#x2F;authenticate.js:19</code></a>
+        <a href="../files/.._routers_chatroom.js.html#l71"><code>..&#x2F;routers&#x2F;chatroom.js:71</code></a>
         </p>
 
 
@@ -371,7 +264,7 @@
     </div>
 
     <div class="description">
-        <p>Register a new user</p>
+        <p>Post a chatroom's message of an Exchange</p>
 
     </div>
 
@@ -380,67 +273,34 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">fb</code>
-                        <span class="type">Boolean=false</span>
+                        <code class="param-name">eid</code>
+                        <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>If the registeration is with FB</p>
+                        <p>The ID of exchange</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">identity</code>
+                        <code class="param-name">sender_uid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>Who post the message</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">content</code>
                         <span class="type">String</span>
 
 
                     <div class="param-description">
-                        <p>The user ID. If it's with FB, fb_id as identity</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">password</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                        <p>Password. If it's with FB, password will be generated by hash</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                        <p>The displaying name</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">email</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                        <p>The email</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">photo_path</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                        <p>The photo path of user face photo</p>
+                        <p>The content of the message</p>
 
                     </div>
 
@@ -453,7 +313,87 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>New created user object</p>
+                    <p>New created message object</p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_PUT api/chatroom/read" class="method item">
+    <h3 class="name"><code>PUT api/chatroom/read</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>cid</code>
+                </li>
+                <li class="arg">
+                        <code>receiver_uid</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">JSON</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/.._routers_chatroom.js.html#l110"><code>..&#x2F;routers&#x2F;chatroom.js:110</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Read a chatroom's message</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">cid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>The ID of chatroom</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">receiver_uid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>Who received the message (Not sender!)</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">JSON</span>:
+                    <p>Updated message object</p>
 
             </div>
         </div>

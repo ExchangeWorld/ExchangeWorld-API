@@ -1,3 +1,9 @@
+/**
+ * Provides some methods related to chatroom
+ *
+ * @class Chatroom
+ */
+
 'use strict';
 
 var express = require('express');
@@ -8,14 +14,16 @@ var exchanges = require('../ORM/Exchanges');
 var messages = require('../ORM/Messages');
 var users = require('../ORM/Users');
 
+/**
+ * Get chatroom's messages of an Exchange
+ *
+ * @method GET api/chatroom/exchange
+ * @param  {Integer} eid The ID of exchange
+ * @param  {Integer=0} from From what number of messages
+ * @param  {Integer=10} number How many messages to get
+ * @return {JSON} Messages including `sender`
+ */
 router.get('/exchange', (req, res) => {
-
-	// Available GET params:
-	//
-	// eid
-	// from
-	// number
-	//
 
 	var _eid = parseInt(req.query.eid, 10);
 	var _from = parseInt(req.query.from, 10);
@@ -60,14 +68,16 @@ router.get('/exchange', (req, res) => {
 
 });
 
+/**
+ * Post a chatroom's message of an Exchange
+ *
+ * @method POST api/chatroom/exchange
+ * @param  {Integer} eid The ID of exchange
+ * @param  {Integer} sender_uid Who post the message
+ * @param  {String} content The content of the message
+ * @return {JSON} New created message object
+ */
 router.post('/exchange', (req, res) => {
-
-	// Available POST params:
-	//
-	// eid
-	// sender_uid
-	// content
-	//
 
 	var _eid = parseInt(req.body.eid, 10);
 	var _sender_uid = parseInt(req.body.sender_uid, 10);
@@ -97,22 +107,28 @@ router.post('/exchange', (req, res) => {
 		});
 });
 
+/**
+ * Read a chatroom's message
+ *
+ * @method PUT api/chatroom/read
+ * @param  {Integer} cid The ID of chatroom
+ * @param  {Integer} receiver_uid Who received the message (Not sender!)
+ * @return {JSON} Updated message object
+ */
 router.put('/read', (req, res) => {
 
-	// Available PUT body params:
-	//
-	// mid
-	//
-
-	// Get property:value in PUT body
-	var _mid = parseInt(req.body.mid, 10);
+	var _cid = parseInt(req.body.cid, 10);
+	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
 
 	messages
 		.update({
 			unread: false
 		}, {
 			where: {
-				mid: _mid
+				chatroom_cid: _cid,
+				sender_uid: {
+					$ne: _receiver_uid
+				}
 			}
 		})
 		.then(result => {
