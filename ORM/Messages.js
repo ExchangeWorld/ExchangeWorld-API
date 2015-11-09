@@ -1,7 +1,15 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../libs/sequelize');
 
-// Define the schema of table `messages`
+/**
+ * Define Messages schema
+ * @param  {Sequelize.INTEGER.UNSIGNED} mid Message's ID
+ * @param  {Sequelize.INTEGER.UNSIGNED} chatroom_cid The chatroom of this message (0)
+ * @param  {Sequelize.INTEGER.UNSIGNED} sender_uid Sender's uid
+ * @param  {Sequelize.INTEGER.UNSIGNED} receiver_uid Receiver's uid
+ * @param  {Sequelize.TEXT} content The content of the message
+ * @param  {Sequelize.BOOLEAN} unread If this message is not read
+ */
 var Messages = sequelize.define('messages', {
 	mid: {
 		type: Sequelize.INTEGER.UNSIGNED,
@@ -10,15 +18,6 @@ var Messages = sequelize.define('messages', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	// sender_uid: {
-	// 	type: Sequelize.INTEGER.UNSIGNED,
-	// 	allowNull: false
-	// },
-	// receiver_uid: {
-	// 	type: Sequelize.INTEGER.UNSIGNED,
-	// 	defaultValue: 0,
-	// 	allowNull: true
-	// },
 	content: {
 		type: Sequelize.TEXT,
 		allowNull: false

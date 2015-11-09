@@ -1,7 +1,20 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../libs/sequelize');
 
-// Define the schema of table `goods`
+/**
+ * Define Goods schema
+ * @param  {Sequelize.INTEGER.UNSIGNED} gid The goods' ID
+ * @param  {Sequelize.INTEGER.UNSIGNED} owner_uid The owner's uid
+ * @param  {Sequelize.TEXT} name The goods' name
+ * @param  {Sequelize.TEXT} photo_path The goods' photo_paths (in json)
+ * @param  {Sequelize.TEXT} category The category of the goods
+ * @param  {Sequelize.TEXT} description The description of the goods
+ * @param  {Sequelize.FLOAT} position_x The position_x of the goods
+ * @param  {Sequelize.FLOAT} position_y The position_y of the goods
+ * @param  {Sequelize.FLOAT} rate The rate of the goods
+ * @param  {Sequelize.INTEGER} exchanged If the goods is exchanged: 0 means not exchanged yet, 1 means exchanged, 2 means exchanging
+ * @param  {Sequelize.INTEGER} deleted If the goods is deleted: 0 means not deleted yet, 1 means deleted
+ */
 var Goods = sequelize.define('goods', {
 	gid: {
 		type: Sequelize.INTEGER.UNSIGNED,
@@ -10,12 +23,8 @@ var Goods = sequelize.define('goods', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	// owner_uid: {
-	// 	type: Sequelize.INTEGER.UNSIGNED,
-	// 	allowNull: false
-	// },
 	name: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: false
 	},
 	photo_path: {
@@ -23,7 +32,7 @@ var Goods = sequelize.define('goods', {
 		allowNull: true
 	},
 	category: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: false
 	},
 	description: {
@@ -43,15 +52,13 @@ var Goods = sequelize.define('goods', {
 	rate: {
 		type: Sequelize.FLOAT,
 		allowNull: true,
-		defaultValue: 0,
+		defaultValue: 0
 	},
-	// 0 means not exchanged yet, 1 means exchanged, 2 means exchanging
 	exchanged: {
 		type: Sequelize.INTEGER,
 		allowNull: false,
 		defaultValue: 0
 	},
-	// 0 means not deleted yet, 1 means deleted
 	deleted: {
 		type: Sequelize.INTEGER,
 		allowNull: false,

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>ExchangeWorld-API-v2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/cayman.css">
+    <link rel="stylesheet" href="css/prism.css">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">ExchangeWorld-API-v2</h1>
+      <h2 class="project-tagline"></h2>
+    </section>
+    <section data-spy="scroll" data-target=".scrollspy" class="main-content">
+      <div class="row">
+        <div class="col-md-3 bs-docs-sidebar">
+          <ul id="sidebar" class="nav nav-stacked fixed">
+            <li><a href="index.html">Main</a></li>
+            <li><a href="Auths.js.html">Auths.js</a></li>
+            <li><a href="Chatrooms.js.html">Chatrooms.js</a></li>
+            <li><a href="Comments.js.html">Comments.js</a></li>
+            <li><a href="Exchanges.js.html">Exchanges.js</a></li>
+            <li><a href="Followers.js.html">Followers.js</a></li>
+            <li><a href="Followings.js.html">Followings.js</a></li>
+            <li><a href="Goods.js.html">Goods.js</a></li>
+            <li><a href="Messages.js.html">Messages.js</a></li>
+            <li><a href="Notifications.js.html">Notifications.js</a></li>
+            <li><a href="Queues.js.html">Queues.js</a></li>
+            <li><a href="Stars.js.html">Stars.js</a></li>
+            <li><a href="Tokens.js.html">Tokens.js</a></li>
+            <li class="active"><a href="Users.js.html">Users.js
+                <ul class="nav nav-stacked">
+                  <li><a href="#Users"><i class="alert alert-success"></i><span>Users</span></a>
+                  </li>
+                </ul></a></li>
+          </ul>
+        </div>
+        <div class="col-md-9">
+          <section id="Users">
+            <h1>Users</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">declaration</div><span>&nbsp;</span><span>Users</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>uid</td>
+                <td>Sequelize.INTEGER.UNSIGNED</td>
+                <td><p>User&#39;s ID</p></td>
+              </tr>
+              <tr>
+                <td>identity</td>
+                <td>Sequelize.STRING</td>
+                <td><p>The user&#39;s identity</p></td>
+              </tr>
+              <tr>
+                <td>name</td>
+                <td>Sequelize.STRING</td>
+                <td><p>The user&#39;s name</p></td>
+              </tr>
+              <tr>
+                <td>email</td>
+                <td>Sequelize.STRING</td>
+                <td><p>The user&#39;s email</p></td>
+              </tr>
+              <tr>
+                <td>photo_path</td>
+                <td>Sequelize.TEXT</td>
+                <td><p>The user&#39;s photo&#39;s path</p></td>
+              </tr>
+              <tr>
+                <td>introduction</td>
+                <td>Sequelize.TEXT</td>
+                <td><p>The user&#39;s introduction</p></td>
+              </tr>
+              <tr>
+                <td>wishlist</td>
+                <td>Sequelize.TEXT</td>
+                <td><p>The user&#39;s wish list</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Define Users schema</p></div>
+          <pre><code class="language-javascript">var Users = sequelize.define('users', {
+	uid: {
+		type: Sequelize.INTEGER.UNSIGNED,
+		allowNull: false,
+		unique: true,
+		autoIncrement: true,
+		primaryKey: true
+	},
+	identity: {
+		type: Sequelize.STRING,
+		allowNull: false,
+		unique: true
+	},
+	name: {
+		type: Sequelize.STRING,
+		allowNull: false
+	},
+	email: {
+		type: Sequelize.STRING,
+		allowNull: true
+	},
+	photo_path: {
+		type: Sequelize.TEXT,
+		allowNull: true
+	},
+	introduction: {
+		type: Sequelize.TEXT,
+		allowNull: true
+	},
+	wishlist: {
+		type: Sequelize.TEXT,
+		allowNull: true
+	}
+});
+
+module.exports = Users;</code></pre>
+          <div class="footer site-footer">
+            <div class="span site-footer-owner"><a href="https://github.com/iwatakeshi/doxx-theme-cayman">Cayman</a> is maintained by <a href="https://github.com/iwatakeshi">iwatakeshi</a>.</div>
+            <div class="span site-footer-credits">This page was generated by <a href="https://github.com/FGRibreau/doxx">Doxx</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/affix.js"></script>
+    <script src="js/dropdown.js"></script>
+    <script src="js/scrollspy.js"></script>
+    <script src="js/prism.js"></script>
+    <script src="js/prism-bash.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('body').scrollspy({
+          target: ".bs-docs-sidebar",
+          offset: 40
+        }) 
+      });
+    </script>
+  </body>
+</html>

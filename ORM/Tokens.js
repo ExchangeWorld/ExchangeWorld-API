@@ -1,7 +1,11 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../libs/sequelize');
 
-// Define the schema of table `tokens`
+/**
+ * Define Tokens schema
+ * @param  {Sequelize.INTEGER.UNSIGNED} tid Token's ID
+ * @param  {Sequelize.TEXT} token The content of the token
+ */
 var Tokens = sequelize.define('tokens', {
 	tid: {
 		type: Sequelize.INTEGER.UNSIGNED,

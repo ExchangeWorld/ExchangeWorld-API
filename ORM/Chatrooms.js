@@ -1,7 +1,11 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../libs/sequelize');
 
-// Define the schema of table `chatrooms`
+/**
+ * Define Chatrooms schema
+ * @param  {Sequelize.INTEGER.UNSIGNED} cid Chatroom's ID
+ * @param  {Sequelize.TEXT} members The members chatroom contains (in json)
+ */
 var Chatrooms = sequelize.define('chatrooms', {
 	cid: {
 		type: Sequelize.INTEGER.UNSIGNED,
@@ -12,7 +16,8 @@ var Chatrooms = sequelize.define('chatrooms', {
 	},
 	members: {
 		type: Sequelize.TEXT,
-		allowNull: true
+		defaultValue: '',
+		allowNull: false
 	}
 });
 

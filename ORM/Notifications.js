@@ -1,7 +1,15 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../libs/sequelize');
 
-// Define the schema of table `notifications`
+/**
+* Define Notifications schema
+* @param  {Sequelize.INTEGER.UNSIGNED} nid Notification's ID
+* @param  {Sequelize.INTEGER.UNSIGNED} sender_uid Sender's uid
+* @param  {Sequelize.INTEGER.UNSIGNED} receiver_uid Receiver's uid
+* @param  {Sequelize.TEXT} trigger_url The URL of the notification trigger object
+* @param  {Sequelize.TEXT} content The content of the notification
+* @param  {Sequelize.BOOLEAN} unread If this notification is not read
+ */
 var Notifications = sequelize.define('notifications', {
 	nid: {
 		type: Sequelize.INTEGER.UNSIGNED,
@@ -10,16 +18,8 @@ var Notifications = sequelize.define('notifications', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	// sender_uid: {
-	// 	type: Sequelize.INTEGER.UNSIGNED,
-	// 	allowNull: false
-	// },
-	// receiver_uid: {
-	// 	type: Sequelize.INTEGER.UNSIGNED,
-	// 	allowNull: false
-	// },
 	trigger_url: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: false
 	},
 	content: {

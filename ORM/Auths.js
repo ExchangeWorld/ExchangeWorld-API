@@ -1,7 +1,13 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../libs/sequelize');
 
-// Define the schema of table `auths`
+/**
+ * Define Auths schema
+ * @param  {Sequelize.INTEGER.UNSIGNED} aid Auth's ID
+ * @param  {Sequelize.STRING} user_identity User's Identity
+ * @param  {Sequelize.TEXT} salt Random generated salt
+ * @param  {Sequelize.TEXT} answer Real password + salt = answer
+ */
 var Auths = sequelize.define('auths', {
 	aid: {
 		type: Sequelize.INTEGER.UNSIGNED,
