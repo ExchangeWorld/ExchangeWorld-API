@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>../routers/message.js</title>
+    <title>../routers/comment.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -78,166 +78,47 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: ../routers/message.js</h1>
+<h1 class="file-heading">File: ../routers/comment.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
+/**
+ * Provides some methods related to comments
+ *
+ * @class Comment
+ */
+
 &#x27;use strict&#x27;;
 
 var express = require(&#x27;express&#x27;);
 var router = express.Router();
 
 // Including tables
-var messages = require(&#x27;../ORM/Messages&#x27;);
+var comments = require(&#x27;../ORM/Comments&#x27;);
 var users = require(&#x27;../ORM/Users&#x27;);
+var goods = require(&#x27;../ORM/Goods&#x27;);
 
-router.get(&#x27;/&#x27;, (req, res) =&gt; {
+/**
+ * Get comments of a goods
+ *
+ * @method GET api/comment/of/goods
+ * @param  {Integer} goods_gid The commented goods
+ * @return {JSON} Comments including &#x60;commenter&#x60;
+ */
+router.get(&#x27;/of/goods&#x27;, (req, res) =&gt; {
 
-	// Available GET params:
-	//
-	// receiver_uid
-	// sender_uid
-	// from
-	// number
-	//
+	var _goods_gid = parseInt(req.query.goods_gid, 10);
 
-	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
-	var _sender_uid = parseInt(req.query.sender_uid, 10);
-	var _from = parseInt(req.query.from, 10);
-	var _number = parseInt(req.query.number, 10);
-
-	_sender_uid = (_sender_uid == _sender_uid ? _sender_uid : null);
-	_from = (_from == _from ? _from : 0);
-	_number = (_number == _number ? _number : 10);
-
-	if (_sender_uid == null) {
-		messages
-			.findAll({
-				where: {
-					receiver_uid: _receiver_uid,
-					chatroom_cid: 0
-				},
-				order: [
-					[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-				],
-				include: [{
-					model: users,
-					as: &#x27;sender&#x27;,
-					required: true
-				}, {
-					model: users,
-					as: &#x27;receiver&#x27;,
-					required: true
-				}],
-				// logging: true,
-				// offset: _from,
-				// limit: _number
-			})
-			.then(result =&gt; {
-				res.json(result);
-			})
-			.catch(err =&gt; {
-				res.send({
-					error: err
-				});
-			});
-	} else {
-		messages
-			.findAll({
-				where: {
-					receiver_uid: _receiver_uid,
-					sender_uid: _sender_uid,
-					chatroom_cid: 0
-				},
-				order: [
-					[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-				],
-				include: [{
-					model: users,
-					as: &#x27;sender&#x27;,
-					required: true
-				}, {
-					model: users,
-					as: &#x27;receiver&#x27;,
-					required: true
-				}],
-				// logging: true,
-				// offset: _from,
-				// limit: _number
-			})
-			.then(result =&gt; {
-				res.json(result);
-			})
-			.catch(err =&gt; {
-				res.send({
-					error: err
-				});
-			});
-	}
-});
-
-router.get(&#x27;/between&#x27;, (req, res) =&gt; {
-
-	// Available GET params:
-	//
-	// receiver_uid
-	// sender_uid
-	// from
-	// number
-	//
-
-	var _user1_uid = parseInt(req.query.user1_uid, 10);
-	var _user2_uid = parseInt(req.query.user2_uid, 10);
-	var _from = parseInt(req.query.from, 10);
-	var _number = parseInt(req.query.number, 10);
-
-	_from = (_from == _from ? _from : 0);
-	_number = (_number == _number ? _number : 10);
-
-	messages
+	comments
 		.findAll({
 			where: {
-				$and: [{
-					$or: [{
-						receiver_uid: _user1_uid,
-						sender_uid: _user2_uid
-					}, {
-						receiver_uid: _user2_uid,
-						sender_uid: _user1_uid
-					}]
-
-				}, {
-					chatroom_cid: 0
-				}]
+				goods_gid: _goods_gid
 			},
-			order: [
-				[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-			],
-			offset: _from,
-			limit: _number
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-router.post(&#x27;/&#x27;, (req, res) =&gt; {
-
-	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
-	var _sender_uid = parseInt(req.body.sender_uid, 10);
-	var _content = req.body.content;
-
-	messages
-		.create({
-			receiver_uid: _receiver_uid,
-			sender_uid: _sender_uid,
-			content: _content,
-			chatroom_cid: 0
+			order: &#x27;cid DESC&#x27;,
+			include: [{
+				model: users,
+				required: true
+			}]
 		})
 		.then(result =&gt; {
 			res.json(result);
@@ -250,24 +131,128 @@ router.post(&#x27;/&#x27;, (req, res) =&gt; {
 });
 
 /**
- * use to update read/unread
+ * Get comments of a user
+ *
+ * @method GET api/comment/of/user
+ * @param  {Integer} commenter_uid The commenter&#x27;s uid
+ * @return {JSON} Comments including &#x60;goods&#x60;, and they are not deleted
  */
-router.put(&#x27;/read&#x27;, (req, res) =&gt; {
+router.get(&#x27;/of/user&#x27;, (req, res) =&gt; {
 
-	// Available PUT body params:
-	//
-	// mid
-	//
+	var _commenter_uid = parseInt(req.query.commenter_uid, 10);
 
-	// Get property:value in PUT body
-	var _mid = parseInt(req.body.mid, 10);
-
-	messages
-		.update({
-			unread: false
-		}, {
+	comments
+		.findAll({
 			where: {
-				mid: _mid
+				commenter_uid: _commenter_uid
+			},
+			order: &#x27;cid DESC&#x27;,
+			include: [{
+				model: goods,
+				where: {
+					deleted: 0
+				},
+				required: true
+			}]
+		})
+		.then(result =&gt; {
+			res.json(result);
+		})
+		.catch(err =&gt; {
+			res.send({
+				error: err
+			});
+		});
+});
+
+/**
+ * Post a comment to a goods
+ *
+ * @method POST api/comment/post
+ * @param  {Integer} goods_gid The commented goods
+ * @param  {Integer} commenter_uid The commenter&#x27;s uid
+ * @param  {String} content The content of the comment
+ * @return {JSON} New created comment
+ */
+router.post(&#x27;/post&#x27;, (req, res) =&gt; {
+
+	var _goods_gid = parseInt(req.body.goods_gid, 10);
+	var _commenter_uid = parseInt(req.body.commenter_uid, 10);
+	var _content = req.body.content;
+
+	comments
+		.create({
+			goods_gid: _goods_gid,
+			commenter_uid: _commenter_uid,
+			content: _content
+		})
+		.then(result =&gt; {
+			if (result == null) {
+				res.json({});
+			} else {
+				res.json(result);
+			}
+		})
+		.catch(err =&gt; {
+			res.send({
+				error: err
+			});
+		});
+});
+
+/**
+ * Edit a comment
+ *
+ * @method PUT api/comment/edit
+ * @param  {Integer} cid The ID of the comment
+ * @param  {String} content The NEW content of the comment
+ * @return {JSON} Updated comment
+ */
+router.put(&#x27;/edit&#x27;, (req, res) =&gt; {
+
+	var _cid = parseInt(req.body.cid, 10);
+	var _content = req.body.content;
+
+	comments
+		.findOne({
+			where: {
+				cid: _cid
+			}
+		})
+		.then(result =&gt; {
+			result.content = _content;
+			result.save().then(() =&gt; {});
+			return result;
+		})
+		.then(result =&gt; {
+			if (result == null) {
+				res.json(null);
+			} else {
+				res.json(result);
+			}
+		})
+		.catch(err =&gt; {
+			res.send({
+				error: err
+			});
+		});
+});
+
+/**
+ * Delete a comment
+ *
+ * @method DELETE api/comment/delete
+ * @param  {Integer} cid The ID of the comment
+ * @return {JSON} Number of deleted comments
+ */
+router.delete(&#x27;/delete&#x27;, (req, res) =&gt; {
+
+	var _cid = parseInt(req.query.cid, 10);
+
+	comments
+		.destroy({
+			where: {
+				cid: _cid
 			}
 		})
 		.then(result =&gt; {

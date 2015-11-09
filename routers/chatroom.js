@@ -1,5 +1,5 @@
 /**
- * Provides some methods related to chatroom
+ * Provides some methods related to chatrooms
  *
  * @class Chatroom
  */

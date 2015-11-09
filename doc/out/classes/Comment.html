@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Chatroom</title>
+    <title>Comment</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -78,12 +78,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Chatroom Class</h1>
+<h1>Comment Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/.._routers_chatroom.js.html#l1"><code>..&#x2F;routers&#x2F;chatroom.js:1</code></a>
+            Defined in: <a href="../files/.._routers_comment.js.html#l1"><code>..&#x2F;routers&#x2F;comment.js:1</code></a>
         </div>
 
 
@@ -91,7 +91,7 @@
 
 
 <div class="box intro">
-    <p>Provides some methods related to chatrooms</p>
+    <p>Provides some methods related to comments</p>
 
 </div>
 
@@ -112,15 +112,23 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_GET api/chatroom/exchange">GET api/chatroom/exchange</a>
+                                <a href="#method_DELETE api/comment/delete">DELETE api/comment/delete</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_POST api/chatroom/exchange">POST api/chatroom/exchange</a>
+                                <a href="#method_GET api/comment/of/goods">GET api/comment/of/goods</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_PUT api/chatroom/read">PUT api/chatroom/read</a>
+                                <a href="#method_GET api/comment/of/user">GET api/comment/of/user</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_POST api/comment/post">POST api/comment/post</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_PUT api/comment/edit">PUT api/comment/edit</a>
 
                             </li>
                     </ul>
@@ -133,19 +141,13 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_GET api/chatroom/exchange" class="method item">
-    <h3 class="name"><code>GET api/chatroom/exchange</code></h3>
+<div id="method_DELETE api/comment/delete" class="method item">
+    <h3 class="name"><code>DELETE api/comment/delete</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>eid</code>
-                </li>
-                <li class="arg">
-                        <code>from</code>
-                </li>
-                <li class="arg">
-                        <code>number</code>
+                        <code>cid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -163,7 +165,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_chatroom.js.html#l17"><code>..&#x2F;routers&#x2F;chatroom.js:17</code></a>
+        <a href="../files/.._routers_comment.js.html#l157"><code>..&#x2F;routers&#x2F;comment.js:157</code></a>
         </p>
 
 
@@ -171,7 +173,7 @@
     </div>
 
     <div class="description">
-        <p>Get chatroom's messages of an Exchange</p>
+        <p>Delete a comment</p>
 
     </div>
 
@@ -180,34 +182,12 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">eid</code>
+                        <code class="param-name">cid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of exchange</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">from</code>
-                        <span class="type">Integer=0</span>
-
-
-                    <div class="param-description">
-                        <p>From what number of messages</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">number</code>
-                        <span class="type">Integer=10</span>
-
-
-                    <div class="param-description">
-                        <p>How many messages to get</p>
+                        <p>The ID of the comment</p>
 
                     </div>
 
@@ -220,23 +200,155 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Messages including <code>sender</code></p>
+                    <p>Number of deleted comments</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_POST api/chatroom/exchange" class="method item">
-    <h3 class="name"><code>POST api/chatroom/exchange</code></h3>
+<div id="method_GET api/comment/of/goods" class="method item">
+    <h3 class="name"><code>GET api/comment/of/goods</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>eid</code>
+                        <code>goods_gid</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">JSON</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/.._routers_comment.js.html#l17"><code>..&#x2F;routers&#x2F;comment.js:17</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Get comments of a goods</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">goods_gid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>The commented goods</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">JSON</span>:
+                    <p>Comments including <code>commenter</code></p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_GET api/comment/of/user" class="method item">
+    <h3 class="name"><code>GET api/comment/of/user</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>commenter_uid</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">JSON</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/.._routers_comment.js.html#l49"><code>..&#x2F;routers&#x2F;comment.js:49</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Get comments of a user</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">commenter_uid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>The commenter's uid</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">JSON</span>:
+                    <p>Comments including <code>goods</code>, and they are not deleted</p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_POST api/comment/post" class="method item">
+    <h3 class="name"><code>POST api/comment/post</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>goods_gid</code>
                 </li>
                 <li class="arg">
-                        <code>sender_uid</code>
+                        <code>commenter_uid</code>
                 </li>
                 <li class="arg">
                         <code>content</code>
@@ -257,7 +369,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_chatroom.js.html#l71"><code>..&#x2F;routers&#x2F;chatroom.js:71</code></a>
+        <a href="../files/.._routers_comment.js.html#l84"><code>..&#x2F;routers&#x2F;comment.js:84</code></a>
         </p>
 
 
@@ -265,7 +377,7 @@
     </div>
 
     <div class="description">
-        <p>Post a chatroom's message of an Exchange</p>
+        <p>Post a comment to a goods</p>
 
     </div>
 
@@ -274,23 +386,23 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">eid</code>
+                        <code class="param-name">goods_gid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of exchange</p>
+                        <p>The commented goods</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">sender_uid</code>
+                        <code class="param-name">commenter_uid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>Who post the message</p>
+                        <p>The commenter's uid</p>
 
                     </div>
 
@@ -301,7 +413,7 @@
 
 
                     <div class="param-description">
-                        <p>The content of the message</p>
+                        <p>The content of the comment</p>
 
                     </div>
 
@@ -314,15 +426,15 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>New created message object</p>
+                    <p>New created comment</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_PUT api/chatroom/read" class="method item">
-    <h3 class="name"><code>PUT api/chatroom/read</code></h3>
+<div id="method_PUT api/comment/edit" class="method item">
+    <h3 class="name"><code>PUT api/comment/edit</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
@@ -330,7 +442,7 @@
                         <code>cid</code>
                 </li>
                 <li class="arg">
-                        <code>receiver_uid</code>
+                        <code>content</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -348,7 +460,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_chatroom.js.html#l110"><code>..&#x2F;routers&#x2F;chatroom.js:110</code></a>
+        <a href="../files/.._routers_comment.js.html#l119"><code>..&#x2F;routers&#x2F;comment.js:119</code></a>
         </p>
 
 
@@ -356,7 +468,7 @@
     </div>
 
     <div class="description">
-        <p>Read a chatroom's message</p>
+        <p>Edit a comment</p>
 
     </div>
 
@@ -370,18 +482,18 @@
 
 
                     <div class="param-description">
-                        <p>The ID of chatroom</p>
+                        <p>The ID of the comment</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">receiver_uid</code>
-                        <span class="type">Integer</span>
+                        <code class="param-name">content</code>
+                        <span class="type">String</span>
 
 
                     <div class="param-description">
-                        <p>Who received the message (Not sender!)</p>
+                        <p>The NEW content of the comment</p>
 
                     </div>
 
@@ -394,7 +506,7 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Updated message object</p>
+                    <p>Updated comment</p>
 
             </div>
         </div>

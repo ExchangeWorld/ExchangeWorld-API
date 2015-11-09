@@ -1,3 +1,9 @@
+/**
+ * Provides some methods related to comments
+ *
+ * @class Comment
+ */
+
 'use strict';
 
 var express = require('express');
@@ -6,14 +12,16 @@ var router = express.Router();
 // Including tables
 var comments = require('../ORM/Comments');
 var users = require('../ORM/Users');
+var goods = require('../ORM/Goods');
 
-// Get comments of a goods
+/**
+ * Get comments of a goods
+ *
+ * @method GET api/comment/of/goods
+ * @param  {Integer} goods_gid The commented goods
+ * @return {JSON} Comments including `commenter`
+ */
 router.get('/of/goods', (req, res) => {
-
-	// Available query params
-	//
-	// goods_gid
-	//
 
 	var _goods_gid = parseInt(req.query.goods_gid, 10);
 
@@ -38,13 +46,14 @@ router.get('/of/goods', (req, res) => {
 		});
 });
 
-// Get Comments of a user
+/**
+ * Get comments of a user
+ *
+ * @method GET api/comment/of/user
+ * @param  {Integer} commenter_uid The commenter's uid
+ * @return {JSON} Comments including `goods`, and they are not deleted
+ */
 router.get('/of/user', (req, res) => {
-
-	// Available query params
-	//
-	// commenter_uid
-	//
 
 	var _commenter_uid = parseInt(req.query.commenter_uid, 10);
 
@@ -56,6 +65,9 @@ router.get('/of/user', (req, res) => {
 			order: 'cid DESC',
 			include: [{
 				model: goods,
+				where: {
+					deleted: 0
+				},
 				required: true
 			}]
 		})
@@ -69,14 +81,16 @@ router.get('/of/user', (req, res) => {
 		});
 });
 
-// Post a comment to a goods
+/**
+ * Post a comment to a goods
+ *
+ * @method POST api/comment/post
+ * @param  {Integer} goods_gid The commented goods
+ * @param  {Integer} commenter_uid The commenter's uid
+ * @param  {String} content The content of the comment
+ * @return {JSON} New created comment
+ */
 router.post('/post', (req, res) => {
-
-	// Necessary POST body params
-	//
-	// goods_gid
-	// commenter_uid
-	//
 
 	var _goods_gid = parseInt(req.body.goods_gid, 10);
 	var _commenter_uid = parseInt(req.body.commenter_uid, 10);
@@ -102,14 +116,15 @@ router.post('/post', (req, res) => {
 		});
 });
 
-// Edit a comment
+/**
+ * Edit a comment
+ *
+ * @method PUT api/comment/edit
+ * @param  {Integer} cid The ID of the comment
+ * @param  {String} content The NEW content of the comment
+ * @return {JSON} Updated comment
+ */
 router.put('/edit', (req, res) => {
-
-	// Necessary PUT body params
-	//
-	// cid
-	// content
-	//
 
 	var _cid = parseInt(req.body.cid, 10);
 	var _content = req.body.content;
@@ -139,13 +154,14 @@ router.put('/edit', (req, res) => {
 		});
 });
 
-// Delete a comment
+/**
+ * Delete a comment
+ *
+ * @method DELETE api/comment/delete
+ * @param  {Integer} cid The ID of the comment
+ * @return {JSON} Number of deleted comments
+ */
 router.delete('/delete', (req, res) => {
-
-	// Necessary DELETE query params
-	//
-	// cid
-	//
 
 	var _cid = parseInt(req.query.cid, 10);
 

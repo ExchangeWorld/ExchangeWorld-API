@@ -19,6 +19,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "../routers/comment.js": {
+            "name": "../routers/comment.js",
+            "modules": {},
+            "classes": {
+                "Comment": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "../routers/message.js": {
             "name": "../routers/message.js",
             "modules": {},
@@ -58,7 +67,19 @@
             "extension_for": [],
             "file": "../routers/chatroom.js",
             "line": 1,
-            "description": "Provides some methods related to chatroom"
+            "description": "Provides some methods related to chatrooms"
+        },
+        "Comment": {
+            "name": "Comment",
+            "shortname": "Comment",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/comment.js",
+            "line": 1,
+            "description": "Provides some methods related to comments"
         }
     },
     "elements": {},
@@ -244,6 +265,116 @@
                 "type": "JSON"
             },
             "class": "Chatroom"
+        },
+        {
+            "file": "../routers/comment.js",
+            "line": 17,
+            "description": "Get comments of a goods",
+            "itemtype": "method",
+            "name": "GET api/comment/of/goods",
+            "params": [
+                {
+                    "name": "goods_gid",
+                    "description": "The commented goods",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Comments including `commenter`",
+                "type": "JSON"
+            },
+            "class": "Comment"
+        },
+        {
+            "file": "../routers/comment.js",
+            "line": 49,
+            "description": "Get comments of a user",
+            "itemtype": "method",
+            "name": "GET api/comment/of/user",
+            "params": [
+                {
+                    "name": "commenter_uid",
+                    "description": "The commenter's uid",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Comments including `goods`, and they are not deleted",
+                "type": "JSON"
+            },
+            "class": "Comment"
+        },
+        {
+            "file": "../routers/comment.js",
+            "line": 84,
+            "description": "Post a comment to a goods",
+            "itemtype": "method",
+            "name": "POST api/comment/post",
+            "params": [
+                {
+                    "name": "goods_gid",
+                    "description": "The commented goods",
+                    "type": "Integer"
+                },
+                {
+                    "name": "commenter_uid",
+                    "description": "The commenter's uid",
+                    "type": "Integer"
+                },
+                {
+                    "name": "content",
+                    "description": "The content of the comment",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "New created comment",
+                "type": "JSON"
+            },
+            "class": "Comment"
+        },
+        {
+            "file": "../routers/comment.js",
+            "line": 119,
+            "description": "Edit a comment",
+            "itemtype": "method",
+            "name": "PUT api/comment/edit",
+            "params": [
+                {
+                    "name": "cid",
+                    "description": "The ID of the comment",
+                    "type": "Integer"
+                },
+                {
+                    "name": "content",
+                    "description": "The NEW content of the comment",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Updated comment",
+                "type": "JSON"
+            },
+            "class": "Comment"
+        },
+        {
+            "file": "../routers/comment.js",
+            "line": 157,
+            "description": "Delete a comment",
+            "itemtype": "method",
+            "name": "DELETE api/comment/delete",
+            "params": [
+                {
+                    "name": "cid",
+                    "description": "The ID of the comment",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Number of deleted comments",
+                "type": "JSON"
+            },
+            "class": "Comment"
         },
         {
             "file": "../routers/message.js",
