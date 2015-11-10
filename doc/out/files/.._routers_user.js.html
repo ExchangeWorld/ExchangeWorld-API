@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>../routers/message.js</title>
+    <title>../routers/user.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -88,14 +88,14 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: ../routers/message.js</h1>
+<h1 class="file-heading">File: ../routers/user.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * Provides some methods related to Messages
+ * Provides some methods related to users
  *
- * @class Message
+ * @class User
  */
 
 &#x27;use strict&#x27;;
@@ -104,215 +104,75 @@ var express = require(&#x27;express&#x27;);
 var router = express.Router();
 
 // Including tables
-var messages = require(&#x27;../ORM/Messages&#x27;);
 var users = require(&#x27;../ORM/Users&#x27;);
+var goods = require(&#x27;../ORM/Goods&#x27;);
+var follows = require(&#x27;../ORM/Follows&#x27;);
+var stars = require(&#x27;../ORM/Stars&#x27;);
 
 /**
- * Get messages by given receiver_uid and sender_uid
+ * Get a user by given uid or identity
  *
- * @method GET api/message
- * @param  {Integer} receiver_uid
- * @param  {Integer} sender_uid It can be not provided, will ignore sender
- * @param  {Integer=0} from
- * @param  {Integer=10} number
- * @return {JSON} The messages including two users
+ * @method GET api/user
+ * @param  {Integer} uid The ID of user
+ * @param  {String} identity User&#x27;s identity
+ * @return {JSON} The user including many things
  */
 router.get(&#x27;/&#x27;, (req, res) =&gt; {
 
-	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
-	var _sender_uid = parseInt(req.query.sender_uid, 10);
-	var _from = parseInt(req.query.from, 10);
-	var _number = parseInt(req.query.number, 10);
+	var _uid = parseInt(req.query.uid, 10);
+	var _identity = req.query.identity;
 
-	_sender_uid = (_sender_uid == _sender_uid ? _sender_uid : null);
-	_from = (_from == _from ? _from : 0);
-	_number = (_number == _number ? _number : 10);
-
-	if (_sender_uid == null) {
-		messages
-			.findAll({
-				where: {
-					receiver_uid: _receiver_uid,
-					chatroom_cid: 0
-				},
-				order: [
-					[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-				],
-				include: [{
-					model: users,
-					as: &#x27;sender&#x27;,
-					required: true
-				}, {
-					model: users,
-					as: &#x27;receiver&#x27;,
-					required: true
-				}],
-				// logging: true,
-				// offset: _from,
-				// limit: _number
-			})
-			.then(result =&gt; {
-				res.json(result);
-			})
-			.catch(err =&gt; {
-				res.send({
-					error: err
-				});
-			});
-	} else {
-		messages
-			.findAll({
-				where: {
-					receiver_uid: _receiver_uid,
-					sender_uid: _sender_uid,
-					chatroom_cid: 0
-				},
-				order: [
-					[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-				],
-				include: [{
-					model: users,
-					as: &#x27;sender&#x27;,
-					attributes: [&#x27;name&#x27;],
-					required: true
-				}, {
-					model: users,
-					as: &#x27;receiver&#x27;,
-					attributes: [&#x27;name&#x27;],
-					required: true
-				}],
-				// logging: true,
-				// offset: _from,
-				// limit: _number
-			})
-			.then(result =&gt; {
-				res.json(result);
-			})
-			.catch(err =&gt; {
-				res.send({
-					error: err
-				});
-			});
+	// If uid or identity in query are not defined, then set them to zero or emptyString
+	if (_uid != _uid) {
+		_uid = 0;
 	}
-});
 
-/**
- * Get messages between two users
- *
- * @method GET api/message/between
- * @param  {Integer} user1_uid
- * @param  {Integer} user2_uid
- * @param  {Integer=0} from
- * @param  {Integer=10} number
- * @return {JSON} The messages including two users
- */
-router.get(&#x27;/between&#x27;, (req, res) =&gt; {
+	if (_identity == undefined) {
+		_identity = &#x27;&#x27;;
+	}
 
-	var _user1_uid = parseInt(req.query.user1_uid, 10);
-	var _user2_uid = parseInt(req.query.user2_uid, 10);
-	var _from = parseInt(req.query.from, 10);
-	var _number = parseInt(req.query.number, 10);
+	if (!_identity.length &gt; 0) {
+		_identity = &#x27;&#x27;;
+	}
 
-	_from = (_from == _from ? _from : 0);
-	_number = (_number == _number ? _number : 10);
-
-	messages
-		.findAll({
+	// Emit a find operation with orm in table &#x60;users&#x60;
+	users
+		.findOne({
 			where: {
 				$or: [{
-					receiver_uid: _user1_uid,
-					sender_uid: _user2_uid
+					uid: _uid
 				}, {
-					receiver_uid: _user2_uid,
-					sender_uid: _user1_uid
-				}],
-				chatroom_cid: 0
+					identity: _identity
+				}]
 			},
-			order: [
-				[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-			],
 			include: [{
-				model: users,
-				as: &#x27;sender&#x27;,
-				attributes: [&#x27;name&#x27;],
-				required: true
+				model: goods,
+				as: &#x27;goods&#x27;,
+				where: {
+					deleted: 0
+				},
+				required: false
 			}, {
-				model: users,
-				as: &#x27;receiver&#x27;,
-				attributes: [&#x27;name&#x27;],
-				required: true
-			}],
-			offset: _from,
-			limit: _number
+				model: follows,
+				as: &#x27;follows_followed&#x27;
+			}, {
+				model: follows,
+				as: &#x27;follows_follower&#x27;
+			}, {
+				model: stars,
+				as: &#x27;star_starring_user&#x27;,
+				include: [{
+					model: goods,
+					as: &#x27;goods&#x27;,
+					where: {
+						deleted: 0
+					},
+					required: false
+				}]
+			}]
 		})
 		.then(result =&gt; {
 			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Post messages by given receiver and sender
- *
- * @method POST api/message/post
- * @param  {Integer} receiver_uid The receiver
- * @param  {Integer} sender_uid The sender
- * @param  {String} content The content
- * @return {JSON} New created message object
- */
-router.post(&#x27;/post&#x27;, (req, res) =&gt; {
-
-	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
-	var _sender_uid = parseInt(req.body.sender_uid, 10);
-	var _content = req.body.content;
-
-	messages
-		.create({
-			receiver_uid: _receiver_uid,
-			sender_uid: _sender_uid,
-			content: _content,
-			chatroom_cid: 0
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Read a message
- *
- * @method PUT api/message/read
- * @param  {Integer} mid The ID of message
- * @return {JSON} Updated message object
- */
-router.put(&#x27;/read&#x27;, (req, res) =&gt; {
-
-	var _mid = parseInt(req.body.mid, 10);
-
-	messages
-		.update({
-			unread: false
-		}, {
-			where: {
-				mid: _mid
-			}
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
 		});
 });
 

@@ -12,7 +12,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "Queue",
         "Search",
         "Star",
-        "Upload"
+        "Upload",
+        "User"
     ],
     "modules": [],
     "allModules": [],

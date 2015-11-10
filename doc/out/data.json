@@ -108,6 +108,15 @@
             },
             "fors": {},
             "namespaces": {}
+        },
+        "../routers/user.js": {
+            "name": "../routers/user.js",
+            "modules": {},
+            "classes": {
+                "User": 1
+            },
+            "fors": {},
+            "namespaces": {}
         }
     },
     "modules": {},
@@ -255,6 +264,18 @@
             "file": "../routers/upload.js",
             "line": 1,
             "description": "Provides some methods related to uploads"
+        },
+        "User": {
+            "name": "User",
+            "shortname": "User",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/user.js",
+            "line": 1,
+            "description": "Provides some methods related to users"
         }
     },
     "elements": {},
@@ -1466,6 +1487,30 @@
                 "type": "URL"
             },
             "class": "Upload"
+        },
+        {
+            "file": "../routers/user.js",
+            "line": 18,
+            "description": "Get a user by given uid or identity",
+            "itemtype": "method",
+            "name": "GET api/user",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "The ID of user",
+                    "type": "Integer"
+                },
+                {
+                    "name": "identity",
+                    "description": "User's identity",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The user including many things",
+                "type": "JSON"
+            },
+            "class": "User"
         }
     ],
     "warnings": []

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Upload</title>
+    <title>User</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -88,12 +88,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Upload Class</h1>
+<h1>User Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/.._routers_upload.js.html#l1"><code>..&#x2F;routers&#x2F;upload.js:1</code></a>
+            Defined in: <a href="../files/.._routers_user.js.html#l1"><code>..&#x2F;routers&#x2F;user.js:1</code></a>
         </div>
 
 
@@ -101,7 +101,7 @@
 
 
 <div class="box intro">
-    <p>Provides some methods related to uploads</p>
+    <p>Provides some methods related to users</p>
 
 </div>
 
@@ -122,7 +122,7 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_POST api/upload/image">POST api/upload/image</a>
+                                <a href="#method_GET api/user">GET api/user</a>
 
                             </li>
                     </ul>
@@ -135,28 +135,22 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_POST api/upload/image" class="method item">
-    <h3 class="name"><code>POST api/upload/image</code></h3>
+<div id="method_GET api/user" class="method item">
+    <h3 class="name"><code>GET api/user</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>filesize</code>
+                        <code>uid</code>
                 </li>
                 <li class="arg">
-                        <code>filename</code>
-                </li>
-                <li class="arg">
-                        <code>base64</code>
-                </li>
-                <li class="arg">
-                        <code>filetype</code>
+                        <code>identity</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
 
         <span class="returns-inline">
-            <span class="type">URL</span>
+            <span class="type">JSON</span>
         </span>
 
 
@@ -168,7 +162,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_upload.js.html#l16"><code>..&#x2F;routers&#x2F;upload.js:16</code></a>
+        <a href="../files/.._routers_user.js.html#l18"><code>..&#x2F;routers&#x2F;user.js:18</code></a>
         </p>
 
 
@@ -176,7 +170,7 @@
     </div>
 
     <div class="description">
-        <p>Post an image</p>
+        <p>Get a user by given uid or identity</p>
 
     </div>
 
@@ -185,43 +179,24 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">filesize</code>
+                        <code class="param-name">uid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">filename</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">base64</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                        <p>Encoded imgData from request body</p>
+                        <p>The ID of user</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">filetype</code>
+                        <code class="param-name">identity</code>
                         <span class="type">String</span>
 
 
                     <div class="param-description">
-                         
+                        <p>User's identity</p>
+
                     </div>
 
                 </li>
@@ -232,8 +207,8 @@
             <h4>Returns:</h4>
 
             <div class="returns-description">
-                        <span class="type">URL</span>:
-                    <p>Image's src</p>
+                        <span class="type">JSON</span>:
+                    <p>The user including many things</p>
 
             </div>
         </div>
