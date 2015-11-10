@@ -44,6 +44,7 @@
                                 <li><a href="../classes/Exchange.html">Exchange</a></li>
                                 <li><a href="../classes/Follow.html">Follow</a></li>
                                 <li><a href="../classes/Goods.html">Goods</a></li>
+                                <li><a href="../classes/Message.html">Message</a></li>
                                 <li><a href="../classes/Search.html">Search</a></li>
                             </ul>
                 
@@ -86,6 +87,12 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+/**
+ * Provides some methods related to Messages
+ *
+ * @class Message
+ */
+
 &#x27;use strict&#x27;;
 
 var express = require(&#x27;express&#x27;);
@@ -95,15 +102,17 @@ var router = express.Router();
 var messages = require(&#x27;../ORM/Messages&#x27;);
 var users = require(&#x27;../ORM/Users&#x27;);
 
+/**
+ * Get messages by given receiver_uid and sender_uid
+ *
+ * @method GET api/message
+ * @param  {Integer} receiver_uid
+ * @param  {Integer} sender_uid It can be not provided, will ignore sender
+ * @param  {Integer=0} from
+ * @param  {Integer=10} number
+ * @return {JSON} The messages including two users
+ */
 router.get(&#x27;/&#x27;, (req, res) =&gt; {
-
-	// Available GET params:
-	//
-	// receiver_uid
-	// sender_uid
-	// from
-	// number
-	//
 
 	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
 	var _sender_uid = parseInt(req.query.sender_uid, 10);
@@ -159,10 +168,12 @@ router.get(&#x27;/&#x27;, (req, res) =&gt; {
 				include: [{
 					model: users,
 					as: &#x27;sender&#x27;,
+					attributes: [&#x27;name&#x27;],
 					required: true
 				}, {
 					model: users,
 					as: &#x27;receiver&#x27;,
+					attributes: [&#x27;name&#x27;],
 					required: true
 				}],
 				// logging: true,
@@ -180,15 +191,17 @@ router.get(&#x27;/&#x27;, (req, res) =&gt; {
 	}
 });
 
+/**
+ * Get messages between two users
+ *
+ * @method GET api/message/between
+ * @param  {Integer} user1_uid
+ * @param  {Integer} user2_uid
+ * @param  {Integer=0} from
+ * @param  {Integer=10} number
+ * @return {JSON} The messages including two users
+ */
 router.get(&#x27;/between&#x27;, (req, res) =&gt; {
-
-	// Available GET params:
-	//
-	// receiver_uid
-	// sender_uid
-	// from
-	// number
-	//
 
 	var _user1_uid = parseInt(req.query.user1_uid, 10);
 	var _user2_uid = parseInt(req.query.user2_uid, 10);
@@ -201,22 +214,29 @@ router.get(&#x27;/between&#x27;, (req, res) =&gt; {
 	messages
 		.findAll({
 			where: {
-				$and: [{
-					$or: [{
-						receiver_uid: _user1_uid,
-						sender_uid: _user2_uid
-					}, {
-						receiver_uid: _user2_uid,
-						sender_uid: _user1_uid
-					}]
-
+				$or: [{
+					receiver_uid: _user1_uid,
+					sender_uid: _user2_uid
 				}, {
-					chatroom_cid: 0
-				}]
+					receiver_uid: _user2_uid,
+					sender_uid: _user1_uid
+				}],
+				chatroom_cid: 0
 			},
 			order: [
 				[&#x27;mid&#x27;, &#x27;DESC&#x27;]
 			],
+			include: [{
+				model: users,
+				as: &#x27;sender&#x27;,
+				attributes: [&#x27;name&#x27;],
+				required: true
+			}, {
+				model: users,
+				as: &#x27;receiver&#x27;,
+				attributes: [&#x27;name&#x27;],
+				required: true
+			}],
 			offset: _from,
 			limit: _number
 		})
@@ -230,6 +250,15 @@ router.get(&#x27;/between&#x27;, (req, res) =&gt; {
 		});
 });
 
+/**
+ * Post messages by given receiver and sender
+ *
+ * @method POST api/message
+ * @param  {Integer} receiver_uid The receiver
+ * @param  {Integer} sender_uid The sender
+ * @param  {String} content The content
+ * @return {JSON} New created message object
+ */
 router.post(&#x27;/&#x27;, (req, res) =&gt; {
 
 	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
@@ -254,16 +283,14 @@ router.post(&#x27;/&#x27;, (req, res) =&gt; {
 });
 
 /**
- * use to update read/unread
+ * Read a message
+ *
+ * @method PUT api/message/read
+ * @param  {Integer} mid The ID of message
+ * @return {JSON} Updated message object
  */
 router.put(&#x27;/read&#x27;, (req, res) =&gt; {
 
-	// Available PUT body params:
-	//
-	// mid
-	//
-
-	// Get property:value in PUT body
 	var _mid = parseInt(req.body.mid, 10);
 
 	messages

@@ -67,7 +67,9 @@
         "../routers/message.js": {
             "name": "../routers/message.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "Message": 1
+            },
             "fors": {},
             "namespaces": {}
         },
@@ -164,6 +166,18 @@
             "file": "../routers/goods.search.js",
             "line": 1,
             "description": "Provides some methods related to Search"
+        },
+        "Message": {
+            "name": "Message",
+            "shortname": "Message",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/message.js",
+            "line": 1,
+            "description": "Provides some methods related to Messages"
         }
     },
     "elements": {},
@@ -917,9 +931,119 @@
         },
         {
             "file": "../routers/message.js",
-            "line": 168,
-            "description": "use to update read/unread",
-            "class": ""
+            "line": 16,
+            "description": "Get messages by given receiver_uid and sender_uid",
+            "itemtype": "method",
+            "name": "GET api/message",
+            "params": [
+                {
+                    "name": "receiver_uid",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "sender_uid",
+                    "description": "It can be not provided, will ignore sender",
+                    "type": "Integer"
+                },
+                {
+                    "name": "from",
+                    "description": "",
+                    "type": "Integer=0"
+                },
+                {
+                    "name": "number",
+                    "description": "",
+                    "type": "Integer=10"
+                }
+            ],
+            "return": {
+                "description": "The messages including two users",
+                "type": "JSON"
+            },
+            "class": "Message"
+        },
+        {
+            "file": "../routers/message.js",
+            "line": 105,
+            "description": "Get messages between two users",
+            "itemtype": "method",
+            "name": "GET api/message/between",
+            "params": [
+                {
+                    "name": "user1_uid",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "user2_uid",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "from",
+                    "description": "",
+                    "type": "Integer=0"
+                },
+                {
+                    "name": "number",
+                    "description": "",
+                    "type": "Integer=10"
+                }
+            ],
+            "return": {
+                "description": "The messages including two users",
+                "type": "JSON"
+            },
+            "class": "Message"
+        },
+        {
+            "file": "../routers/message.js",
+            "line": 164,
+            "description": "Post messages by given receiver and sender",
+            "itemtype": "method",
+            "name": "POST api/message",
+            "params": [
+                {
+                    "name": "receiver_uid",
+                    "description": "The receiver",
+                    "type": "Integer"
+                },
+                {
+                    "name": "sender_uid",
+                    "description": "The sender",
+                    "type": "Integer"
+                },
+                {
+                    "name": "content",
+                    "description": "The content",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "New created message object",
+                "type": "JSON"
+            },
+            "class": "Message"
+        },
+        {
+            "file": "../routers/message.js",
+            "line": 196,
+            "description": "Read a message",
+            "itemtype": "method",
+            "name": "PUT api/message/read",
+            "params": [
+                {
+                    "name": "mid",
+                    "description": "The ID of message",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Updated message object",
+                "type": "JSON"
+            },
+            "class": "Message"
         },
         {
             "file": "../routers/notification.js",
@@ -929,10 +1053,6 @@
         }
     ],
     "warnings": [
-        {
-            "message": "Missing item type\nuse to update read/unread",
-            "line": " ../routers/message.js:168"
-        },
         {
             "message": "Missing item type\nuse to update read/unread",
             "line": " ../routers/notification.js:106"

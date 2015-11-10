@@ -1,3 +1,9 @@
+/**
+ * Provides some methods related to Messages
+ *
+ * @class Message
+ */
+
 'use strict';
 
 var express = require('express');
@@ -7,15 +13,17 @@ var router = express.Router();
 var messages = require('../ORM/Messages');
 var users = require('../ORM/Users');
 
+/**
+ * Get messages by given receiver_uid and sender_uid
+ *
+ * @method GET api/message
+ * @param  {Integer} receiver_uid
+ * @param  {Integer} sender_uid It can be not provided, will ignore sender
+ * @param  {Integer=0} from
+ * @param  {Integer=10} number
+ * @return {JSON} The messages including two users
+ */
 router.get('/', (req, res) => {
-
-	// Available GET params:
-	//
-	// receiver_uid
-	// sender_uid
-	// from
-	// number
-	//
 
 	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
 	var _sender_uid = parseInt(req.query.sender_uid, 10);
@@ -71,10 +79,12 @@ router.get('/', (req, res) => {
 				include: [{
 					model: users,
 					as: 'sender',
+					attributes: ['name'],
 					required: true
 				}, {
 					model: users,
 					as: 'receiver',
+					attributes: ['name'],
 					required: true
 				}],
 				// logging: true,
@@ -92,15 +102,17 @@ router.get('/', (req, res) => {
 	}
 });
 
+/**
+ * Get messages between two users
+ *
+ * @method GET api/message/between
+ * @param  {Integer} user1_uid
+ * @param  {Integer} user2_uid
+ * @param  {Integer=0} from
+ * @param  {Integer=10} number
+ * @return {JSON} The messages including two users
+ */
 router.get('/between', (req, res) => {
-
-	// Available GET params:
-	//
-	// receiver_uid
-	// sender_uid
-	// from
-	// number
-	//
 
 	var _user1_uid = parseInt(req.query.user1_uid, 10);
 	var _user2_uid = parseInt(req.query.user2_uid, 10);
@@ -113,22 +125,29 @@ router.get('/between', (req, res) => {
 	messages
 		.findAll({
 			where: {
-				$and: [{
-					$or: [{
-						receiver_uid: _user1_uid,
-						sender_uid: _user2_uid
-					}, {
-						receiver_uid: _user2_uid,
-						sender_uid: _user1_uid
-					}]
-
+				$or: [{
+					receiver_uid: _user1_uid,
+					sender_uid: _user2_uid
 				}, {
-					chatroom_cid: 0
-				}]
+					receiver_uid: _user2_uid,
+					sender_uid: _user1_uid
+				}],
+				chatroom_cid: 0
 			},
 			order: [
 				['mid', 'DESC']
 			],
+			include: [{
+				model: users,
+				as: 'sender',
+				attributes: ['name'],
+				required: true
+			}, {
+				model: users,
+				as: 'receiver',
+				attributes: ['name'],
+				required: true
+			}],
 			offset: _from,
 			limit: _number
 		})
@@ -142,6 +161,15 @@ router.get('/between', (req, res) => {
 		});
 });
 
+/**
+ * Post messages by given receiver and sender
+ *
+ * @method POST api/message
+ * @param  {Integer} receiver_uid The receiver
+ * @param  {Integer} sender_uid The sender
+ * @param  {String} content The content
+ * @return {JSON} New created message object
+ */
 router.post('/', (req, res) => {
 
 	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
@@ -166,16 +194,14 @@ router.post('/', (req, res) => {
 });
 
 /**
- * use to update read/unread
+ * Read a message
+ *
+ * @method PUT api/message/read
+ * @param  {Integer} mid The ID of message
+ * @return {JSON} Updated message object
  */
 router.put('/read', (req, res) => {
 
-	// Available PUT body params:
-	//
-	// mid
-	//
-
-	// Get property:value in PUT body
 	var _mid = parseInt(req.body.mid, 10);
 
 	messages
