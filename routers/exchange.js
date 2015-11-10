@@ -427,7 +427,7 @@ router.put('/drop', (req, res) => {
 router.put('/agree', (req, res) => {
 
 	var _eid = parseInt(req.body.eid, 10);
-	var _owner_uid = parseInt(Req.body.owner_uid, 10);
+	var _owner_uid = parseInt(req.body.owner_uid, 10);
 
 	exchanges
 		.findOne({
@@ -460,7 +460,7 @@ router.put('/agree', (req, res) => {
 		})
 		.then(result => {
 			if (result != null) {
-				if (result['goods_one']['owner']['uid'] == owner_uid) {
+				if (result['goods_one']['owner']['uid'] == _owner_uid) {
 					result.goods_one_agree = true;
 					result.save().then(() => {
 						if (result.goods_one_agree == true && result.goods_two_agree == true) {
@@ -469,7 +469,7 @@ router.put('/agree', (req, res) => {
 						}
 					});
 					return result;
-				} else if (result['goods_two']['owner']['uid'] == owner_uid) {
+				} else if (result['goods_two']['owner']['uid'] == _owner_uid) {
 					result.goods_two_agree = true;
 					result.save().then(() => {
 						if (result.goods_one_agree == true && result.goods_two_agree == true) {
