@@ -46,6 +46,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "../routers/goods.js": {
+            "name": "../routers/goods.js",
+            "modules": {},
+            "classes": {
+                "Goods": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "../routers/message.js": {
             "name": "../routers/message.js",
             "modules": {},
@@ -122,6 +131,18 @@
             "file": "../routers/follow.js",
             "line": 1,
             "description": "Provides some methods related to follows\n(follower -[follow]-> followed)"
+        },
+        "Goods": {
+            "name": "Goods",
+            "shortname": "Goods",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/goods.js",
+            "line": 1,
+            "description": "Provides some methods related to goods"
         }
     },
     "elements": {},
@@ -644,6 +665,185 @@
                 "type": "JSON"
             },
             "class": "Follow"
+        },
+        {
+            "file": "../routers/goods.js",
+            "line": 18,
+            "description": "Get a goods by given gid",
+            "itemtype": "method",
+            "name": "GET api/goods/",
+            "params": [
+                {
+                    "name": "gid",
+                    "description": "The ID of goods",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "A goods including users, comments and stars",
+                "type": "JSON"
+            },
+            "class": "Goods"
+        },
+        {
+            "file": "../routers/goods.js",
+            "line": 62,
+            "description": "Get all goods of given owner_uid",
+            "itemtype": "method",
+            "name": "GET api/goods/of",
+            "params": [
+                {
+                    "name": "owner_uid",
+                    "description": "The owner",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "The goods including comments and stars",
+                "type": "JSON"
+            },
+            "class": "Goods"
+        },
+        {
+            "file": "../routers/goods.js",
+            "line": 102,
+            "description": "Post a goods",
+            "itemtype": "method",
+            "name": "POST api/goods/post",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "category",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "description",
+                    "description": "",
+                    "type": "String=''"
+                },
+                {
+                    "name": "photo_path",
+                    "description": "",
+                    "type": "String=''"
+                },
+                {
+                    "name": "position_x",
+                    "description": "",
+                    "type": "Float"
+                },
+                {
+                    "name": "position_y",
+                    "description": "",
+                    "type": "Float"
+                },
+                {
+                    "name": "owner_uid",
+                    "description": "",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "New created goods object",
+                "type": "JSON"
+            },
+            "class": "Goods"
+        },
+        {
+            "file": "../routers/goods.js",
+            "line": 146,
+            "description": "Edit a goods",
+            "itemtype": "method",
+            "name": "PUT api/goods/edit",
+            "params": [
+                {
+                    "name": "gid",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "category",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "description",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "photo_path",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "position_x",
+                    "description": "",
+                    "type": "Float"
+                },
+                {
+                    "name": "position_y",
+                    "description": "",
+                    "type": "Float"
+                }
+            ],
+            "return": {
+                "description": "Updated goods object",
+                "type": "JSON"
+            },
+            "class": "Goods"
+        },
+        {
+            "file": "../routers/goods.js",
+            "line": 200,
+            "description": "Rate a goods",
+            "itemtype": "method",
+            "name": "PUT api/goods/rate",
+            "params": [
+                {
+                    "name": "gid",
+                    "description": "The ID of goods",
+                    "type": "Integer"
+                },
+                {
+                    "name": "rate",
+                    "description": "The rate point!",
+                    "type": "Float"
+                }
+            ],
+            "return": {
+                "description": "Updated goods object",
+                "type": "JSON"
+            },
+            "class": "Goods"
+        },
+        {
+            "file": "../routers/goods.js",
+            "line": 237,
+            "description": "Delete a goods (but not really)",
+            "itemtype": "method",
+            "name": "Delete api/goods/delete",
+            "params": [
+                {
+                    "name": "gid",
+                    "description": "The ID of goods",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Updated goods object",
+                "type": "JSON"
+            },
+            "class": "Goods"
         },
         {
             "file": "../routers/message.js",

@@ -5,7 +5,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "Chatroom",
         "Comment",
         "Exchange",
-        "Follow"
+        "Follow",
+        "Goods"
     ],
     "modules": [],
     "allModules": [],
