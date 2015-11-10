@@ -99,6 +99,15 @@
             },
             "fors": {},
             "namespaces": {}
+        },
+        "../routers/upload.js": {
+            "name": "../routers/upload.js",
+            "modules": {},
+            "classes": {
+                "Upload": 1
+            },
+            "fors": {},
+            "namespaces": {}
         }
     },
     "modules": {},
@@ -234,6 +243,18 @@
             "file": "../routers/star.js",
             "line": 1,
             "description": "Provides some methods related to stars"
+        },
+        "Upload": {
+            "name": "Upload",
+            "shortname": "Upload",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/upload.js",
+            "line": 1,
+            "description": "Provides some methods related to uploads"
         }
     },
     "elements": {},
@@ -1411,6 +1432,40 @@
                 "type": "JSON"
             },
             "class": "Star"
+        },
+        {
+            "file": "../routers/upload.js",
+            "line": 16,
+            "description": "Post an image",
+            "itemtype": "method",
+            "name": "POST api/upload/image",
+            "params": [
+                {
+                    "name": "filesize",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "filename",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "base64",
+                    "description": "Encoded imgData from request body",
+                    "type": "String"
+                },
+                {
+                    "name": "filetype",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Image's src",
+                "type": "URL"
+            },
+            "class": "Upload"
         }
     ],
     "warnings": []

@@ -1,3 +1,9 @@
+/**
+ * Provides some methods related to uploads
+ *
+ * @class Upload
+ */
+
 'use strict';
 
 var express = require('express');
@@ -7,14 +13,17 @@ var router = express.Router();
 // Including tables for photoPath
 var goods = require('../ORM/Goods');
 
-// Handle posting image
+/**
+ * Post an image
+ *
+ * @method POST api/upload/image
+ * @param  {Integer} filesize
+ * @param  {String} filename
+ * @param  {String} base64 Encoded imgData from request body
+ * @param  {String} filetype
+ * @return {URL} Image's src
+ */
 router.post('/image', (req, res) => {
-
-	/*
-	 * POST body looks like:
-	 * imgData   = /9j/2wCEAAgGBgcGBQgHBwcJC...
-	 * imgFormat = png
-	 */
 
 	// Get file size
 	var imgSize = req.body.filesize;
@@ -45,7 +54,7 @@ router.post('/image', (req, res) => {
 	// And if there is another person who uploaded a same base64 image,
 	// The things are still going right because that means same image, why not treat them same?
 	// Finally, send the "static file path" back
-	fs.writeFile(filePath, dataBuffer, function(err) {
+	fs.writeFile(filePath, dataBuffer, err => {
 		if (err) {
 			res.send({
 				error: err
@@ -58,7 +67,7 @@ router.post('/image', (req, res) => {
 });
 
 // Hashcode generation function
-var getSHA256 = (function(strToEncrypt) {
+var getSHA256 = strToEncrypt => {
 
 	var crypto = require('crypto');
 	var sha256 = crypto.createHash('sha256');
@@ -66,6 +75,6 @@ var getSHA256 = (function(strToEncrypt) {
 	sha256.update(strToEncrypt, 'utf8');
 
 	return sha256.digest('hex');
-});
+};
 
 module.exports = router;

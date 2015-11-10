@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>../routers/chatroom.js</title>
+    <title>Upload</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -87,156 +87,163 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: ../routers/chatroom.js</h1>
+<h1>Upload Class</h1>
+<div class="box meta">
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-/**
- * Provides some methods related to chatrooms
- *
- * @class Chatroom
- */
 
-&#x27;use strict&#x27;;
+        <div class="foundat">
+            Defined in: <a href="../files/.._routers_upload.js.html#l1"><code>..&#x2F;routers&#x2F;upload.js:1</code></a>
+        </div>
 
-var express = require(&#x27;express&#x27;);
-var router = express.Router();
 
-// Including tables
-var exchanges = require(&#x27;../ORM/Exchanges&#x27;);
-var messages = require(&#x27;../ORM/Messages&#x27;);
-var users = require(&#x27;../ORM/Users&#x27;);
+</div>
 
-/**
- * Get chatroom&#x27;s messages of an Exchange
- *
- * @method GET api/chatroom/exchange
- * @param  {Integer} eid The ID of exchange
- * @param  {Integer=0} from From what number of messages
- * @param  {Integer=10} number How many messages to get
- * @return {JSON} Messages including &#x60;sender&#x60;
- */
-router.get(&#x27;/exchange&#x27;, (req, res) =&gt; {
 
-	var _eid = parseInt(req.query.eid, 10);
-	var _from = parseInt(req.query.from, 10);
-	var _number = parseInt(req.query.number, 10);
+<div class="box intro">
+    <p>Provides some methods related to uploads</p>
 
-	// default _from is 0 and _number is 10
-	// means you will get 10 latest messages in the chatroom
-	_from = (_from == _from ? _from : 0);
-	_number = (_number == _number ? _number : 10);
+</div>
 
-	exchanges
-		.findOne({
-			where: {
-				eid: _eid
-			}
-		})
-		.then(_exchange =&gt; {
-			return messages
-				.findAll({
-					where: {
-						chatroom_cid: _exchange.chatroom_cid
-					},
-					order: [
-						[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-					],
-					include: [{
-						model: users,
-						as: &#x27;sender&#x27;
-					}],
-					offset: _from,
-					limit: _number
-				});
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
 
-});
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-/**
- * Post a chatroom&#x27;s message of an Exchange
- *
- * @method POST api/chatroom/exchange
- * @param  {Integer} eid The ID of exchange
- * @param  {Integer} sender_uid Who post the message
- * @param  {String} content The content of the message
- * @return {JSON} New created message object
- */
-router.post(&#x27;/exchange&#x27;, (req, res) =&gt; {
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+    </ul>
 
-	var _eid = parseInt(req.body.eid, 10);
-	var _sender_uid = parseInt(req.body.sender_uid, 10);
-	var _content = req.body.content;
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
 
-	exchanges
-		.findOne({
-			where: {
-				eid: _eid
-			}
-		})
-		.then(_exchange =&gt; {
-			return messages
-				.create({
-					sender_uid: _sender_uid,
-					chatroom_cid: _exchange.chatroom_cid,
-					content: _content
-				});
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
+                <div class="index-section methods">
+                    <h3>Methods</h3>
 
-/**
- * Read a chatroom&#x27;s message
- *
- * @method PUT api/chatroom/read
- * @param  {Integer} cid The ID of chatroom
- * @param  {Integer} receiver_uid Who received the message (Not sender!)
- * @return {JSON} Updated message object
- */
-router.put(&#x27;/read&#x27;, (req, res) =&gt; {
+                    <ul class="index-list methods">
+                            <li class="index-item method">
+                                <a href="#method_POST api/upload/image">POST api/upload/image</a>
 
-	var _cid = parseInt(req.body.cid, 10);
-	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
+                            </li>
+                    </ul>
+                </div>
 
-	messages
-		.update({
-			unread: false
-		}, {
-			where: {
-				chatroom_cid: _cid,
-				sender_uid: {
-					$ne: _receiver_uid
-				}
-			}
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
 
-module.exports = router;
 
-    </pre>
+        </div>
+
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+<div id="method_POST api/upload/image" class="method item">
+    <h3 class="name"><code>POST api/upload/image</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>filesize</code>
+                </li>
+                <li class="arg">
+                        <code>filename</code>
+                </li>
+                <li class="arg">
+                        <code>base64</code>
+                </li>
+                <li class="arg">
+                        <code>filetype</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">URL</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/.._routers_upload.js.html#l16"><code>..&#x2F;routers&#x2F;upload.js:16</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Post an image</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">filesize</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">filename</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">base64</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                        <p>Encoded imgData from request body</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">filetype</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">URL</span>:
+                    <p>Image's src</p>
+
+            </div>
+        </div>
+
+
+</div>
+            </div>
+
+
+
+    </div>
 </div>
                     </div>
                 </div>

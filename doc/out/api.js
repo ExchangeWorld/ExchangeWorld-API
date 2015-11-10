@@ -11,7 +11,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "Notification",
         "Queue",
         "Search",
-        "Star"
+        "Star",
+        "Upload"
     ],
     "modules": [],
     "allModules": [],
