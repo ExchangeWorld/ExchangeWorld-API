@@ -65,7 +65,7 @@ router.get('/all', (req, res) => {
 });
 
 /**
- * Get all exchanges of an user
+ * Get all exchanges of a user
  *
  * @method GET api/exchange/of/user/all
  * @param  {Integer} owner_uid The owner
@@ -144,7 +144,7 @@ router.get('/of/user/all', (req, res) => {
 });
 
 /**
- * Get an exchanges of an user
+ * Get an exchanges of a user
  *
  * @method GET api/exchange/of/user/one
  * @param  {Integer} eid The ID of the exchange
@@ -416,7 +416,7 @@ router.put('/drop', (req, res) => {
 });
 
 /**
- * Accept an exchange by an user
+ * Accept an exchange by a user
  * And if two owners accept, then the exchange will be set status='completed'
  *
  * @method PUT api/exchange/agree

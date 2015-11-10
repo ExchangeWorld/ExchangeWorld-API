@@ -76,7 +76,9 @@
         "../routers/notification.js": {
             "name": "../routers/notification.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "Notification": 1
+            },
             "fors": {},
             "namespaces": {}
         }
@@ -178,6 +180,18 @@
             "file": "../routers/message.js",
             "line": 1,
             "description": "Provides some methods related to Messages"
+        },
+        "Notification": {
+            "name": "Notification",
+            "shortname": "Notification",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/notification.js",
+            "line": 1,
+            "description": "Provides some methods related to notifications"
         }
     },
     "elements": {},
@@ -489,7 +503,7 @@
         {
             "file": "../routers/exchange.js",
             "line": 67,
-            "description": "Get all exchanges of an user",
+            "description": "Get all exchanges of a user",
             "itemtype": "method",
             "name": "GET api/exchange/of/user/all",
             "params": [
@@ -508,7 +522,7 @@
         {
             "file": "../routers/exchange.js",
             "line": 146,
-            "description": "Get an exchanges of an user",
+            "description": "Get an exchanges of a user",
             "itemtype": "method",
             "name": "GET api/exchange/of/user/one",
             "params": [
@@ -594,7 +608,7 @@
         {
             "file": "../routers/exchange.js",
             "line": 418,
-            "description": "Accept an exchange by an user\nAnd if two owners accept, then the exchange will be set status='completed'",
+            "description": "Accept an exchange by a user\nAnd if two owners accept, then the exchange will be set status='completed'",
             "itemtype": "method",
             "name": "PUT api/exchange/agree",
             "params": [
@@ -1047,15 +1061,105 @@
         },
         {
             "file": "../routers/notification.js",
-            "line": 106,
-            "description": "use to update read/unread",
-            "class": ""
+            "line": 16,
+            "description": "Get notifications belong to a user",
+            "itemtype": "method",
+            "name": "GET api/notification/belongsTo",
+            "params": [
+                {
+                    "name": "receiver_uid",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "from",
+                    "description": "",
+                    "type": "Integer=0"
+                },
+                {
+                    "name": "number",
+                    "description": "",
+                    "type": "Integer=10"
+                }
+            ],
+            "return": {
+                "description": "The notifications including receiver and sender",
+                "type": "JSON"
+            },
+            "class": "Notification"
+        },
+        {
+            "file": "../routers/notification.js",
+            "line": 64,
+            "description": "Get notification by given nid",
+            "itemtype": "method",
+            "name": "GET api/notification",
+            "params": [
+                {
+                    "name": "nid",
+                    "description": "The ID of notification",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "A notification including receiver and sender",
+                "type": "JSON"
+            },
+            "class": "Notification"
+        },
+        {
+            "file": "../routers/notification.js",
+            "line": 100,
+            "description": "Emit notification",
+            "itemtype": "method",
+            "name": "POST api/notification",
+            "params": [
+                {
+                    "name": "sender_uid",
+                    "description": "The user trigger the notification",
+                    "type": "Integer"
+                },
+                {
+                    "name": "receiver_uid",
+                    "description": "Target user",
+                    "type": "Integer"
+                },
+                {
+                    "name": "trigger_url",
+                    "description": "The trigger object's URL",
+                    "type": "String"
+                },
+                {
+                    "name": "content",
+                    "description": "The content of the notification",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "A notification including receiver and sender",
+                "type": "JSON"
+            },
+            "class": "Notification"
+        },
+        {
+            "file": "../routers/notification.js",
+            "line": 134,
+            "description": "Read a notification",
+            "itemtype": "method",
+            "name": "PUT api/notification/read",
+            "params": [
+                {
+                    "name": "nid",
+                    "description": "",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Updated notification object",
+                "type": "JSON"
+            },
+            "class": "Notification"
         }
     ],
-    "warnings": [
-        {
-            "message": "Missing item type\nuse to update read/unread",
-            "line": " ../routers/notification.js:106"
-        }
-    ]
+    "warnings": []
 }

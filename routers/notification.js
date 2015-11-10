@@ -1,3 +1,9 @@
+/**
+ * Provides some methods related to notifications
+ *
+ * @class Notification
+ */
+
 'use strict';
 
 var express = require('express');
@@ -7,14 +13,16 @@ var router = express.Router();
 var notifications = require('../ORM/Notifications');
 var users = require('../ORM/Users');
 
+/**
+ * Get notifications belong to a user
+ *
+ * @method GET api/notification/belongsTo
+ * @param  {Integer} receiver_uid
+ * @param  {Integer=0} from
+ * @param  {Integer=10} number
+ * @return {JSON} The notifications including receiver and sender
+ */
 router.get('/belongsTo', (req, res) => {
-
-	// Available GET params:
-	//
-	// receiver_uid
-	// from
-	// number
-	//
 
 	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
 	var _from = parseInt(req.query.from, 10);
@@ -33,10 +41,12 @@ router.get('/belongsTo', (req, res) => {
 			],
 			include: [{
 				model: users,
-				as: 'sender'
+				as: 'sender',
+				required: true
 			}, {
 				model: users,
-				as: 'receiver'
+				as: 'receiver',
+				required: true
 			}],
 			offset: _from,
 			limit: _number
@@ -51,22 +61,30 @@ router.get('/belongsTo', (req, res) => {
 		});
 });
 
+/**
+ * Get notification by given nid
+ *
+ * @method GET api/notification
+ * @param  {Integer} nid The ID of notification
+ * @return {JSON} A notification including receiver and sender
+ */
 router.get('/', (req, res) => {
-
-	// Available GET params:
-	//
-	// nid
-	//
 
 	var _nid = parseInt(req.query.nid, 10);
 
 	notifications
-		.findAll({
+		.findOne({
 			where: {
 				nid: _nid
 			},
 			include: [{
-				all: true
+				model: users,
+				as: 'sender',
+				required: true
+			}, {
+				model: users,
+				as: 'receiver',
+				required: true
 			}]
 		})
 		.then(result => {
@@ -79,6 +97,16 @@ router.get('/', (req, res) => {
 		});
 });
 
+/**
+ * Emit notification
+ *
+ * @method POST api/notification
+ * @param  {Integer} sender_uid The user trigger the notification
+ * @param  {Integer} receiver_uid Target user
+ * @param  {String} trigger_url The trigger object's URL
+ * @param  {String} content The content of the notification
+ * @return {JSON} A notification including receiver and sender
+ */
 router.post('/', (req, res) => {
 
 	var _sender_uid = parseInt(req.body.sender_uid);
@@ -104,23 +132,19 @@ router.post('/', (req, res) => {
 });
 
 /**
- * use to update read/unread
+ * Read a notification
+ *
+ * @method PUT api/notification/read
+ * @param {Integer} nid
+ * @return {JSON} Updated notification object
  */
-router.put('/', (req, res) => {
+router.put('/read', (req, res) => {
 
-	// Available PUT body params:
-	//
-	// nid
-	// unread
-	//
-
-	// Get property:value in PUT body
 	var _nid = parseInt(req.body.nid, 10);
-	var _unread = Boolean(req.body.unread);
 
 	notifications
 		.update({
-			unread: _unread
+			unread: false
 		}, {
 			where: {
 				nid: _nid

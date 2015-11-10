@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Goods</title>
+    <title>Notification</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,12 +84,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Goods Class</h1>
+<h1>Notification Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/.._routers_goods.js.html#l1"><code>..&#x2F;routers&#x2F;goods.js:1</code></a>
+            Defined in: <a href="../files/.._routers_notification.js.html#l1"><code>..&#x2F;routers&#x2F;notification.js:1</code></a>
         </div>
 
 
@@ -97,7 +97,7 @@
 
 
 <div class="box intro">
-    <p>Provides some methods related to goods</p>
+    <p>Provides some methods related to notifications</p>
 
 </div>
 
@@ -118,27 +118,19 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_Delete api/goods/delete">Delete api/goods/delete</a>
+                                <a href="#method_GET api/notification">GET api/notification</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_GET api/goods/">GET api/goods/</a>
+                                <a href="#method_GET api/notification/belongsTo">GET api/notification/belongsTo</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_GET api/goods/of">GET api/goods/of</a>
+                                <a href="#method_POST api/notification">POST api/notification</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_POST api/goods/post">POST api/goods/post</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_PUT api/goods/edit">PUT api/goods/edit</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_PUT api/goods/rate">PUT api/goods/rate</a>
+                                <a href="#method_PUT api/notification/read">PUT api/notification/read</a>
 
                             </li>
                     </ul>
@@ -151,13 +143,13 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_Delete api/goods/delete" class="method item">
-    <h3 class="name"><code>Delete api/goods/delete</code></h3>
+<div id="method_GET api/notification" class="method item">
+    <h3 class="name"><code>GET api/notification</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>gid</code>
+                        <code>nid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -175,7 +167,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l237"><code>..&#x2F;routers&#x2F;goods.js:237</code></a>
+        <a href="../files/.._routers_notification.js.html#l64"><code>..&#x2F;routers&#x2F;notification.js:64</code></a>
         </p>
 
 
@@ -183,7 +175,7 @@
     </div>
 
     <div class="description">
-        <p>Delete a goods (but not really)</p>
+        <p>Get notification by given nid</p>
 
     </div>
 
@@ -192,12 +184,12 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">gid</code>
+                        <code class="param-name">nid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of goods</p>
+                        <p>The ID of notification</p>
 
                     </div>
 
@@ -210,20 +202,26 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Updated goods object</p>
+                    <p>A notification including receiver and sender</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_GET api/goods/" class="method item">
-    <h3 class="name"><code>GET api/goods/</code></h3>
+<div id="method_GET api/notification/belongsTo" class="method item">
+    <h3 class="name"><code>GET api/notification/belongsTo</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>gid</code>
+                        <code>receiver_uid</code>
+                </li>
+                <li class="arg">
+                        <code>from</code>
+                </li>
+                <li class="arg">
+                        <code>number</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -241,7 +239,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l18"><code>..&#x2F;routers&#x2F;goods.js:18</code></a>
+        <a href="../files/.._routers_notification.js.html#l16"><code>..&#x2F;routers&#x2F;notification.js:16</code></a>
         </p>
 
 
@@ -249,7 +247,7 @@
     </div>
 
     <div class="description">
-        <p>Get a goods by given gid</p>
+        <p>Get notifications belong to a user</p>
 
     </div>
 
@@ -258,13 +256,32 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">gid</code>
+                        <code class="param-name">receiver_uid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of goods</p>
+                         
+                    </div>
 
+                </li>
+                <li class="param">
+                        <code class="param-name">from</code>
+                        <span class="type">Integer=0</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">number</code>
+                        <span class="type">Integer=10</span>
+
+
+                    <div class="param-description">
+                         
                     </div>
 
                 </li>
@@ -276,20 +293,29 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>A goods including users, comments and stars</p>
+                    <p>The notifications including receiver and sender</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_GET api/goods/of" class="method item">
-    <h3 class="name"><code>GET api/goods/of</code></h3>
+<div id="method_POST api/notification" class="method item">
+    <h3 class="name"><code>POST api/notification</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>owner_uid</code>
+                        <code>sender_uid</code>
+                </li>
+                <li class="arg">
+                        <code>receiver_uid</code>
+                </li>
+                <li class="arg">
+                        <code>trigger_url</code>
+                </li>
+                <li class="arg">
+                        <code>content</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -307,7 +333,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l62"><code>..&#x2F;routers&#x2F;goods.js:62</code></a>
+        <a href="../files/.._routers_notification.js.html#l100"><code>..&#x2F;routers&#x2F;notification.js:100</code></a>
         </p>
 
 
@@ -315,7 +341,7 @@
     </div>
 
     <div class="description">
-        <p>Get all goods of given owner_uid</p>
+        <p>Emit notification</p>
 
     </div>
 
@@ -324,12 +350,45 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">owner_uid</code>
+                        <code class="param-name">sender_uid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The owner</p>
+                        <p>The user trigger the notification</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">receiver_uid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>Target user</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">trigger_url</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                        <p>The trigger object's URL</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">content</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                        <p>The content of the notification</p>
 
                     </div>
 
@@ -342,38 +401,20 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>The goods including comments and stars</p>
+                    <p>A notification including receiver and sender</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_POST api/goods/post" class="method item">
-    <h3 class="name"><code>POST api/goods/post</code></h3>
+<div id="method_PUT api/notification/read" class="method item">
+    <h3 class="name"><code>PUT api/notification/read</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>name</code>
-                </li>
-                <li class="arg">
-                        <code>category</code>
-                </li>
-                <li class="arg">
-                        <code>description</code>
-                </li>
-                <li class="arg">
-                        <code>photo_path</code>
-                </li>
-                <li class="arg">
-                        <code>position_x</code>
-                </li>
-                <li class="arg">
-                        <code>position_y</code>
-                </li>
-                <li class="arg">
-                        <code>owner_uid</code>
+                        <code>nid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -391,7 +432,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l102"><code>..&#x2F;routers&#x2F;goods.js:102</code></a>
+        <a href="../files/.._routers_notification.js.html#l134"><code>..&#x2F;routers&#x2F;notification.js:134</code></a>
         </p>
 
 
@@ -399,7 +440,7 @@
     </div>
 
     <div class="description">
-        <p>Post a goods</p>
+        <p>Read a notification</p>
 
     </div>
 
@@ -408,67 +449,7 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">category</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">description</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">photo_path</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">position_x</code>
-                        <span class="type">Float</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">position_y</code>
-                        <span class="type">Float</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">owner_uid</code>
+                        <code class="param-name">nid</code>
                         <span class="type">Integer</span>
 
 
@@ -485,230 +466,7 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>New created goods object</p>
-
-            </div>
-        </div>
-
-
-</div>
-<div id="method_PUT api/goods/edit" class="method item">
-    <h3 class="name"><code>PUT api/goods/edit</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>gid</code>
-                </li>
-                <li class="arg">
-                        <code>name</code>
-                </li>
-                <li class="arg">
-                        <code>category</code>
-                </li>
-                <li class="arg">
-                        <code>description</code>
-                </li>
-                <li class="arg">
-                        <code>photo_path</code>
-                </li>
-                <li class="arg">
-                        <code>position_x</code>
-                </li>
-                <li class="arg">
-                        <code>position_y</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_goods.js.html#l146"><code>..&#x2F;routers&#x2F;goods.js:146</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Edit a goods</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">gid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">category</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">description</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">photo_path</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">position_x</code>
-                        <span class="type">Float</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">position_y</code>
-                        <span class="type">Float</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>Updated goods object</p>
-
-            </div>
-        </div>
-
-
-</div>
-<div id="method_PUT api/goods/rate" class="method item">
-    <h3 class="name"><code>PUT api/goods/rate</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>gid</code>
-                </li>
-                <li class="arg">
-                        <code>rate</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_goods.js.html#l200"><code>..&#x2F;routers&#x2F;goods.js:200</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Rate a goods</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">gid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>The ID of goods</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">rate</code>
-                        <span class="type">Float</span>
-
-
-                    <div class="param-description">
-                        <p>The rate point!</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>Updated goods object</p>
+                    <p>Updated notification object</p>
 
             </div>
         </div>

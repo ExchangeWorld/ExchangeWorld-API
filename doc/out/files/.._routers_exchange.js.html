@@ -45,6 +45,7 @@
                                 <li><a href="../classes/Follow.html">Follow</a></li>
                                 <li><a href="../classes/Goods.html">Goods</a></li>
                                 <li><a href="../classes/Message.html">Message</a></li>
+                                <li><a href="../classes/Notification.html">Notification</a></li>
                                 <li><a href="../classes/Search.html">Search</a></li>
                             </ul>
                 
@@ -154,7 +155,7 @@ router.get(&#x27;/all&#x27;, (req, res) =&gt; {
 });
 
 /**
- * Get all exchanges of an user
+ * Get all exchanges of a user
  *
  * @method GET api/exchange/of/user/all
  * @param  {Integer} owner_uid The owner
@@ -233,7 +234,7 @@ router.get(&#x27;/of/user/all&#x27;, (req, res) =&gt; {
 });
 
 /**
- * Get an exchanges of an user
+ * Get an exchanges of a user
  *
  * @method GET api/exchange/of/user/one
  * @param  {Integer} eid The ID of the exchange
@@ -505,7 +506,7 @@ router.put(&#x27;/drop&#x27;, (req, res) =&gt; {
 });
 
 /**
- * Accept an exchange by an user
+ * Accept an exchange by a user
  * And if two owners accept, then the exchange will be set status=&#x27;completed&#x27;
  *
  * @method PUT api/exchange/agree

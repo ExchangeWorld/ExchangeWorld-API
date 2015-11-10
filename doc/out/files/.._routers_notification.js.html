@@ -45,6 +45,7 @@
                                 <li><a href="../classes/Follow.html">Follow</a></li>
                                 <li><a href="../classes/Goods.html">Goods</a></li>
                                 <li><a href="../classes/Message.html">Message</a></li>
+                                <li><a href="../classes/Notification.html">Notification</a></li>
                                 <li><a href="../classes/Search.html">Search</a></li>
                             </ul>
                 
@@ -87,6 +88,12 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+/**
+ * Provides some methods related to notifications
+ *
+ * @class Notification
+ */
+
 &#x27;use strict&#x27;;
 
 var express = require(&#x27;express&#x27;);
@@ -96,14 +103,16 @@ var router = express.Router();
 var notifications = require(&#x27;../ORM/Notifications&#x27;);
 var users = require(&#x27;../ORM/Users&#x27;);
 
+/**
+ * Get notifications belong to a user
+ *
+ * @method GET api/notification/belongsTo
+ * @param  {Integer} receiver_uid
+ * @param  {Integer=0} from
+ * @param  {Integer=10} number
+ * @return {JSON} The notifications including receiver and sender
+ */
 router.get(&#x27;/belongsTo&#x27;, (req, res) =&gt; {
-
-	// Available GET params:
-	//
-	// receiver_uid
-	// from
-	// number
-	//
 
 	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
 	var _from = parseInt(req.query.from, 10);
@@ -122,10 +131,12 @@ router.get(&#x27;/belongsTo&#x27;, (req, res) =&gt; {
 			],
 			include: [{
 				model: users,
-				as: &#x27;sender&#x27;
+				as: &#x27;sender&#x27;,
+				required: true
 			}, {
 				model: users,
-				as: &#x27;receiver&#x27;
+				as: &#x27;receiver&#x27;,
+				required: true
 			}],
 			offset: _from,
 			limit: _number
@@ -140,22 +151,30 @@ router.get(&#x27;/belongsTo&#x27;, (req, res) =&gt; {
 		});
 });
 
+/**
+ * Get notification by given nid
+ *
+ * @method GET api/notification
+ * @param  {Integer} nid The ID of notification
+ * @return {JSON} A notification including receiver and sender
+ */
 router.get(&#x27;/&#x27;, (req, res) =&gt; {
-
-	// Available GET params:
-	//
-	// nid
-	//
 
 	var _nid = parseInt(req.query.nid, 10);
 
 	notifications
-		.findAll({
+		.findOne({
 			where: {
 				nid: _nid
 			},
 			include: [{
-				all: true
+				model: users,
+				as: &#x27;sender&#x27;,
+				required: true
+			}, {
+				model: users,
+				as: &#x27;receiver&#x27;,
+				required: true
 			}]
 		})
 		.then(result =&gt; {
@@ -168,6 +187,16 @@ router.get(&#x27;/&#x27;, (req, res) =&gt; {
 		});
 });
 
+/**
+ * Emit notification
+ *
+ * @method POST api/notification
+ * @param  {Integer} sender_uid The user trigger the notification
+ * @param  {Integer} receiver_uid Target user
+ * @param  {String} trigger_url The trigger object&#x27;s URL
+ * @param  {String} content The content of the notification
+ * @return {JSON} A notification including receiver and sender
+ */
 router.post(&#x27;/&#x27;, (req, res) =&gt; {
 
 	var _sender_uid = parseInt(req.body.sender_uid);
@@ -193,23 +222,19 @@ router.post(&#x27;/&#x27;, (req, res) =&gt; {
 });
 
 /**
- * use to update read/unread
+ * Read a notification
+ *
+ * @method PUT api/notification/read
+ * @param {Integer} nid
+ * @return {JSON} Updated notification object
  */
-router.put(&#x27;/&#x27;, (req, res) =&gt; {
+router.put(&#x27;/read&#x27;, (req, res) =&gt; {
 
-	// Available PUT body params:
-	//
-	// nid
-	// unread
-	//
-
-	// Get property:value in PUT body
 	var _nid = parseInt(req.body.nid, 10);
-	var _unread = Boolean(req.body.unread);
 
 	notifications
 		.update({
-			unread: _unread
+			unread: false
 		}, {
 			where: {
 				nid: _nid
