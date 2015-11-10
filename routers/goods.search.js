@@ -1,3 +1,9 @@
+/**
+ * Provides some methods related to Search
+ *
+ * @class Search
+ */
+
 'use strict';
 
 var express = require('express');
@@ -6,19 +12,22 @@ var router = express.Router();
 // Including tables
 var goods = require('../ORM/Goods');
 var users = require('../ORM/Users');
+var stars = require('../ORM/Stars');
 
+/**
+ * Get a goods by given query
+ *
+ * @method GET api/goods/search
+ * @param  {String=''} name
+ * @param  {String=''} wishlist
+ * @param  {String=''} category
+ * @param  {Float=-1.0} position_x
+ * @param  {Float=-1.0} position_y
+ * @param  {Integer=-1} from
+ * @param  {Integer=-1} to
+ * @return {JSON} The goods including users and stars
+ */
 router.get('/', (req, res) => {
-
-	// Available query params:
-	//
-	// name
-	// wishlist
-	// category
-	// position_x
-	// position_y
-	// from
-	// to
-	//
 
 	var name = req.query.name || '';
 	var wishlist = req.query.wishlist || '';
@@ -66,18 +75,13 @@ router.get('/', (req, res) => {
 				},
 				deleted: 0
 			},
-			// include: [{
-			// 	model: users,
-			// 	required: true
-			// }]
 			include: [{
 				model: users,
 				as: 'owner',
 				required: true
 			}, {
-				model: comments,
-				as: 'comments',
-				// required: true
+				model: stars,
+				as: 'star_goods'
 			}]
 		})
 		.then(result => {

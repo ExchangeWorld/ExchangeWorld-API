@@ -6,7 +6,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "Comment",
         "Exchange",
         "Follow",
-        "Goods"
+        "Goods",
+        "Search"
     ],
     "modules": [],
     "allModules": [],

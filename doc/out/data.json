@@ -55,6 +55,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "../routers/goods.search.js": {
+            "name": "../routers/goods.search.js",
+            "modules": {},
+            "classes": {
+                "Search": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "../routers/message.js": {
             "name": "../routers/message.js",
             "modules": {},
@@ -143,6 +152,18 @@
             "file": "../routers/goods.js",
             "line": 1,
             "description": "Provides some methods related to goods"
+        },
+        "Search": {
+            "name": "Search",
+            "shortname": "Search",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/goods.search.js",
+            "line": 1,
+            "description": "Provides some methods related to Search"
         }
     },
     "elements": {},
@@ -844,6 +865,55 @@
                 "type": "JSON"
             },
             "class": "Goods"
+        },
+        {
+            "file": "../routers/goods.search.js",
+            "line": 17,
+            "description": "Get a goods by given query",
+            "itemtype": "method",
+            "name": "GET api/goods/search",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "String=''"
+                },
+                {
+                    "name": "wishlist",
+                    "description": "",
+                    "type": "String=''"
+                },
+                {
+                    "name": "category",
+                    "description": "",
+                    "type": "String=''"
+                },
+                {
+                    "name": "position_x",
+                    "description": "",
+                    "type": "Float=-1.0"
+                },
+                {
+                    "name": "position_y",
+                    "description": "",
+                    "type": "Float=-1.0"
+                },
+                {
+                    "name": "from",
+                    "description": "",
+                    "type": "Integer=-1"
+                },
+                {
+                    "name": "to",
+                    "description": "",
+                    "type": "Integer=-1"
+                }
+            ],
+            "return": {
+                "description": "The goods including users and stars",
+                "type": "JSON"
+            },
+            "class": "Search"
         },
         {
             "file": "../routers/message.js",

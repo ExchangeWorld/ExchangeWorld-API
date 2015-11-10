@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>../routers/comment.js</title>
+    <title>../routers/goods.search.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -82,14 +82,14 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: ../routers/comment.js</h1>
+<h1 class="file-heading">File: ../routers/goods.search.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * Provides some methods related to comments
+ * Provides some methods related to Search
  *
- * @class Comment
+ * @class Search
  */
 
 &#x27;use strict&#x27;;
@@ -98,166 +98,79 @@ var express = require(&#x27;express&#x27;);
 var router = express.Router();
 
 // Including tables
-var comments = require(&#x27;../ORM/Comments&#x27;);
-var users = require(&#x27;../ORM/Users&#x27;);
 var goods = require(&#x27;../ORM/Goods&#x27;);
+var users = require(&#x27;../ORM/Users&#x27;);
+var stars = require(&#x27;../ORM/Stars&#x27;);
 
 /**
- * Get comments of a goods
+ * Get a goods by given query
  *
- * @method GET api/comment/of/goods
- * @param  {Integer} goods_gid The commented goods
- * @return {JSON} Comments including &#x60;commenter&#x60;
+ * @method GET api/goods/search
+ * @param  {String=&#x27;&#x27;} name
+ * @param  {String=&#x27;&#x27;} wishlist
+ * @param  {String=&#x27;&#x27;} category
+ * @param  {Float=-1.0} position_x
+ * @param  {Float=-1.0} position_y
+ * @param  {Integer=-1} from
+ * @param  {Integer=-1} to
+ * @return {JSON} The goods including users and stars
  */
-router.get(&#x27;/of/goods&#x27;, (req, res) =&gt; {
+router.get(&#x27;/&#x27;, (req, res) =&gt; {
 
-	var _goods_gid = parseInt(req.query.goods_gid, 10);
+	var name = req.query.name || &#x27;&#x27;;
+	var wishlist = req.query.wishlist || &#x27;&#x27;;
+	var category = req.query.category || &#x27;&#x27;;
+	var position_x = parseFloat(req.query.position_x) || -1.0;
+	var position_y = parseFloat(req.query.position_y) || -1.0;
+	var bound = req.query.bound || &#x27;-90,0,90,180&#x27;;
+	var from = parseInt(req.query.from, 10) || -1;
+	var to = parseInt(req.query.to, 10) || -1;
 
-	comments
+	/*
+	 * [ lat_lo, lng_lo, lat_hi, lng_hi ] for this bounds,
+	 *   where &quot;lo&quot; corresponds to the southwest corner of the bounding box,
+	 *   while &quot;hi&quot; corresponds to the northeast corner of that box.
+	 */
+
+	var boundArray = bound.split(&#x27;,&#x27;).map(parseFloat);
+
+	// Emit a find operation with orm model in table &#x60;goods&#x60;
+	goods
 		.findAll({
 			where: {
-				goods_gid: _goods_gid
+				$and: [{
+					name: (name === &#x27;&#x27; ? {
+						$ilike: &#x27;%&#x27;
+					} : {
+						$ilike: &#x27;%&#x27; + name + &#x27;%&#x27;
+					}),
+					category: (category === &#x27;&#x27; ? {
+						$ilike: &#x27;%&#x27;
+					} : {
+						$ilike: &#x27;%&#x27; + category + &#x27;%&#x27;
+					})
+				}],
+				position_x: {
+					gt: boundArray[1],
+					lt: boundArray[3]
+				},
+				position_y: {
+					gt: boundArray[0],
+					lt: boundArray[2]
+				},
+				exchanged: {
+					$in: [0, 2]
+				},
+				deleted: 0
 			},
-			order: &#x27;cid DESC&#x27;,
 			include: [{
 				model: users,
+				as: &#x27;owner&#x27;,
 				required: true
+			}, {
+				model: stars,
+				as: &#x27;star_goods&#x27;
 			}]
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Get comments of a user
- *
- * @method GET api/comment/of/user
- * @param  {Integer} commenter_uid The commenter&#x27;s uid
- * @return {JSON} Comments including &#x60;goods&#x60;, and they are not deleted
- */
-router.get(&#x27;/of/user&#x27;, (req, res) =&gt; {
-
-	var _commenter_uid = parseInt(req.query.commenter_uid, 10);
-
-	comments
-		.findAll({
-			where: {
-				commenter_uid: _commenter_uid
-			},
-			order: &#x27;cid DESC&#x27;,
-			include: [{
-				model: goods,
-				where: {
-					deleted: 0
-				},
-				required: true
-			}]
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Post a comment to a goods
- *
- * @method POST api/comment/post
- * @param  {Integer} goods_gid The commented goods
- * @param  {Integer} commenter_uid The commenter&#x27;s uid
- * @param  {String} content The content of the comment
- * @return {JSON} New created comment
- */
-router.post(&#x27;/post&#x27;, (req, res) =&gt; {
-
-	var _goods_gid = parseInt(req.body.goods_gid, 10);
-	var _commenter_uid = parseInt(req.body.commenter_uid, 10);
-	var _content = req.body.content;
-
-	comments
-		.create({
-			goods_gid: _goods_gid,
-			commenter_uid: _commenter_uid,
-			content: _content
-		})
-		.then(result =&gt; {
-			if (result == null) {
-				res.json({});
-			} else {
-				res.json(result);
-			}
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Edit a comment
- *
- * @method PUT api/comment/edit
- * @param  {Integer} cid The ID of the comment
- * @param  {String} content The NEW content of the comment
- * @return {JSON} Updated comment
- */
-router.put(&#x27;/edit&#x27;, (req, res) =&gt; {
-
-	var _cid = parseInt(req.body.cid, 10);
-	var _content = req.body.content;
-
-	comments
-		.findOne({
-			where: {
-				cid: _cid
-			}
-		})
-		.then(result =&gt; {
-			result.content = _content;
-			result.save().then(() =&gt; {});
-			return result;
-		})
-		.then(result =&gt; {
-			if (result == null) {
-				res.json(null);
-			} else {
-				res.json(result);
-			}
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Delete a comment
- *
- * @method DELETE api/comment/delete
- * @param  {Integer} cid The ID of the comment
- * @return {JSON} Number of deleted comments
- */
-router.delete(&#x27;/delete&#x27;, (req, res) =&gt; {
-
-	var _cid = parseInt(req.query.cid, 10);
-
-	comments
-		.destroy({
-			where: {
-				cid: _cid
-			}
 		})
 		.then(result =&gt; {
 			res.json(result);

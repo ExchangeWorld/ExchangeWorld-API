@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Follow</title>
+    <title>Search</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -82,12 +82,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Follow Class</h1>
+<h1>Search Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/.._routers_follow.js.html#l1"><code>..&#x2F;routers&#x2F;follow.js:1</code></a>
+            Defined in: <a href="../files/.._routers_goods.search.js.html#l1"><code>..&#x2F;routers&#x2F;goods.search.js:1</code></a>
         </div>
 
 
@@ -95,8 +95,7 @@
 
 
 <div class="box intro">
-    <p>Provides some methods related to follows
-(follower -[follow]-&gt; followed)</p>
+    <p>Provides some methods related to Search</p>
 
 </div>
 
@@ -117,19 +116,7 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_DELETE api/follow/delete">DELETE api/follow/delete</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_GET api/follow/followed/by">GET api/follow/followed/by</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_GET api/follow/followers/of">GET api/follow/followers/of</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_POST api/follow/post">POST api/follow/post</a>
+                                <a href="#method_GET api/goods/search">GET api/goods/search</a>
 
                             </li>
                     </ul>
@@ -142,16 +129,31 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_DELETE api/follow/delete" class="method item">
-    <h3 class="name"><code>DELETE api/follow/delete</code></h3>
+<div id="method_GET api/goods/search" class="method item">
+    <h3 class="name"><code>GET api/goods/search</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>follower_uid</code>
+                        <code>name</code>
                 </li>
                 <li class="arg">
-                        <code>followed_uid</code>
+                        <code>wishlist</code>
+                </li>
+                <li class="arg">
+                        <code>category</code>
+                </li>
+                <li class="arg">
+                        <code>position_x</code>
+                </li>
+                <li class="arg">
+                        <code>position_y</code>
+                </li>
+                <li class="arg">
+                        <code>from</code>
+                </li>
+                <li class="arg">
+                        <code>to</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -169,7 +171,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_follow.js.html#l134"><code>..&#x2F;routers&#x2F;follow.js:134</code></a>
+        <a href="../files/.._routers_goods.search.js.html#l17"><code>..&#x2F;routers&#x2F;goods.search.js:17</code></a>
         </p>
 
 
@@ -177,8 +179,7 @@
     </div>
 
     <div class="description">
-        <p>Delete a follow
-(follower -[follow]-&gt; followed)</p>
+        <p>Get a goods by given query</p>
 
     </div>
 
@@ -187,24 +188,72 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">follower_uid</code>
-                        <span class="type">Integer</span>
+                        <code class="param-name">name</code>
+                        <span class="type">String=''</span>
 
 
                     <div class="param-description">
-                        <p>The follower</p>
-
+                         
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">followed_uid</code>
-                        <span class="type">Integer</span>
+                        <code class="param-name">wishlist</code>
+                        <span class="type">String=''</span>
 
 
                     <div class="param-description">
-                        <p>The followed</p>
+                         
+                    </div>
 
+                </li>
+                <li class="param">
+                        <code class="param-name">category</code>
+                        <span class="type">String=''</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">position_x</code>
+                        <span class="type">Float=-1.0</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">position_y</code>
+                        <span class="type">Float=-1.0</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">from</code>
+                        <span class="type">Integer=-1</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">to</code>
+                        <span class="type">Integer=-1</span>
+
+
+                    <div class="param-description">
+                         
                     </div>
 
                 </li>
@@ -216,222 +265,7 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Number of deleted follows</p>
-
-            </div>
-        </div>
-
-
-</div>
-<div id="method_GET api/follow/followed/by" class="method item">
-    <h3 class="name"><code>GET api/follow/followed/by</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>follower_uid</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_follow.js.html#l53"><code>..&#x2F;routers&#x2F;follow.js:53</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Get who are followed by the given follower_uid
-(follower -[follow]-&gt; followed)</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">follower_uid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>The follower</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>Users followed by given follower_uid</p>
-
-            </div>
-        </div>
-
-
-</div>
-<div id="method_GET api/follow/followers/of" class="method item">
-    <h3 class="name"><code>GET api/follow/followers/of</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>followed_uid</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_follow.js.html#l17"><code>..&#x2F;routers&#x2F;follow.js:17</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Get who follow the given followed_uid
-(follower -[follow]-&gt; followed)</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">followed_uid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>The one be followed</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>Users following given followed_uid</p>
-
-            </div>
-        </div>
-
-
-</div>
-<div id="method_POST api/follow/post" class="method item">
-    <h3 class="name"><code>POST api/follow/post</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>follower_uid</code>
-                </li>
-                <li class="arg">
-                        <code>followed_uid</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_follow.js.html#l89"><code>..&#x2F;routers&#x2F;follow.js:89</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Post a follow
-(follower -[follow]-&gt; followed)</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">follower_uid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>The follower</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">followed_uid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>The followed</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>New created follow object, or if there is already one, return that one</p>
+                    <p>The goods including users and stars</p>
 
             </div>
         </div>
