@@ -125,15 +125,15 @@
 
                             </li>
                             <li class="index-item method">
+                                <a href="#method_GET api/exchange/of/user/one">GET api/exchange/of/user/one</a>
+
+                            </li>
+                            <li class="index-item method">
                                 <a href="#method_POST api/exchange/create">POST api/exchange/create</a>
 
                             </li>
                             <li class="index-item method">
                                 <a href="#method_PUT api/exchange/agree">PUT api/exchange/agree</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_PUT api/exchange/complete">PUT api/exchange/complete</a>
 
                             </li>
                             <li class="index-item method">
@@ -174,7 +174,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_exchange.js.html#l146"><code>..&#x2F;routers&#x2F;exchange.js:146</code></a>
+        <a href="../files/.._routers_exchange.js.html#l230"><code>..&#x2F;routers&#x2F;exchange.js:230</code></a>
         </p>
 
 
@@ -209,7 +209,7 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Exchange incluing goods and owners</p>
+                    <p>An exchange incluing goods and owners</p>
 
             </div>
         </div>
@@ -265,7 +265,7 @@
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>_owner_uid</code>
+                        <code>owner_uid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -300,7 +300,7 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">_owner_uid</code>
+                        <code class="param-name">owner_uid</code>
                         <span class="type">Integer</span>
 
 
@@ -319,6 +319,86 @@
             <div class="returns-description">
                         <span class="type">JSON</span>:
                     <p>Exchanges incluing goods( owner_goods, other_goods )</p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_GET api/exchange/of/user/one" class="method item">
+    <h3 class="name"><code>GET api/exchange/of/user/one</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>eid</code>
+                </li>
+                <li class="arg">
+                        <code>owner_uid</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">JSON</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/.._routers_exchange.js.html#l146"><code>..&#x2F;routers&#x2F;exchange.js:146</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Get an exchanges of an user</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">eid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>The ID of the exchange</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">owner_uid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>The owner</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">JSON</span>:
+                    <p>(Array with one element) An exchange incluing goods( owner_goods, other_goods )</p>
 
             </div>
         </div>
@@ -352,7 +432,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_exchange.js.html#l197"><code>..&#x2F;routers&#x2F;exchange.js:197</code></a>
+        <a href="../files/.._routers_exchange.js.html#l281"><code>..&#x2F;routers&#x2F;exchange.js:281</code></a>
         </p>
 
 
@@ -432,7 +512,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_exchange.js.html#l308"><code>..&#x2F;routers&#x2F;exchange.js:308</code></a>
+        <a href="../files/.._routers_exchange.js.html#l418"><code>..&#x2F;routers&#x2F;exchange.js:418</code></a>
         </p>
 
 
@@ -440,7 +520,8 @@
     </div>
 
     <div class="description">
-        <p>Accept an exchange by an user</p>
+        <p>Accept an exchange by an user
+And if two owners accept, then the exchange will be set status='completed'</p>
 
     </div>
 
@@ -485,72 +566,6 @@
 
 
 </div>
-<div id="method_PUT api/exchange/complete" class="method item">
-    <h3 class="name"><code>PUT api/exchange/complete</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>eid</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_exchange.js.html#l288"><code>..&#x2F;routers&#x2F;exchange.js:288</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Complete an exchange</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">eid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>The ID of an exchange</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>If it cannot be done, return {}. If it can be done, return updated exchange object</p>
-
-            </div>
-        </div>
-
-
-</div>
 <div id="method_PUT api/exchange/drop" class="method item">
     <h3 class="name"><code>PUT api/exchange/drop</code></h3>
 
@@ -575,7 +590,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_exchange.js.html#l298"><code>..&#x2F;routers&#x2F;exchange.js:298</code></a>
+        <a href="../files/.._routers_exchange.js.html#l372"><code>..&#x2F;routers&#x2F;exchange.js:372</code></a>
         </p>
 
 

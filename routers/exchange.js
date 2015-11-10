@@ -35,7 +35,7 @@ router.get('/all', (req, res) => {
 				as: 'goods_one',
 				include: [{
 					model: users,
-					as: 'owner',
+					as: 'owner'
 				}],
 				where: {
 					exchanged: 2,
@@ -46,7 +46,7 @@ router.get('/all', (req, res) => {
 				as: 'goods_two',
 				include: [{
 					model: users,
-					as: 'owner',
+					as: 'owner'
 				}],
 				where: {
 					exchanged: 2,
@@ -68,7 +68,7 @@ router.get('/all', (req, res) => {
  * Get all exchanges of an user
  *
  * @method GET api/exchange/of/user/all
- * @param  {Integer} _owner_uid The owner
+ * @param  {Integer} owner_uid The owner
  * @return {JSON} Exchanges incluing goods( owner_goods, other_goods )
  */
 router.get('/of/user/all', (req, res) => {
@@ -144,11 +144,95 @@ router.get('/of/user/all', (req, res) => {
 });
 
 /**
+ * Get an exchanges of an user
+ *
+ * @method GET api/exchange/of/user/one
+ * @param  {Integer} eid The ID of the exchange
+ * @param  {Integer} owner_uid The owner
+ * @return {JSON} (Array with one element) An exchange incluing goods( owner_goods, other_goods )
+ */
+router.get('/of/user/one', (req, res) => {
+
+	var _eid = parseInt(req.query.eid, 10);
+	var _owner_uid = parseInt(req.query.owner_uid, 10);
+
+	exchanges
+		.findAll({
+			where: {
+				eid: _eid
+			},
+			include: [{
+				model: goods,
+				as: 'goods_one',
+				include: [{
+					model: users,
+					as: 'owner',
+					where: {
+						uid: _owner_uid
+					},
+					required: false
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
+			}, {
+				model: goods,
+				as: 'goods_two',
+				include: [{
+					model: users,
+					as: 'owner',
+					where: {
+						uid: _owner_uid
+					},
+					required: false
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
+			}]
+		})
+		.then(result => {
+			res.json(_(JSON.parse(JSON.stringify(result)))
+				.map(r => {
+
+					if (r['goods_one']['owner'] == null) {
+						r['owner_goods'] = r['goods_two'];
+						r['other_goods'] = r['goods_one'];
+						r['owner_agree'] = r['goods_two_agree'];
+						r['other_agree'] = r['goods_one_agree'];
+					} else {
+						r['owner_goods'] = r['goods_one'];
+						r['other_goods'] = r['goods_two'];
+						r['owner_agree'] = r['goods_one_agree'];
+						r['other_agree'] = r['goods_two_agree'];
+					}
+
+					delete r['owner_goods']['owner'];
+					delete r['other_goods']['owner'];
+					delete r['goods_one'];
+					delete r['goods_two'];
+					delete r['goods_one_agree'];
+					delete r['goods_two_agree'];
+
+					return r;
+				})
+				.toArray());
+		})
+		.catch(err => {
+			res.send({
+				error: err
+			});
+		});
+});
+
+/**
  * Get an exchange simply by given eid
  *
  * @method GET api/exchange/
  * @param  {Integer} eid The ID of exchange
- * @return {JSON} Exchange incluing goods and owners
+ * @return {JSON} An exchange incluing goods and owners
  */
 router.get('/', (req, res) => {
 
@@ -165,7 +249,7 @@ router.get('/', (req, res) => {
 				as: 'goods_one',
 				include: [{
 					model: users,
-					as: 'owner',
+					as: 'owner'
 				}],
 				where: {
 					exchanged: 2,
@@ -176,7 +260,7 @@ router.get('/', (req, res) => {
 				as: 'goods_two',
 				include: [{
 					model: users,
-					as: 'owner',
+					as: 'owner'
 				}],
 				where: {
 					exchanged: 2,
@@ -286,16 +370,6 @@ router.post('/create', (req, res) => {
 });
 
 /**
- * Complete an exchange
- *
- * @method PUT api/exchange/complete
- * @param  {Integer} eid The ID of an exchange
- * @return {JSON} If it cannot be done, return {}. If it can be done, return updated exchange object
- */
-router.put('/complete', (req, res) => {
-});
-
-/**
  * Drop an exchange
  *
  * @method PUT api/exchange/drop
@@ -303,10 +377,47 @@ router.put('/complete', (req, res) => {
  * @return {JSON} Updated exchange object
  */
 router.put('/drop', (req, res) => {
+
+	var _eid = parseInt(req.body.eid, 10);
+
+	exchanges
+		.findOne({
+			where: {
+				eid: _eid
+			}
+		})
+		.then(result => {
+			result.status = 'dropped';
+			result.save().then(() => {});
+			return result;
+		})
+		.then(result => {
+
+			result.getGoods_one().then(g1 => {
+				g1.exchanged = 0;
+				g1.save().then(() => {});
+			});
+
+			result.getGoods_two().then(g2 => {
+				g2.exchanged = 0;
+				g2.save().then(() => {});
+			});
+
+			return result;
+		})
+		.then(result => {
+			res.json(result);
+		})
+		.catch(err => {
+			res.send({
+				error: err
+			});
+		});
 });
 
 /**
  * Accept an exchange by an user
+ * And if two owners accept, then the exchange will be set status='completed'
  *
  * @method PUT api/exchange/agree
  * @param  {Integer} eid The ID of an exchange
@@ -314,6 +425,74 @@ router.put('/drop', (req, res) => {
  * @return {JSON} Updated exchange object
  */
 router.put('/agree', (req, res) => {
+
+	var _eid = parseInt(req.body.eid, 10);
+	var _owner_uid = parseInt(Req.body.owner_uid, 10);
+
+	exchanges
+		.findOne({
+			where: {
+				eid: _eid
+			},
+			include: [{
+				model: goods,
+				as: 'goods_one',
+				include: [{
+					model: users,
+					as: 'owner'
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
+			}, {
+				model: goods,
+				as: 'goods_two',
+				include: [{
+					model: users,
+					as: 'owner'
+				}],
+				where: {
+					exchanged: 2,
+					deleted: 0
+				}
+			}]
+		})
+		.then(result => {
+			if (result != null) {
+				if (result['goods_one']['owner']['uid'] == owner_uid) {
+					result.goods_one_agree = true;
+					result.save().then(() => {
+						if (result.goods_one_agree == true && result.goods_two_agree == true) {
+							result.status = 'completed';
+							result.save().then(() => {});
+						}
+					});
+					return result;
+				} else if (result['goods_two']['owner']['uid'] == owner_uid) {
+					result.goods_two_agree = true;
+					result.save().then(() => {
+						if (result.goods_one_agree == true && result.goods_two_agree == true) {
+							result.status = 'completed';
+							result.save().then(() => {});
+						}
+					});
+					return result;
+				} else {
+					return null;
+				}
+			} else {
+				return null;
+			}
+		})
+		.then(result => {
+			res.json(result);
+		})
+		.catch(err => {
+			res.send({
+				error: err
+			});
+		});
 });
 
 module.exports = router;
