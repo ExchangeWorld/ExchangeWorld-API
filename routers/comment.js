@@ -103,11 +103,7 @@ router.post('/post', (req, res) => {
 			content: _content
 		})
 		.then(result => {
-			if (result == null) {
-				res.json({});
-			} else {
-				res.json(result);
-			}
+			res.json(result);
 		})
 		.catch(err => {
 			res.send({
@@ -141,11 +137,7 @@ router.put('/edit', (req, res) => {
 			return result;
 		})
 		.then(result => {
-			if (result == null) {
-				res.json(null);
-			} else {
-				res.json(result);
-			}
+			res.json(result);
 		})
 		.catch(err => {
 			res.send({

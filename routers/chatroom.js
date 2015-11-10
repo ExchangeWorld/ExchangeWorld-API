@@ -58,7 +58,10 @@ router.get('/exchange', (req, res) => {
 				});
 		})
 		.then(result => {
-			res.json(result);
+			result
+				.then(r => {
+					res.json(r);
+				});
 		})
 		.catch(err => {
 			res.send({
@@ -98,7 +101,10 @@ router.post('/exchange', (req, res) => {
 				});
 		})
 		.then(result => {
-			res.json(result);
+			result
+				.then(r => {
+					res.json(r);
+				});
 		})
 		.catch(err => {
 			res.send({

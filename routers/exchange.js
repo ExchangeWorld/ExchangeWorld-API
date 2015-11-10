@@ -459,31 +459,28 @@ router.put('/agree', (req, res) => {
 			}]
 		})
 		.then(result => {
-			if (result != null) {
-				if (result['goods_one']['owner']['uid'] == _owner_uid) {
-					result.goods_one_agree = true;
-					result.save().then(() => {
-						if (result.goods_one_agree == true && result.goods_two_agree == true) {
-							result.status = 'completed';
-							result.save().then(() => {});
-						}
-					});
-					return result;
-				} else if (result['goods_two']['owner']['uid'] == _owner_uid) {
-					result.goods_two_agree = true;
-					result.save().then(() => {
-						if (result.goods_one_agree == true && result.goods_two_agree == true) {
-							result.status = 'completed';
-							result.save().then(() => {});
-						}
-					});
-					return result;
-				} else {
-					return null;
-				}
-			} else {
-				return null;
+			if (result == null || result == undefined) {
+				return result;
 			}
+
+			if (result['goods_one']['owner']['uid'] == _owner_uid) {
+				result.goods_one_agree = true;
+				result.save().then(() => {
+					if (result.goods_one_agree == true && result.goods_two_agree == true) {
+						result.status = 'completed';
+						result.save().then(() => {});
+					}
+				});
+			} else if (result['goods_two']['owner']['uid'] == _owner_uid) {
+				result.goods_two_agree = true;
+				result.save().then(() => {
+					if (result.goods_one_agree == true && result.goods_two_agree == true) {
+						result.status = 'completed';
+						result.save().then(() => {});
+					}
+				});
+			}
+			return result;
 		})
 		.then(result => {
 			res.json(result);

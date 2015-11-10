@@ -104,24 +104,13 @@ router.post('/post', (req, res) => {
 	// But if there is already the pair(followed_uid, follower_uid)
 	// Then don't create another
 	follows
-		.findOne({
+		.findOrCreatee({
 			where: {
 				follower_uid: _follower_uid,
 				followed_uid: _followed_uid
 			}
 		})
-		.then(isThereAlready => {
-			if (isThereAlready != null) {
-				return isThereAlready;
-			} else {
-				return follows
-					.create({
-						follower_uid: _follower_uid,
-						followed_uid: _followed_uid
-					});
-			}
-		})
-		.then(result => {
+		.then((result, created) => {
 			res.json(result);
 		})
 		.catch(err => {

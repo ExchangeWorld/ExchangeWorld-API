@@ -125,11 +125,6 @@ var tokens = require(&#x27;../ORM/Tokens&#x27;);
  */
 router.post(&#x27;/register&#x27;, (req, res) =&gt; {
 
-	// **WARNING**
-	// fb_id will be id
-	// and the password for fb will be from a hash func
-	// **WARNING**
-
 	var _fb = ((req.body.fb || &#x27;&#x27;) == &#x27;true&#x27;) ? true : false;
 	var _id = req.body.identity;
 	var _password = req.body.password || &#x27;&#x27;;
@@ -179,7 +174,6 @@ router.post(&#x27;/register&#x27;, (req, res) =&gt; {
 				error: err
 			});
 		});
-
 });
 
 /**
@@ -244,7 +238,7 @@ var login_function = (req, res) =&gt; {
 							identity: _id,
 							password: _password
 						}, &#x27;事實上我們做了一年&#x27;, {
-							expiresIn: &#x27;15m&#x27;
+							expiresIn: &#x27;30m&#x27;
 						})
 					})
 					.then(result =&gt; {
@@ -320,10 +314,9 @@ var token_function = (req, res, next) =&gt; {
 						next();
 					}
 				});
-
 			} else {
 				res.json({
-					authentication: &#x27;fail&#x27;,
+					authentication: &#x27;fail&#x27;
 				});
 			}
 		})

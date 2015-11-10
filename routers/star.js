@@ -19,7 +19,7 @@ var users = require('../ORM/Users');
  *
  * @method GET api/star/to
  * @param  {Integer} goods_gid The goods starred by a user
- * @return {JSON} The stars including user
+ * @return {JSON} The stars including users
  */
 router.get('/to', (req, res) => {
 

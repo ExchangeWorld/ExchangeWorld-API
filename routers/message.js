@@ -54,8 +54,8 @@ router.get('/', (req, res) => {
 					required: true
 				}],
 				// logging: true,
-				// offset: _from,
-				// limit: _number
+				offset: _from,
+				limit: _number
 			})
 			.then(result => {
 				res.json(result);
@@ -88,8 +88,8 @@ router.get('/', (req, res) => {
 					required: true
 				}],
 				// logging: true,
-				// offset: _from,
-				// limit: _number
+				offset: _from,
+				limit: _number
 			})
 			.then(result => {
 				res.json(result);

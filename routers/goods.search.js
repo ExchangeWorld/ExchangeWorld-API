@@ -15,7 +15,7 @@ var users = require('../ORM/Users');
 var stars = require('../ORM/Stars');
 
 /**
- * Get a goods by given query
+ * Get goods by given query
  *
  * @method GET api/goods/search
  * @param  {String=''} name

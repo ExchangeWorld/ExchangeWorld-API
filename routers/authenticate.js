@@ -30,11 +30,6 @@ var tokens = require('../ORM/Tokens');
  */
 router.post('/register', (req, res) => {
 
-	// **WARNING**
-	// fb_id will be id
-	// and the password for fb will be from a hash func
-	// **WARNING**
-
 	var _fb = ((req.body.fb || '') == 'true') ? true : false;
 	var _id = req.body.identity;
 	var _password = req.body.password || '';
@@ -84,7 +79,6 @@ router.post('/register', (req, res) => {
 				error: err
 			});
 		});
-
 });
 
 /**
@@ -149,7 +143,7 @@ var login_function = (req, res) => {
 							identity: _id,
 							password: _password
 						}, '事實上我們做了一年', {
-							expiresIn: '15m'
+							expiresIn: '30m'
 						})
 					})
 					.then(result => {
@@ -225,10 +219,9 @@ var token_function = (req, res, next) => {
 						next();
 					}
 				});
-
 			} else {
 				res.json({
-					authentication: 'fail',
+					authentication: 'fail'
 				});
 			}
 		})

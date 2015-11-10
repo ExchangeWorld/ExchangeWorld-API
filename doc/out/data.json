@@ -347,7 +347,7 @@
         },
         {
             "file": "../routers/authenticate.js",
-            "line": 90,
+            "line": 84,
             "description": "Login",
             "itemtype": "method",
             "name": "GET api/authenticate/login",
@@ -380,7 +380,7 @@
         },
         {
             "file": "../routers/authenticate.js",
-            "line": 177,
+            "line": 171,
             "description": "Token validation",
             "itemtype": "method",
             "name": "GET *?token=...",
@@ -432,7 +432,7 @@
         },
         {
             "file": "../routers/chatroom.js",
-            "line": 71,
+            "line": 74,
             "description": "Post a chatroom's message of an Exchange",
             "itemtype": "method",
             "name": "POST api/chatroom/exchange",
@@ -461,7 +461,7 @@
         },
         {
             "file": "../routers/chatroom.js",
-            "line": 110,
+            "line": 116,
             "description": "Read a chatroom's message",
             "itemtype": "method",
             "name": "PUT api/chatroom/read",
@@ -552,7 +552,7 @@
         },
         {
             "file": "../routers/comment.js",
-            "line": 119,
+            "line": 115,
             "description": "Edit a comment",
             "itemtype": "method",
             "name": "PUT api/comment/edit",
@@ -576,7 +576,7 @@
         },
         {
             "file": "../routers/comment.js",
-            "line": 157,
+            "line": 149,
             "description": "Delete a comment",
             "itemtype": "method",
             "name": "DELETE api/comment/delete",
@@ -798,7 +798,7 @@
         },
         {
             "file": "../routers/follow.js",
-            "line": 134,
+            "line": 123,
             "description": "Delete a follow\n(follower -[follow]-> followed)",
             "itemtype": "method",
             "name": "DELETE api/follow/delete",
@@ -1002,7 +1002,7 @@
         {
             "file": "../routers/goods.search.js",
             "line": 17,
-            "description": "Get a goods by given query",
+            "description": "Get goods by given query",
             "itemtype": "method",
             "name": "GET api/goods/search",
             "params": [
@@ -1367,7 +1367,7 @@
         },
         {
             "file": "../routers/queue.js",
-            "line": 286,
+            "line": 285,
             "description": "Delete a queue",
             "itemtype": "method",
             "name": "DELETE api/queue/delete",
@@ -1403,7 +1403,7 @@
                 }
             ],
             "return": {
-                "description": "The stars including user",
+                "description": "The stars including users",
                 "type": "JSON"
             },
             "class": "Star"

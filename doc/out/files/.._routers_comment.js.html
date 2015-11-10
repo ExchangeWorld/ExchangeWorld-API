@@ -198,11 +198,7 @@ router.post(&#x27;/post&#x27;, (req, res) =&gt; {
 			content: _content
 		})
 		.then(result =&gt; {
-			if (result == null) {
-				res.json({});
-			} else {
-				res.json(result);
-			}
+			res.json(result);
 		})
 		.catch(err =&gt; {
 			res.send({
@@ -236,11 +232,7 @@ router.put(&#x27;/edit&#x27;, (req, res) =&gt; {
 			return result;
 		})
 		.then(result =&gt; {
-			if (result == null) {
-				res.json(null);
-			} else {
-				res.json(result);
-			}
+			res.json(result);
 		})
 		.catch(err =&gt; {
 			res.send({
