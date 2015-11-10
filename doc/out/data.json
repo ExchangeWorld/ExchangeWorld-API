@@ -90,6 +90,15 @@
             },
             "fors": {},
             "namespaces": {}
+        },
+        "../routers/star.js": {
+            "name": "../routers/star.js",
+            "modules": {},
+            "classes": {
+                "Star": 1
+            },
+            "fors": {},
+            "namespaces": {}
         }
     },
     "modules": {},
@@ -212,7 +221,19 @@
             "extension_for": [],
             "file": "../routers/queue.js",
             "line": 1,
-            "description": "Provides some methods related to Queues\n(queuer_goods -[queue]-> host_goods)"
+            "description": "Provides some methods related to queues\n(queuer_goods -[queue]-> host_goods)"
+        },
+        "Star": {
+            "name": "Star",
+            "shortname": "Star",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/star.js",
+            "line": 1,
+            "description": "Provides some methods related to stars"
         }
     },
     "elements": {},
@@ -1037,7 +1058,7 @@
             "line": 164,
             "description": "Post messages by given receiver and sender",
             "itemtype": "method",
-            "name": "POST api/message",
+            "name": "POST api/message/post",
             "params": [
                 {
                     "name": "receiver_uid",
@@ -1133,7 +1154,7 @@
             "line": 100,
             "description": "Emit notification",
             "itemtype": "method",
-            "name": "POST api/notification",
+            "name": "POST api/notification/post",
             "params": [
                 {
                     "name": "sender_uid",
@@ -1283,7 +1304,7 @@
         },
         {
             "file": "../routers/queue.js",
-            "line": 283,
+            "line": 286,
             "description": "Delete a queue",
             "itemtype": "method",
             "name": "DELETE api/queue/delete",
@@ -1304,6 +1325,92 @@
                 "type": "JSON"
             },
             "class": "Queue"
+        },
+        {
+            "file": "../routers/star.js",
+            "line": 17,
+            "description": "Get users who star the goods",
+            "itemtype": "method",
+            "name": "GET api/star/to",
+            "params": [
+                {
+                    "name": "goods_gid",
+                    "description": "The goods starred by a user",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "The stars including user",
+                "type": "JSON"
+            },
+            "class": "Star"
+        },
+        {
+            "file": "../routers/star.js",
+            "line": 48,
+            "description": "Get goods that a user stars",
+            "itemtype": "method",
+            "name": "GET api/star/by",
+            "params": [
+                {
+                    "name": "starring_user_uid",
+                    "description": "Who star the goods",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "The stars including goods",
+                "type": "JSON"
+            },
+            "class": "Star"
+        },
+        {
+            "file": "../routers/star.js",
+            "line": 82,
+            "description": "Post a star",
+            "itemtype": "method",
+            "name": "POST api/star/post",
+            "params": [
+                {
+                    "name": "goods_gid",
+                    "description": "The goods starred by the user",
+                    "type": "Integer"
+                },
+                {
+                    "name": "starring_user_uid",
+                    "description": "Who star the goods",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "New created star object or already created one",
+                "type": "JSON"
+            },
+            "class": "Star"
+        },
+        {
+            "file": "../routers/star.js",
+            "line": 110,
+            "description": "Delete a star",
+            "itemtype": "method",
+            "name": "DELETE api/star/delete",
+            "params": [
+                {
+                    "name": "goods_gid",
+                    "description": "The goods starred by the user",
+                    "type": "Integer"
+                },
+                {
+                    "name": "starring_user_uid",
+                    "description": "Who star the goods",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Number of deleted stars",
+                "type": "JSON"
+            },
+            "class": "Star"
         }
     ],
     "warnings": []

@@ -1,5 +1,5 @@
 /**
- * Provides some methods related to Queues
+ * Provides some methods related to queues
  * (queuer_goods -[queue]-> host_goods)
  *
  * @class Queue
@@ -269,7 +269,10 @@ router.post('/post', (req, res) => {
 			if (JSON.stringify(result) == JSON.stringify({})) {
 				res.json(result);
 			} else {
-				res.json(result[0]);
+				result
+					.then((r, created) => {
+						res.json(r);
+					});
 			}
 		})
 		.catch(err => {

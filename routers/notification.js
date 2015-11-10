@@ -100,14 +100,14 @@ router.get('/', (req, res) => {
 /**
  * Emit notification
  *
- * @method POST api/notification
+ * @method POST api/notification/post
  * @param  {Integer} sender_uid The user trigger the notification
  * @param  {Integer} receiver_uid Target user
  * @param  {String} trigger_url The trigger object's URL
  * @param  {String} content The content of the notification
  * @return {JSON} A notification including receiver and sender
  */
-router.post('/', (req, res) => {
+router.post('/post', (req, res) => {
 
 	var _sender_uid = parseInt(req.body.sender_uid);
 	var _receiver_uid = parseInt(req.body.receiver_uid);

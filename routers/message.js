@@ -164,13 +164,13 @@ router.get('/between', (req, res) => {
 /**
  * Post messages by given receiver and sender
  *
- * @method POST api/message
+ * @method POST api/message/post
  * @param  {Integer} receiver_uid The receiver
  * @param  {Integer} sender_uid The sender
  * @param  {String} content The content
  * @return {JSON} New created message object
  */
-router.post('/', (req, res) => {
+router.post('/post', (req, res) => {
 
 	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
 	var _sender_uid = parseInt(req.body.sender_uid, 10);

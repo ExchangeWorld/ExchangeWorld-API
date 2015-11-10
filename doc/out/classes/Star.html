@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Exchange</title>
+    <title>Star</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -86,12 +86,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Exchange Class</h1>
+<h1>Star Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/.._routers_exchange.js.html#l1"><code>..&#x2F;routers&#x2F;exchange.js:1</code></a>
+            Defined in: <a href="../files/.._routers_star.js.html#l1"><code>..&#x2F;routers&#x2F;star.js:1</code></a>
         </div>
 
 
@@ -99,7 +99,7 @@
 
 
 <div class="box intro">
-    <p>Provides some methods related to EXCHANGES</p>
+    <p>Provides some methods related to stars</p>
 
 </div>
 
@@ -120,31 +120,19 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_GET api/exchange/">GET api/exchange/</a>
+                                <a href="#method_DELETE api/star/delete">DELETE api/star/delete</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_GET api/exchange/all">GET api/exchange/all</a>
+                                <a href="#method_GET api/star/by">GET api/star/by</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_GET api/exchange/of/user/all">GET api/exchange/of/user/all</a>
+                                <a href="#method_GET api/star/to">GET api/star/to</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_GET api/exchange/of/user/one">GET api/exchange/of/user/one</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_POST api/exchange/create">POST api/exchange/create</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_PUT api/exchange/agree">PUT api/exchange/agree</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_PUT api/exchange/drop">PUT api/exchange/drop</a>
+                                <a href="#method_POST api/star/post">POST api/star/post</a>
 
                             </li>
                     </ul>
@@ -157,13 +145,16 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_GET api/exchange/" class="method item">
-    <h3 class="name"><code>GET api/exchange/</code></h3>
+<div id="method_DELETE api/star/delete" class="method item">
+    <h3 class="name"><code>DELETE api/star/delete</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>eid</code>
+                        <code>goods_gid</code>
+                </li>
+                <li class="arg">
+                        <code>starring_user_uid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -181,7 +172,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_exchange.js.html#l230"><code>..&#x2F;routers&#x2F;exchange.js:230</code></a>
+        <a href="../files/.._routers_star.js.html#l110"><code>..&#x2F;routers&#x2F;star.js:110</code></a>
         </p>
 
 
@@ -189,7 +180,7 @@
     </div>
 
     <div class="description">
-        <p>Get an exchange simply by given eid</p>
+        <p>Delete a star</p>
 
     </div>
 
@@ -198,12 +189,23 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">eid</code>
+                        <code class="param-name">goods_gid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of exchange</p>
+                        <p>The goods starred by the user</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">starring_user_uid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>Who star the goods</p>
 
                     </div>
 
@@ -216,63 +218,20 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>An exchange incluing goods and owners</p>
+                    <p>Number of deleted stars</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_GET api/exchange/all" class="method item">
-    <h3 class="name"><code>GET api/exchange/all</code></h3>
-
-        <span class="paren">()</span>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_exchange.js.html#l20"><code>..&#x2F;routers&#x2F;exchange.js:20</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Get all of exchanges</p>
-
-    </div>
-
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>Exchanges including goods and owners</p>
-
-            </div>
-        </div>
-
-
-</div>
-<div id="method_GET api/exchange/of/user/all" class="method item">
-    <h3 class="name"><code>GET api/exchange/of/user/all</code></h3>
+<div id="method_GET api/star/by" class="method item">
+    <h3 class="name"><code>GET api/star/by</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>owner_uid</code>
+                        <code>starring_user_uid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -290,7 +249,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_exchange.js.html#l67"><code>..&#x2F;routers&#x2F;exchange.js:67</code></a>
+        <a href="../files/.._routers_star.js.html#l48"><code>..&#x2F;routers&#x2F;star.js:48</code></a>
         </p>
 
 
@@ -298,7 +257,7 @@
     </div>
 
     <div class="description">
-        <p>Get all exchanges of a user</p>
+        <p>Get goods that a user stars</p>
 
     </div>
 
@@ -307,12 +266,12 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">owner_uid</code>
+                        <code class="param-name">starring_user_uid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The owner</p>
+                        <p>Who star the goods</p>
 
                     </div>
 
@@ -325,23 +284,20 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Exchanges incluing goods( owner_goods, other_goods )</p>
+                    <p>The stars including goods</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_GET api/exchange/of/user/one" class="method item">
-    <h3 class="name"><code>GET api/exchange/of/user/one</code></h3>
+<div id="method_GET api/star/to" class="method item">
+    <h3 class="name"><code>GET api/star/to</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>eid</code>
-                </li>
-                <li class="arg">
-                        <code>owner_uid</code>
+                        <code>goods_gid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -359,7 +315,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_exchange.js.html#l146"><code>..&#x2F;routers&#x2F;exchange.js:146</code></a>
+        <a href="../files/.._routers_star.js.html#l17"><code>..&#x2F;routers&#x2F;star.js:17</code></a>
         </p>
 
 
@@ -367,7 +323,7 @@
     </div>
 
     <div class="description">
-        <p>Get an exchanges of a user</p>
+        <p>Get users who star the goods</p>
 
     </div>
 
@@ -376,23 +332,12 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">eid</code>
+                        <code class="param-name">goods_gid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of the exchange</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">owner_uid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>The owner</p>
+                        <p>The goods starred by a user</p>
 
                     </div>
 
@@ -405,23 +350,23 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>(Array with one element) An exchange incluing goods( owner_goods, other_goods )</p>
+                    <p>The stars including user</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_POST api/exchange/create" class="method item">
-    <h3 class="name"><code>POST api/exchange/create</code></h3>
+<div id="method_POST api/star/post" class="method item">
+    <h3 class="name"><code>POST api/star/post</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>goods_one_gid</code>
+                        <code>goods_gid</code>
                 </li>
                 <li class="arg">
-                        <code>goods_two_gid</code>
+                        <code>starring_user_uid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -439,7 +384,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_exchange.js.html#l281"><code>..&#x2F;routers&#x2F;exchange.js:281</code></a>
+        <a href="../files/.._routers_star.js.html#l82"><code>..&#x2F;routers&#x2F;star.js:82</code></a>
         </p>
 
 
@@ -447,7 +392,7 @@
     </div>
 
     <div class="description">
-        <p>Create an exchange</p>
+        <p>Post a star</p>
 
     </div>
 
@@ -456,23 +401,23 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">goods_one_gid</code>
+                        <code class="param-name">goods_gid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>One of goods in new exchange</p>
+                        <p>The goods starred by the user</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">goods_two_gid</code>
+                        <code class="param-name">starring_user_uid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>Other goods in new exchange</p>
+                        <p>Who star the goods</p>
 
                     </div>
 
@@ -485,154 +430,7 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>If (goods_one, goods_two) pair exists return that one, or return new created exchange</p>
-
-            </div>
-        </div>
-
-
-</div>
-<div id="method_PUT api/exchange/agree" class="method item">
-    <h3 class="name"><code>PUT api/exchange/agree</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>eid</code>
-                </li>
-                <li class="arg">
-                        <code>owner_uid</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_exchange.js.html#l418"><code>..&#x2F;routers&#x2F;exchange.js:418</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Accept an exchange by a user
-And if two owners accept, then the exchange will be set status='completed'</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">eid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>The ID of an exchange</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">owner_uid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>Who wants to accept this exchange</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>Updated exchange object</p>
-
-            </div>
-        </div>
-
-
-</div>
-<div id="method_PUT api/exchange/drop" class="method item">
-    <h3 class="name"><code>PUT api/exchange/drop</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>eid</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_exchange.js.html#l372"><code>..&#x2F;routers&#x2F;exchange.js:372</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Drop an exchange</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">eid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>The ID of an exchange</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>Updated exchange object</p>
+                    <p>New created star object or already created one</p>
 
             </div>
         </div>
