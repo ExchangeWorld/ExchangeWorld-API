@@ -117,6 +117,15 @@
             },
             "fors": {},
             "namespaces": {}
+        },
+        "../routers/user.profile.js": {
+            "name": "../routers/user.profile.js",
+            "modules": {},
+            "classes": {
+                "Profile": 1
+            },
+            "fors": {},
+            "namespaces": {}
         }
     },
     "modules": {},
@@ -276,6 +285,18 @@
             "file": "../routers/user.js",
             "line": 1,
             "description": "Provides some methods related to users"
+        },
+        "Profile": {
+            "name": "Profile",
+            "shortname": "Profile",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/user.profile.js",
+            "line": 1,
+            "description": "Provides some methods related to users' profile"
         }
     },
     "elements": {},
@@ -1511,6 +1532,45 @@
                 "type": "JSON"
             },
             "class": "User"
+        },
+        {
+            "file": "../routers/user.profile.js",
+            "line": 15,
+            "description": "Edit a user's profile",
+            "itemtype": "method",
+            "name": "PUT api/user/profile/edit",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "email",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "introduction",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "wishlist",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Updated user object, or if not found, return {}",
+                "type": "JSON|Nothing"
+            },
+            "class": "Profile"
         }
     ],
     "warnings": []

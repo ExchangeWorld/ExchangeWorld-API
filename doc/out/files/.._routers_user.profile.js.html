@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>../routers/goods.js</title>
+    <title>../routers/user.profile.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -89,14 +89,14 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: ../routers/goods.js</h1>
+<h1 class="file-heading">File: ../routers/user.profile.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * Provides some methods related to goods
+ * Provides some methods related to users&#x27; profile
  *
- * @class Goods
+ * @class Profile
  */
 
 &#x27;use strict&#x27;;
@@ -105,167 +105,31 @@ var express = require(&#x27;express&#x27;);
 var router = express.Router();
 
 // Including tables
-var goods = require(&#x27;../ORM/Goods&#x27;);
 var users = require(&#x27;../ORM/Users&#x27;);
-var comments = require(&#x27;../ORM/Comments&#x27;);
-var stars = require(&#x27;../ORM/Stars&#x27;);
 
 /**
- * Get a goods by given gid
+ * Edit a user&#x27;s profile
  *
- * @method GET api/goods/
- * @param  {Integer} gid The ID of goods
- * @return {JSON} A goods including users, comments and stars
- */
-router.get(&#x27;/&#x27;, (req, res) =&gt; {
-
-	var _gid = parseInt(req.query.gid, 10);
-
-	// Emit a find operation with orm model in table &#x60;goods&#x60;
-	goods
-		.findOne({
-			where: {
-				gid: _gid,
-				deleted: 0
-			},
-			include: [{
-				model: users,
-				as: &#x27;owner&#x27;,
-				required: true
-			}, {
-				model: comments,
-				as: &#x27;comments&#x27;
-			}, {
-				model: stars,
-				as: &#x27;star_goods&#x27;,
-				include: [{
-					model: users,
-					as: &#x27;starring_user&#x27;
-				}]
-			}]
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Get all goods of given owner_uid
- *
- * @method GET api/goods/of
- * @param  {Integer} owner_uid The owner
- * @return {JSON} The goods including comments and stars
- */
-router.get(&#x27;/of&#x27;, (req, res) =&gt; {
-
-	var _owner_uid = parseInt(req.query.owner_uid, 10);
-
-	// Emit a find operation with orm model in table &#x60;goods&#x60;
-	goods
-		.findAll({
-			where: {
-				owner_uid: _owner_uid,
-				deleted: 0
-			},
-			include: [{
-				model: comments,
-				as: &#x27;comments&#x27;
-			}, {
-				model: stars,
-				as: &#x27;star_goods&#x27;,
-				include: [{
-					model: users,
-					as: &#x27;starring_user&#x27;
-				}]
-			}]
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Post a goods
- *
- * @method POST api/goods/post
+ * @method PUT api/user/profile/edit
+ * @param  {Integer} uid
  * @param  {String} name
- * @param  {String} category
- * @param  {String=&#x27;&#x27;} description
- * @param  {String=&#x27;&#x27;} photo_path
- * @param  {Float} position_x
- * @param  {Float} position_y
- * @param  {Integer} owner_uid
- * @return {JSON} New created goods object
- */
-router.post(&#x27;/post&#x27;, (req, res) =&gt; {
-
-	var _name = req.body.name;
-	var _category = req.body.category;
-	var _description = req.body.description || &#x27;&#x27;;
-	var _photo_path = req.body.photo_path || &#x27;&#x27;;
-	var _position_x = parseFloat(req.body.position_x);
-	var _position_y = parseFloat(req.body.position_y);
-	var _owner_uid = parseInt(req.body.owner_uid, 10);
-
-	// Create instance
-	goods
-		.create({
-			name: _name,
-			category: _category,
-			description: _description,
-			photo_path: _photo_path,
-			position_x: _position_x,
-			position_y: _position_y,
-			owner_uid: _owner_uid
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Edit a goods
- *
- * @method PUT api/goods/edit
- * @param  {Integer} gid
- * @param  {String} name
- * @param  {String} category
- * @param  {String} description
- * @param  {String} photo_path
- * @param  {Float} position_x
- * @param  {Float} position_y
- * @return {JSON} Updated goods object
+ * @param  {String} email
+ * @param  {String} introduction
+ * @param  {String} wishlist
+ * @return {JSON|Nothing} Updated user object, or if not found, return {}
  */
 router.put(&#x27;/edit&#x27;, (req, res) =&gt; {
 
-	var _gid = parseInt(req.body.gid, 10);
+	var _uid = parseInt(req.body.uid, 10);
 	var _name = req.body.name;
-	var _category = req.body.category;
-	var _description = req.body.description || &#x27;&#x27;;
-	var _photo_path = req.body.photo_path || &#x27;&#x27;;
-	var _position_x = parseFloat(req.body.position_x);
-	var _position_y = parseFloat(req.body.position_y);
+	var _email = req.body.email;
+	var _introduction = req.body.introduction;
+	var _wishlist = req.body.wishlist;
 
-	// Find the good which got right gid and update values
-	goods
+	users
 		.findOne({
 			where: {
-				gid: _gid
+				uid: _uid
 			}
 		})
 		.then(result =&gt; {
@@ -273,11 +137,9 @@ router.put(&#x27;/edit&#x27;, (req, res) =&gt; {
 				return {};
 			} else {
 				result.name = _name;
-				result.category = _category;
-				result.description = _description;
-				result.photo_path = _photo_path;
-				result.position_x = _position_x;
-				result.position_y = _position_y;
+				result.email = _email;
+				result.introduction = _introduction;
+				result.wishlist = _wishlist;
 				result.save().then(() =&gt; {});
 				return result;
 			}
@@ -287,72 +149,6 @@ router.put(&#x27;/edit&#x27;, (req, res) =&gt; {
 		})
 		.catch(err =&gt; {
 			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Rate a goods
- *
- * @method PUT api/goods/rate
- * @param  {Integer} gid The ID of goods
- * @param  {Float} rate The rate point!
- * @return {JSON} Updated goods object
- */
-router.put(&#x27;/rate&#x27;, (req, res) =&gt; {
-
-	var _gid = parseInt(req.body.gid, 10);
-	var _rate = parseFloat(req.body.rate);
-
-	if (_rate != _rate) {
-		res.send({
-			error: &#x27;rate is NaN&#x27;
-		});
-	} else {
-		goods
-			.update({
-				rate: _rate
-			}, {
-				where: {
-					gid: _gid
-				}
-			})
-			.then(_goods =&gt; {
-				res.json(_goods);
-			})
-			.catch(err =&gt; {
-				res.json({
-					error: err
-				});
-			});
-	}
-});
-
-/**
- * Delete a goods (but not really)
- *
- * @method Delete api/goods/delete
- * @param  {Integer} gid The ID of goods
- * @return {JSON} Updated goods object
- */
-router.delete(&#x27;/delete&#x27;, (req, res) =&gt; {
-
-	var _gid = parseInt(req.query.gid, 10);
-
-	goods
-		.update({
-			deleted: 1
-		}, {
-			where: {
-				gid: _gid
-			}
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.json({
 				error: err
 			});
 		});

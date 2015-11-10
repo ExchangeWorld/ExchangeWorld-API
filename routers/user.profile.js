@@ -1,3 +1,9 @@
+/**
+ * Provides some methods related to users' profile
+ *
+ * @class Profile
+ */
+
 'use strict';
 
 var express = require('express');
@@ -5,63 +11,19 @@ var router = express.Router();
 
 // Including tables
 var users = require('../ORM/Users');
-var goods = require('../ORM/Goods');
-var followers = require('../ORM/Followers');
-var followings = require('../ORM/Followings');
 
-// Get a profile
-router.get('/', (req, res) => {
-
-	// Available query params:
-	//
-	// uid
-	//
-
-	// Get property:value in ?x=y&z=w....
-	var _uid = parseInt(req.query.uid, 10);
-
-	// Emit a find operation with orm model in table `users`
-	users
-		.findOne({
-			where: {
-				uid: _uid
-			},
-			include: [{
-				model: goods,
-				as: 'goods'
-			}, {
-				model: followers,
-				as: 'followers_my'
-			}, {
-				model: followings,
-				as: 'followings_my'
-			}]
-		})
-		.then(result => {
-			if (result == null) {
-				res.json({});
-			} else {
-				res.json(data);
-			}
-		})
-		.catch(err => {
-			res.send({
-				error: err
-			});
-		});
-});
-
-// Edit a profile
+/**
+ * Edit a user's profile
+ *
+ * @method PUT api/user/profile/edit
+ * @param  {Integer} uid
+ * @param  {String} name
+ * @param  {String} email
+ * @param  {String} introduction
+ * @param  {String} wishlist
+ * @return {JSON|Nothing} Updated user object, or if not found, return {}
+ */
 router.put('/edit', (req, res) => {
-
-	// Available PUT body params:
-	//
-	// uid
-	// name
-	// email
-	// introduction
-	// wishlist
-	//
 
 	var _uid = parseInt(req.body.uid, 10);
 	var _name = req.body.name;

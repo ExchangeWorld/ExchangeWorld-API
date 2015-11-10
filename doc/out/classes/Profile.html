@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Authenticate</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -89,12 +89,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Authenticate Class</h1>
+<h1>Profile Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/.._routers_authenticate.js.html#l1"><code>..&#x2F;routers&#x2F;authenticate.js:1</code></a>
+            Defined in: <a href="../files/.._routers_user.profile.js.html#l1"><code>..&#x2F;routers&#x2F;user.profile.js:1</code></a>
         </div>
 
 
@@ -102,7 +102,7 @@
 
 
 <div class="box intro">
-    <p>Provides some methods related to any authentications</p>
+    <p>Provides some methods related to users' profile</p>
 
 </div>
 
@@ -123,15 +123,7 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_GET *?token=...">GET *?token=...</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_GET api/authenticate/login">GET api/authenticate/login</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_POST api/authenticate/register">POST api/authenticate/register</a>
+                                <a href="#method_PUT api/user/profile/edit">PUT api/user/profile/edit</a>
 
                             </li>
                     </ul>
@@ -144,13 +136,25 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_GET *?token=..." class="method item">
-    <h3 class="name"><code>GET *?token=...</code></h3>
+<div id="method_PUT api/user/profile/edit" class="method item">
+    <h3 class="name"><code>PUT api/user/profile/edit</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>TOKEN</code>
+                        <code>uid</code>
+                </li>
+                <li class="arg">
+                        <code>name</code>
+                </li>
+                <li class="arg">
+                        <code>email</code>
+                </li>
+                <li class="arg">
+                        <code>introduction</code>
+                </li>
+                <li class="arg">
+                        <code>wishlist</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -168,7 +172,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_authenticate.js.html#l177"><code>..&#x2F;routers&#x2F;authenticate.js:177</code></a>
+        <a href="../files/.._routers_user.profile.js.html#l15"><code>..&#x2F;routers&#x2F;user.profile.js:15</code></a>
         </p>
 
 
@@ -176,7 +180,7 @@
     </div>
 
     <div class="description">
-        <p>Token validation</p>
+        <p>Edit a user's profile</p>
 
     </div>
 
@@ -185,8 +189,48 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">TOKEN</code>
-                        <span class="type">String=''</span>
+                        <code class="param-name">uid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">email</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">introduction</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">wishlist</code>
+                        <span class="type">String</span>
 
 
                     <div class="param-description">
@@ -202,270 +246,7 @@
 
             <div class="returns-description">
                         <span class="type">JSON | Nothing</span>:
-                    <p>If failed, return JSON</p>
-
-            </div>
-        </div>
-
-
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre>
-{
-    authentication: 'timeout',
-    err: err
-}
-</pre><pre>
-{
-    authentication: 'fail',
-}
-</pre>
-            </div>
-        </div>
-</div>
-<div id="method_GET api/authenticate/login" class="method item">
-    <h3 class="name"><code>GET api/authenticate/login</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>fb</code>
-                </li>
-                <li class="arg">
-                        <code>identity</code>
-                </li>
-                <li class="arg">
-                        <code>password</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_authenticate.js.html#l90"><code>..&#x2F;routers&#x2F;authenticate.js:90</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Login</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">fb</code>
-                        <span class="type">Boolean=false</span>
-
-
-                    <div class="param-description">
-                        <p>If the login is with FB</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">identity</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                        <p>The user ID. If it's with FB, fb_id as identity</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">password</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                        <p>Password. If it's with FB, password will be checked by hash</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>Token</p>
-
-            </div>
-        </div>
-
-
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre>
-{
-    authentication: 'success',
-    token: result.token
-}
-</pre><pre>
-{
-    authentication: 'fail',
-    token: null
-}
-</pre>
-            </div>
-        </div>
-</div>
-<div id="method_POST api/authenticate/register" class="method item">
-    <h3 class="name"><code>POST api/authenticate/register</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>fb</code>
-                </li>
-                <li class="arg">
-                        <code>identity</code>
-                </li>
-                <li class="arg">
-                        <code>password</code>
-                </li>
-                <li class="arg">
-                        <code>name</code>
-                </li>
-                <li class="arg">
-                        <code>email</code>
-                </li>
-                <li class="arg">
-                        <code>photo_path</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">JSON</span>
-        </span>
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/.._routers_authenticate.js.html#l19"><code>..&#x2F;routers&#x2F;authenticate.js:19</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Register a new user</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">fb</code>
-                        <span class="type">Boolean=false</span>
-
-
-                    <div class="param-description">
-                        <p>If the registeration is with FB</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">identity</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                        <p>The user ID. If it's with FB, fb_id as identity</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">password</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                        <p>Password. If it's with FB, password will be generated by hash</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                        <p>The displaying name</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">email</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                        <p>The email</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">photo_path</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                        <p>The photo path of user face photo</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>New created user object</p>
+                    <p>Updated user object, or if not found, return {}</p>
 
             </div>
         </div>
