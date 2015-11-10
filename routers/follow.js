@@ -11,7 +11,7 @@ var express = require('express');
 var router = express.Router();
 
 // Including tables
-var follows = require('../ORM/follows');
+var follows = require('../ORM/Follows');
 var users = require('../ORM/Users');
 
 /**
