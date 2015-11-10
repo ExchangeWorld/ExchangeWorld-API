@@ -3,7 +3,8 @@ YUI.add("yuidoc-meta", function(Y) {
     "classes": [
         "Authenticate",
         "Chatroom",
-        "Comment"
+        "Comment",
+        "Exchange"
     ],
     "modules": [],
     "allModules": [],

@@ -28,6 +28,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "../routers/exchange.js": {
+            "name": "../routers/exchange.js",
+            "modules": {},
+            "classes": {
+                "Exchange": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "../routers/message.js": {
             "name": "../routers/message.js",
             "modules": {},
@@ -80,6 +89,18 @@
             "file": "../routers/comment.js",
             "line": 1,
             "description": "Provides some methods related to comments"
+        },
+        "Exchange": {
+            "name": "Exchange",
+            "shortname": "Exchange",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/exchange.js",
+            "line": 1,
+            "description": "Provides some methods related to EXCHANGES"
         }
     },
     "elements": {},
@@ -375,6 +396,142 @@
                 "type": "JSON"
             },
             "class": "Comment"
+        },
+        {
+            "file": "../routers/exchange.js",
+            "line": 20,
+            "description": "Get all of exchanges",
+            "itemtype": "method",
+            "name": "GET api/exchange/all",
+            "return": {
+                "description": "Exchanges including goods and owners",
+                "type": "JSON"
+            },
+            "class": "Exchange"
+        },
+        {
+            "file": "../routers/exchange.js",
+            "line": 67,
+            "description": "Get all exchanges of an user",
+            "itemtype": "method",
+            "name": "GET api/exchange/of/user/all",
+            "params": [
+                {
+                    "name": "_owner_uid",
+                    "description": "The owner",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Exchanges incluing goods( owner_goods, other_goods )",
+                "type": "JSON"
+            },
+            "class": "Exchange"
+        },
+        {
+            "file": "../routers/exchange.js",
+            "line": 146,
+            "description": "Get an exchange simply by given eid",
+            "itemtype": "method",
+            "name": "GET api/exchange/",
+            "params": [
+                {
+                    "name": "eid",
+                    "description": "The ID of exchange",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Exchange incluing goods and owners",
+                "type": "JSON"
+            },
+            "class": "Exchange"
+        },
+        {
+            "file": "../routers/exchange.js",
+            "line": 197,
+            "description": "Create an exchange",
+            "itemtype": "method",
+            "name": "POST api/exchange/create",
+            "params": [
+                {
+                    "name": "goods_one_gid",
+                    "description": "One of goods in new exchange",
+                    "type": "Integer"
+                },
+                {
+                    "name": "goods_two_gid",
+                    "description": "Other goods in new exchange",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "If (goods_one, goods_two) pair exists return that one, or return new created exchange",
+                "type": "JSON"
+            },
+            "class": "Exchange"
+        },
+        {
+            "file": "../routers/exchange.js",
+            "line": 288,
+            "description": "Complete an exchange",
+            "itemtype": "method",
+            "name": "PUT api/exchange/complete",
+            "params": [
+                {
+                    "name": "eid",
+                    "description": "The ID of an exchange",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "If it cannot be done, return {}. If it can be done, return updated exchange object",
+                "type": "JSON"
+            },
+            "class": "Exchange"
+        },
+        {
+            "file": "../routers/exchange.js",
+            "line": 298,
+            "description": "Drop an exchange",
+            "itemtype": "method",
+            "name": "PUT api/exchange/drop",
+            "params": [
+                {
+                    "name": "eid",
+                    "description": "The ID of an exchange",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Updated exchange object",
+                "type": "JSON"
+            },
+            "class": "Exchange"
+        },
+        {
+            "file": "../routers/exchange.js",
+            "line": 308,
+            "description": "Accept an exchange by an user",
+            "itemtype": "method",
+            "name": "PUT api/exchange/agree",
+            "params": [
+                {
+                    "name": "eid",
+                    "description": "The ID of an exchange",
+                    "type": "Integer"
+                },
+                {
+                    "name": "owner_uid",
+                    "description": "Who wants to accept this exchange",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Updated exchange object",
+                "type": "JSON"
+            },
+            "class": "Exchange"
         },
         {
             "file": "../routers/message.js",

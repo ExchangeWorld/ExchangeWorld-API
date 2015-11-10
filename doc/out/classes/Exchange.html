@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Chatroom</title>
+    <title>Exchange</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -79,12 +79,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Chatroom Class</h1>
+<h1>Exchange Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/.._routers_chatroom.js.html#l1"><code>..&#x2F;routers&#x2F;chatroom.js:1</code></a>
+            Defined in: <a href="../files/.._routers_exchange.js.html#l1"><code>..&#x2F;routers&#x2F;exchange.js:1</code></a>
         </div>
 
 
@@ -92,7 +92,7 @@
 
 
 <div class="box intro">
-    <p>Provides some methods related to chatrooms</p>
+    <p>Provides some methods related to EXCHANGES</p>
 
 </div>
 
@@ -113,15 +113,31 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_GET api/chatroom/exchange">GET api/chatroom/exchange</a>
+                                <a href="#method_GET api/exchange/">GET api/exchange/</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_POST api/chatroom/exchange">POST api/chatroom/exchange</a>
+                                <a href="#method_GET api/exchange/all">GET api/exchange/all</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_PUT api/chatroom/read">PUT api/chatroom/read</a>
+                                <a href="#method_GET api/exchange/of/user/all">GET api/exchange/of/user/all</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_POST api/exchange/create">POST api/exchange/create</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_PUT api/exchange/agree">PUT api/exchange/agree</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_PUT api/exchange/complete">PUT api/exchange/complete</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_PUT api/exchange/drop">PUT api/exchange/drop</a>
 
                             </li>
                     </ul>
@@ -134,19 +150,13 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_GET api/chatroom/exchange" class="method item">
-    <h3 class="name"><code>GET api/chatroom/exchange</code></h3>
+<div id="method_GET api/exchange/" class="method item">
+    <h3 class="name"><code>GET api/exchange/</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
                         <code>eid</code>
-                </li>
-                <li class="arg">
-                        <code>from</code>
-                </li>
-                <li class="arg">
-                        <code>number</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -164,7 +174,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_chatroom.js.html#l17"><code>..&#x2F;routers&#x2F;chatroom.js:17</code></a>
+        <a href="../files/.._routers_exchange.js.html#l146"><code>..&#x2F;routers&#x2F;exchange.js:146</code></a>
         </p>
 
 
@@ -172,7 +182,7 @@
     </div>
 
     <div class="description">
-        <p>Get chatroom's messages of an Exchange</p>
+        <p>Get an exchange simply by given eid</p>
 
     </div>
 
@@ -191,28 +201,6 @@
                     </div>
 
                 </li>
-                <li class="param">
-                        <code class="param-name">from</code>
-                        <span class="type">Integer=0</span>
-
-
-                    <div class="param-description">
-                        <p>From what number of messages</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">number</code>
-                        <span class="type">Integer=10</span>
-
-
-                    <div class="param-description">
-                        <p>How many messages to get</p>
-
-                    </div>
-
-                </li>
             </ul>
         </div>
 
@@ -221,26 +209,63 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Messages including <code>sender</code></p>
+                    <p>Exchange incluing goods and owners</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_POST api/chatroom/exchange" class="method item">
-    <h3 class="name"><code>POST api/chatroom/exchange</code></h3>
+<div id="method_GET api/exchange/all" class="method item">
+    <h3 class="name"><code>GET api/exchange/all</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">JSON</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/.._routers_exchange.js.html#l20"><code>..&#x2F;routers&#x2F;exchange.js:20</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Get all of exchanges</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">JSON</span>:
+                    <p>Exchanges including goods and owners</p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_GET api/exchange/of/user/all" class="method item">
+    <h3 class="name"><code>GET api/exchange/of/user/all</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>eid</code>
-                </li>
-                <li class="arg">
-                        <code>sender_uid</code>
-                </li>
-                <li class="arg">
-                        <code>content</code>
+                        <code>_owner_uid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -258,7 +283,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_chatroom.js.html#l71"><code>..&#x2F;routers&#x2F;chatroom.js:71</code></a>
+        <a href="../files/.._routers_exchange.js.html#l67"><code>..&#x2F;routers&#x2F;exchange.js:67</code></a>
         </p>
 
 
@@ -266,7 +291,156 @@
     </div>
 
     <div class="description">
-        <p>Post a chatroom's message of an Exchange</p>
+        <p>Get all exchanges of an user</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">_owner_uid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>The owner</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">JSON</span>:
+                    <p>Exchanges incluing goods( owner_goods, other_goods )</p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_POST api/exchange/create" class="method item">
+    <h3 class="name"><code>POST api/exchange/create</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>goods_one_gid</code>
+                </li>
+                <li class="arg">
+                        <code>goods_two_gid</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">JSON</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/.._routers_exchange.js.html#l197"><code>..&#x2F;routers&#x2F;exchange.js:197</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Create an exchange</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">goods_one_gid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>One of goods in new exchange</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">goods_two_gid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>Other goods in new exchange</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">JSON</span>:
+                    <p>If (goods_one, goods_two) pair exists return that one, or return new created exchange</p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_PUT api/exchange/agree" class="method item">
+    <h3 class="name"><code>PUT api/exchange/agree</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>eid</code>
+                </li>
+                <li class="arg">
+                        <code>owner_uid</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">JSON</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/.._routers_exchange.js.html#l308"><code>..&#x2F;routers&#x2F;exchange.js:308</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Accept an exchange by an user</p>
 
     </div>
 
@@ -280,29 +454,18 @@
 
 
                     <div class="param-description">
-                        <p>The ID of exchange</p>
+                        <p>The ID of an exchange</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">sender_uid</code>
+                        <code class="param-name">owner_uid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>Who post the message</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">content</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                        <p>The content of the message</p>
+                        <p>Who wants to accept this exchange</p>
 
                     </div>
 
@@ -315,23 +478,20 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>New created message object</p>
+                    <p>Updated exchange object</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_PUT api/chatroom/read" class="method item">
-    <h3 class="name"><code>PUT api/chatroom/read</code></h3>
+<div id="method_PUT api/exchange/complete" class="method item">
+    <h3 class="name"><code>PUT api/exchange/complete</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>cid</code>
-                </li>
-                <li class="arg">
-                        <code>receiver_uid</code>
+                        <code>eid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -349,7 +509,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_chatroom.js.html#l110"><code>..&#x2F;routers&#x2F;chatroom.js:110</code></a>
+        <a href="../files/.._routers_exchange.js.html#l288"><code>..&#x2F;routers&#x2F;exchange.js:288</code></a>
         </p>
 
 
@@ -357,7 +517,7 @@
     </div>
 
     <div class="description">
-        <p>Read a chatroom's message</p>
+        <p>Complete an exchange</p>
 
     </div>
 
@@ -366,23 +526,12 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">cid</code>
+                        <code class="param-name">eid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of chatroom</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">receiver_uid</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>Who received the message (Not sender!)</p>
+                        <p>The ID of an exchange</p>
 
                     </div>
 
@@ -395,7 +544,73 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Updated message object</p>
+                    <p>If it cannot be done, return {}. If it can be done, return updated exchange object</p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_PUT api/exchange/drop" class="method item">
+    <h3 class="name"><code>PUT api/exchange/drop</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>eid</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">JSON</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/.._routers_exchange.js.html#l298"><code>..&#x2F;routers&#x2F;exchange.js:298</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Drop an exchange</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">eid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>The ID of an exchange</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">JSON</span>:
+                    <p>Updated exchange object</p>
 
             </div>
         </div>
