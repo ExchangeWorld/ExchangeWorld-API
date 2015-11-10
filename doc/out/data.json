@@ -81,6 +81,15 @@
             },
             "fors": {},
             "namespaces": {}
+        },
+        "../routers/queue.js": {
+            "name": "../routers/queue.js",
+            "modules": {},
+            "classes": {
+                "Queue": 1
+            },
+            "fors": {},
+            "namespaces": {}
         }
     },
     "modules": {},
@@ -192,6 +201,18 @@
             "file": "../routers/notification.js",
             "line": 1,
             "description": "Provides some methods related to notifications"
+        },
+        "Queue": {
+            "name": "Queue",
+            "shortname": "Queue",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/queue.js",
+            "line": 1,
+            "description": "Provides some methods related to Queues\n(queuer_goods -[queue]-> host_goods)"
         }
     },
     "elements": {},
@@ -1159,6 +1180,130 @@
                 "type": "JSON"
             },
             "class": "Notification"
+        },
+        {
+            "file": "../routers/queue.js",
+            "line": 18,
+            "description": "Get goods are queueing on given host_goods\n(If queuer_goods is in another exchange, it will not be returned)",
+            "itemtype": "method",
+            "name": "GET api/queue/of/goods",
+            "params": [
+                {
+                    "name": "host_goods_gid",
+                    "description": "",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "The queues including goods and owners",
+                "type": "JSON"
+            },
+            "class": "Queue"
+        },
+        {
+            "file": "../routers/queue.js",
+            "line": 71,
+            "description": "Get goods are queued by given queuer_goods",
+            "itemtype": "method",
+            "name": "GET api/queue/by/goods",
+            "params": [
+                {
+                    "name": "queuer_goods_gid",
+                    "description": "",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "The queues including goods and owners",
+                "type": "JSON"
+            },
+            "class": "Queue"
+        },
+        {
+            "file": "../routers/queue.js",
+            "line": 125,
+            "description": "Get goods are queueing on someone's goods",
+            "itemtype": "method",
+            "name": "GET api/queue/of/person",
+            "params": [
+                {
+                    "name": "host_user_uid",
+                    "description": "Who owns the host_goods",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "The queues including goods and owners",
+                "type": "JSON"
+            },
+            "class": "Queue"
+        },
+        {
+            "file": "../routers/queue.js",
+            "line": 177,
+            "description": "Get goods are queued by someone's goods",
+            "itemtype": "method",
+            "name": "GET api/queue/by/person",
+            "params": [
+                {
+                    "name": "queuer_user_uid",
+                    "description": "Who owns the queuer_goods",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "The queues including goods and owners",
+                "type": "JSON"
+            },
+            "class": "Queue"
+        },
+        {
+            "file": "../routers/queue.js",
+            "line": 229,
+            "description": "Post a queue\n(queuer_goods -[queue]-> host_goods)\n(If queuer_goods is in another exchange return {})",
+            "itemtype": "method",
+            "name": "POST api/queue/post",
+            "params": [
+                {
+                    "name": "host_goods_gid",
+                    "description": "Which is queued",
+                    "type": "Integer"
+                },
+                {
+                    "name": "queuer_goods_gid",
+                    "description": "Which is queueing",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "New created queue object, already created one or {}",
+                "type": "JSON|Nothing"
+            },
+            "class": "Queue"
+        },
+        {
+            "file": "../routers/queue.js",
+            "line": 283,
+            "description": "Delete a queue",
+            "itemtype": "method",
+            "name": "DELETE api/queue/delete",
+            "params": [
+                {
+                    "name": "host_goods_gid",
+                    "description": "Which is queued",
+                    "type": "Integer"
+                },
+                {
+                    "name": "queuer_goods_gid",
+                    "description": "Which is queueing",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Number of deleted queues",
+                "type": "JSON"
+            },
+            "class": "Queue"
         }
     ],
     "warnings": []

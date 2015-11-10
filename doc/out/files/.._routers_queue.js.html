@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>../routers/comment.js</title>
+    <title>../routers/queue.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -85,14 +85,15 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: ../routers/comment.js</h1>
+<h1 class="file-heading">File: ../routers/queue.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * Provides some methods related to comments
+ * Provides some methods related to Queues
+ * (queuer_goods -[queue]-&gt; host_goods)
  *
- * @class Comment
+ * @class Queue
  */
 
 &#x27;use strict&#x27;;
@@ -101,65 +102,51 @@ var express = require(&#x27;express&#x27;);
 var router = express.Router();
 
 // Including tables
-var comments = require(&#x27;../ORM/Comments&#x27;);
-var users = require(&#x27;../ORM/Users&#x27;);
+var queues = require(&#x27;../ORM/Queues&#x27;);
 var goods = require(&#x27;../ORM/Goods&#x27;);
+var users = require(&#x27;../ORM/Users&#x27;);
 
 /**
- * Get comments of a goods
+ * Get goods are queueing on given host_goods
+ * (If queuer_goods is in another exchange, it will not be returned)
  *
- * @method GET api/comment/of/goods
- * @param  {Integer} goods_gid The commented goods
- * @return {JSON} Comments including &#x60;commenter&#x60;
+ * @method GET api/queue/of/goods
+ * @param  {Integer} host_goods_gid
+ * @return {JSON} The queues including goods and owners
  */
 router.get(&#x27;/of/goods&#x27;, (req, res) =&gt; {
 
-	var _goods_gid = parseInt(req.query.goods_gid, 10);
+	var _host_goods_gid = parseInt(req.query.host_goods_gid, 10);
 
-	comments
+	queues
 		.findAll({
 			where: {
-				goods_gid: _goods_gid
+				host_goods_gid: _host_goods_gid
 			},
-			order: &#x27;cid DESC&#x27;,
-			include: [{
-				model: users,
-				required: true
-			}]
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Get comments of a user
- *
- * @method GET api/comment/of/user
- * @param  {Integer} commenter_uid The commenter&#x27;s uid
- * @return {JSON} Comments including &#x60;goods&#x60;, and they are not deleted
- */
-router.get(&#x27;/of/user&#x27;, (req, res) =&gt; {
-
-	var _commenter_uid = parseInt(req.query.commenter_uid, 10);
-
-	comments
-		.findAll({
-			where: {
-				commenter_uid: _commenter_uid
-			},
-			order: &#x27;cid DESC&#x27;,
 			include: [{
 				model: goods,
+				as: &#x27;host_goods&#x27;,
 				where: {
+					exchanged: {
+						$in: [0, 2]
+					},
 					deleted: 0
 				},
-				required: true
+				include: [{
+					model: users,
+					as: &#x27;owner&#x27;
+				}]
+			}, {
+				model: goods,
+				as: &#x27;queuer_goods&#x27;,
+				where: {
+					exchanged: 0,
+					deleted: 0
+				},
+				include: [{
+					model: users,
+					as: &#x27;owner&#x27;
+				}]
 			}]
 		})
 		.then(result =&gt; {
@@ -173,69 +160,207 @@ router.get(&#x27;/of/user&#x27;, (req, res) =&gt; {
 });
 
 /**
- * Post a comment to a goods
+ * Get goods are queued by given queuer_goods
  *
- * @method POST api/comment/post
- * @param  {Integer} goods_gid The commented goods
- * @param  {Integer} commenter_uid The commenter&#x27;s uid
- * @param  {String} content The content of the comment
- * @return {JSON} New created comment
+ * @method GET api/queue/by/goods
+ * @param  {Integer} queuer_goods_gid
+ * @return {JSON} The queues including goods and owners
+ */
+router.get(&#x27;/by/goods&#x27;, (req, res) =&gt; {
+
+	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);
+
+	queues
+		.findAll({
+			where: {
+				queuer_goods_gid: _queuer_goods_gid
+			},
+			include: [{
+				model: goods,
+				as: &#x27;host_goods&#x27;,
+				where: {
+					exchanged: {
+						$in: [0, 2]
+					},
+					deleted: 0
+				},
+				include: [{
+					model: users,
+					as: &#x27;owner&#x27;
+				}]
+			}, {
+				model: goods,
+				as: &#x27;queuer_goods&#x27;,
+				where: {
+					exchanged: {
+						$in: [0, 2]
+					},
+					deleted: 0
+				},
+				include: [{
+					model: users,
+					as: &#x27;owner&#x27;
+				}]
+			}]
+		})
+		.then(result =&gt; {
+			res.json(result);
+		})
+		.catch(err =&gt; {
+			res.send({
+				error: err
+			});
+		});
+});
+
+/**
+ * Get goods are queueing on someone&#x27;s goods
+ *
+ * @method GET api/queue/of/person
+ * @param  {Integer} host_user_uid Who owns the host_goods
+ * @return {JSON} The queues including goods and owners
+ */
+router.get(&#x27;/of/person&#x27;, (req, res) =&gt; {
+
+	var _host_user_uid = parseInt(req.query.host_user_uid, 10);
+
+	queues
+		.findAll({
+			include: [{
+				model: goods,
+				as: &#x27;host_goods&#x27;,
+				where: {
+					owner_uid: _host_user_uid,
+					exchanged: {
+						$in: [0, 2]
+					},
+					deleted: 0
+				},
+				include: [{
+					model: users,
+					as: &#x27;owner&#x27;
+				}]
+			}, {
+				model: goods,
+				as: &#x27;queuer_goods&#x27;,
+				where: {
+					exchanged: {
+						$in: [0, 2]
+					},
+					deleted: 0
+				},
+				include: [{
+					model: users,
+					as: &#x27;owner&#x27;
+				}]
+			}]
+		})
+		.then(result =&gt; {
+			res.json(result);
+		})
+		.catch(err =&gt; {
+			res.json({
+				error: err
+			});
+		});
+});
+
+/**
+ * Get goods are queued by someone&#x27;s goods
+ *
+ * @method GET api/queue/by/person
+ * @param  {Integer} queuer_user_uid Who owns the queuer_goods
+ * @return {JSON} The queues including goods and owners
+ */
+router.get(&#x27;/by/person&#x27;, (req, res) =&gt; {
+
+	var _queuer_user_uid = parseInt(req.query.queuer_user_uid, 10);
+
+	queues
+		.findAll({
+			include: [{
+				model: goods,
+				as: &#x27;host_goods&#x27;,
+				where: {
+					exchanged: {
+						$in: [0, 2]
+					},
+					deleted: 0
+				},
+				include: [{
+					model: users,
+					as: &#x27;owner&#x27;
+				}]
+			}, {
+				model: goods,
+				as: &#x27;queuer_goods&#x27;,
+				where: {
+					owner_uid: _queuer_user_uid,
+					exchanged: {
+						$in: [0, 2]
+					},
+					deleted: 0
+				},
+				include: [{
+					model: users,
+					as: &#x27;owner&#x27;
+				}]
+			}]
+		})
+		.then(result =&gt; {
+			res.json(result);
+		})
+		.catch(err =&gt; {
+			res.json({
+				error: err
+			});
+		});
+});
+
+/**
+ * Post a queue
+ * (queuer_goods -[queue]-&gt; host_goods)
+ * (If queuer_goods is in another exchange return {})
+ *
+ * @method POST api/queue/post
+ * @param  {Integer} host_goods_gid Which is queued
+ * @param  {Integer} queuer_goods_gid Which is queueing
+ * @return {JSON|Nothing} New created queue object, already created one or {}
  */
 router.post(&#x27;/post&#x27;, (req, res) =&gt; {
 
-	var _goods_gid = parseInt(req.body.goods_gid, 10);
-	var _commenter_uid = parseInt(req.body.commenter_uid, 10);
-	var _content = req.body.content;
+	var _host_goods_gid = parseInt(req.body.host_goods_gid, 10);
+	var _queuer_goods_gid = parseInt(req.body.queuer_goods_gid, 10);
 
-	comments
-		.create({
-			goods_gid: _goods_gid,
-			commenter_uid: _commenter_uid,
-			content: _content
-		})
-		.then(result =&gt; {
-			if (result == null) {
-				res.json({});
-			} else {
-				res.json(result);
-			}
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Edit a comment
- *
- * @method PUT api/comment/edit
- * @param  {Integer} cid The ID of the comment
- * @param  {String} content The NEW content of the comment
- * @return {JSON} Updated comment
- */
-router.put(&#x27;/edit&#x27;, (req, res) =&gt; {
-
-	var _cid = parseInt(req.body.cid, 10);
-	var _content = req.body.content;
-
-	comments
+	goods
 		.findOne({
 			where: {
-				cid: _cid
+				gid: _queuer_goods_gid,
+				exchanged: 2
 			}
 		})
 		.then(result =&gt; {
-			result.content = _content;
-			result.save().then(() =&gt; {});
-			return result;
+			if (result != null) {
+				return {};
+			} else {
+				return queues
+					.findOrCreate({
+						where: {
+							host_goods_gid: _host_goods_gid,
+							queuer_goods_gid: _queuer_goods_gid
+						},
+						defaults: {
+							host_goods_gid: _host_goods_gid,
+							queuer_goods_gid: _queuer_goods_gid
+						}
+					});
+			}
 		})
 		.then(result =&gt; {
-			if (result == null) {
-				res.json(null);
-			} else {
+			if (JSON.stringify(result) == JSON.stringify({})) {
 				res.json(result);
+			} else {
+				res.json(result[0]);
 			}
 		})
 		.catch(err =&gt; {
@@ -243,23 +368,27 @@ router.put(&#x27;/edit&#x27;, (req, res) =&gt; {
 				error: err
 			});
 		});
+
 });
 
 /**
- * Delete a comment
+ * Delete a queue
  *
- * @method DELETE api/comment/delete
- * @param  {Integer} cid The ID of the comment
- * @return {JSON} Number of deleted comments
+ * @method DELETE api/queue/delete
+ * @param  {Integer} host_goods_gid Which is queued
+ * @param  {Integer} queuer_goods_gid Which is queueing
+ * @return {JSON} Number of deleted queues
  */
 router.delete(&#x27;/delete&#x27;, (req, res) =&gt; {
 
-	var _cid = parseInt(req.query.cid, 10);
+	var _host_goods_gid = parseInt(req.query.host_goods_gid, 10);
+	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);
 
-	comments
+	queues
 		.destroy({
 			where: {
-				cid: _cid
+				host_goods_gid: _host_goods_gid,
+				queuer_goods_gid: _queuer_goods_gid
 			}
 		})
 		.then(result =&gt; {

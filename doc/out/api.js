@@ -9,6 +9,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "Goods",
         "Message",
         "Notification",
+        "Queue",
         "Search"
     ],
     "modules": [],

@@ -1,3 +1,10 @@
+/**
+ * Provides some methods related to Queues
+ * (queuer_goods -[queue]-> host_goods)
+ *
+ * @class Queue
+ */
+
 'use strict';
 
 var express = require('express');
@@ -8,13 +15,15 @@ var queues = require('../ORM/Queues');
 var goods = require('../ORM/Goods');
 var users = require('../ORM/Users');
 
-// Get queues of a goods
+/**
+ * Get goods are queueing on given host_goods
+ * (If queuer_goods is in another exchange, it will not be returned)
+ *
+ * @method GET api/queue/of/goods
+ * @param  {Integer} host_goods_gid
+ * @return {JSON} The queues including goods and owners
+ */
 router.get('/of/goods', (req, res) => {
-
-	// Available query params:
-	//
-	// host_goods_gid
-	//
 
 	var _host_goods_gid = parseInt(req.query.host_goods_gid, 10);
 
@@ -31,14 +40,16 @@ router.get('/of/goods', (req, res) => {
 						$in: [0, 2]
 					},
 					deleted: 0
-				}
+				},
+				include: [{
+					model: users,
+					as: 'owner'
+				}]
 			}, {
 				model: goods,
 				as: 'queuer_goods',
 				where: {
-					exchanged: {
-						$in: [0, 2]
-					},
+					exchanged: 0,
 					deleted: 0
 				},
 				include: [{
@@ -57,15 +68,14 @@ router.get('/of/goods', (req, res) => {
 		});
 });
 
-// Get queues queued by a goods
-// It means you take one thing to queue many other things
-// And you want to get those many other things
+/**
+ * Get goods are queued by given queuer_goods
+ *
+ * @method GET api/queue/by/goods
+ * @param  {Integer} queuer_goods_gid
+ * @return {JSON} The queues including goods and owners
+ */
 router.get('/by/goods', (req, res) => {
-
-	// Available query params:
-	//
-	// queuer_goods_gid
-	//
 
 	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);
 
@@ -95,7 +105,11 @@ router.get('/by/goods', (req, res) => {
 						$in: [0, 2]
 					},
 					deleted: 0
-				}
+				},
+				include: [{
+					model: users,
+					as: 'owner'
+				}]
 			}]
 		})
 		.then(result => {
@@ -108,13 +122,14 @@ router.get('/by/goods', (req, res) => {
 		});
 });
 
-// Get queues that queue on me
+/**
+ * Get goods are queueing on someone's goods
+ *
+ * @method GET api/queue/of/person
+ * @param  {Integer} host_user_uid Who owns the host_goods
+ * @return {JSON} The queues including goods and owners
+ */
 router.get('/of/person', (req, res) => {
-
-	// Available query params:
-	//
-	// host_user_uid
-	//
 
 	var _host_user_uid = parseInt(req.query.host_user_uid, 10);
 
@@ -129,7 +144,11 @@ router.get('/of/person', (req, res) => {
 						$in: [0, 2]
 					},
 					deleted: 0
-				}
+				},
+				include: [{
+					model: users,
+					as: 'owner'
+				}]
 			}, {
 				model: goods,
 				as: 'queuer_goods',
@@ -155,13 +174,14 @@ router.get('/of/person', (req, res) => {
 		});
 });
 
-// Get what I queued on
+/**
+ * Get goods are queued by someone's goods
+ *
+ * @method GET api/queue/by/person
+ * @param  {Integer} queuer_user_uid Who owns the queuer_goods
+ * @return {JSON} The queues including goods and owners
+ */
 router.get('/by/person', (req, res) => {
-
-	// Available query params:
-	//
-	// queuer_user_uid
-	//
 
 	var _queuer_user_uid = parseInt(req.query.queuer_user_uid, 10);
 
@@ -189,7 +209,11 @@ router.get('/by/person', (req, res) => {
 						$in: [0, 2]
 					},
 					deleted: 0
-				}
+				},
+				include: [{
+					model: users,
+					as: 'owner'
+				}]
 			}]
 		})
 		.then(result => {
@@ -202,14 +226,17 @@ router.get('/by/person', (req, res) => {
 		});
 });
 
-// Post a queue (queuer_goods_gid -> host_goods_gid)
+/**
+ * Post a queue
+ * (queuer_goods -[queue]-> host_goods)
+ * (If queuer_goods is in another exchange return {})
+ *
+ * @method POST api/queue/post
+ * @param  {Integer} host_goods_gid Which is queued
+ * @param  {Integer} queuer_goods_gid Which is queueing
+ * @return {JSON|Nothing} New created queue object, already created one or {}
+ */
 router.post('/post', (req, res) => {
-
-	// Necessary POST body params
-	//
-	// host_goods_gid
-	// queuer_goods_gid
-	//
 
 	var _host_goods_gid = parseInt(req.body.host_goods_gid, 10);
 	var _queuer_goods_gid = parseInt(req.body.queuer_goods_gid, 10);
@@ -253,14 +280,15 @@ router.post('/post', (req, res) => {
 
 });
 
-// Delete a queue
+/**
+ * Delete a queue
+ *
+ * @method DELETE api/queue/delete
+ * @param  {Integer} host_goods_gid Which is queued
+ * @param  {Integer} queuer_goods_gid Which is queueing
+ * @return {JSON} Number of deleted queues
+ */
 router.delete('/delete', (req, res) => {
-
-	// Necessary DELETE query params
-	//
-	// host_goods_gid
-	// queuer_goods_gid
-	//
 
 	var _host_goods_gid = parseInt(req.query.host_goods_gid, 10);
 	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);

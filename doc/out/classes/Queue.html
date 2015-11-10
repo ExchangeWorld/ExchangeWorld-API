@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Goods</title>
+    <title>Queue</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -85,12 +85,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Goods Class</h1>
+<h1>Queue Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/.._routers_goods.js.html#l1"><code>..&#x2F;routers&#x2F;goods.js:1</code></a>
+            Defined in: <a href="../files/.._routers_queue.js.html#l1"><code>..&#x2F;routers&#x2F;queue.js:1</code></a>
         </div>
 
 
@@ -98,7 +98,8 @@
 
 
 <div class="box intro">
-    <p>Provides some methods related to goods</p>
+    <p>Provides some methods related to Queues
+(queuer_goods -[queue]-&gt; host_goods)</p>
 
 </div>
 
@@ -119,27 +120,27 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_Delete api/goods/delete">Delete api/goods/delete</a>
+                                <a href="#method_DELETE api/queue/delete">DELETE api/queue/delete</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_GET api/goods/">GET api/goods/</a>
+                                <a href="#method_GET api/queue/by/goods">GET api/queue/by/goods</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_GET api/goods/of">GET api/goods/of</a>
+                                <a href="#method_GET api/queue/by/person">GET api/queue/by/person</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_POST api/goods/post">POST api/goods/post</a>
+                                <a href="#method_GET api/queue/of/goods">GET api/queue/of/goods</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_PUT api/goods/edit">PUT api/goods/edit</a>
+                                <a href="#method_GET api/queue/of/person">GET api/queue/of/person</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_PUT api/goods/rate">PUT api/goods/rate</a>
+                                <a href="#method_POST api/queue/post">POST api/queue/post</a>
 
                             </li>
                     </ul>
@@ -152,13 +153,16 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_Delete api/goods/delete" class="method item">
-    <h3 class="name"><code>Delete api/goods/delete</code></h3>
+<div id="method_DELETE api/queue/delete" class="method item">
+    <h3 class="name"><code>DELETE api/queue/delete</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>gid</code>
+                        <code>host_goods_gid</code>
+                </li>
+                <li class="arg">
+                        <code>queuer_goods_gid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -176,7 +180,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l237"><code>..&#x2F;routers&#x2F;goods.js:237</code></a>
+        <a href="../files/.._routers_queue.js.html#l283"><code>..&#x2F;routers&#x2F;queue.js:283</code></a>
         </p>
 
 
@@ -184,7 +188,7 @@
     </div>
 
     <div class="description">
-        <p>Delete a goods (but not really)</p>
+        <p>Delete a queue</p>
 
     </div>
 
@@ -193,12 +197,23 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">gid</code>
+                        <code class="param-name">host_goods_gid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of goods</p>
+                        <p>Which is queued</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">queuer_goods_gid</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>Which is queueing</p>
 
                     </div>
 
@@ -211,20 +226,20 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Updated goods object</p>
+                    <p>Number of deleted queues</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_GET api/goods/" class="method item">
-    <h3 class="name"><code>GET api/goods/</code></h3>
+<div id="method_GET api/queue/by/goods" class="method item">
+    <h3 class="name"><code>GET api/queue/by/goods</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>gid</code>
+                        <code>queuer_goods_gid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -242,7 +257,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l18"><code>..&#x2F;routers&#x2F;goods.js:18</code></a>
+        <a href="../files/.._routers_queue.js.html#l71"><code>..&#x2F;routers&#x2F;queue.js:71</code></a>
         </p>
 
 
@@ -250,7 +265,7 @@
     </div>
 
     <div class="description">
-        <p>Get a goods by given gid</p>
+        <p>Get goods are queued by given queuer_goods</p>
 
     </div>
 
@@ -259,13 +274,12 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">gid</code>
+                        <code class="param-name">queuer_goods_gid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of goods</p>
-
+                         
                     </div>
 
                 </li>
@@ -277,20 +291,20 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>A goods including users, comments and stars</p>
+                    <p>The queues including goods and owners</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_GET api/goods/of" class="method item">
-    <h3 class="name"><code>GET api/goods/of</code></h3>
+<div id="method_GET api/queue/by/person" class="method item">
+    <h3 class="name"><code>GET api/queue/by/person</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>owner_uid</code>
+                        <code>queuer_user_uid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -308,7 +322,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l62"><code>..&#x2F;routers&#x2F;goods.js:62</code></a>
+        <a href="../files/.._routers_queue.js.html#l177"><code>..&#x2F;routers&#x2F;queue.js:177</code></a>
         </p>
 
 
@@ -316,7 +330,7 @@
     </div>
 
     <div class="description">
-        <p>Get all goods of given owner_uid</p>
+        <p>Get goods are queued by someone's goods</p>
 
     </div>
 
@@ -325,12 +339,12 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">owner_uid</code>
+                        <code class="param-name">queuer_user_uid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The owner</p>
+                        <p>Who owns the queuer_goods</p>
 
                     </div>
 
@@ -343,38 +357,20 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>The goods including comments and stars</p>
+                    <p>The queues including goods and owners</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_POST api/goods/post" class="method item">
-    <h3 class="name"><code>POST api/goods/post</code></h3>
+<div id="method_GET api/queue/of/goods" class="method item">
+    <h3 class="name"><code>GET api/queue/of/goods</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>name</code>
-                </li>
-                <li class="arg">
-                        <code>category</code>
-                </li>
-                <li class="arg">
-                        <code>description</code>
-                </li>
-                <li class="arg">
-                        <code>photo_path</code>
-                </li>
-                <li class="arg">
-                        <code>position_x</code>
-                </li>
-                <li class="arg">
-                        <code>position_y</code>
-                </li>
-                <li class="arg">
-                        <code>owner_uid</code>
+                        <code>host_goods_gid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -392,7 +388,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l102"><code>..&#x2F;routers&#x2F;goods.js:102</code></a>
+        <a href="../files/.._routers_queue.js.html#l18"><code>..&#x2F;routers&#x2F;queue.js:18</code></a>
         </p>
 
 
@@ -400,7 +396,8 @@
     </div>
 
     <div class="description">
-        <p>Post a goods</p>
+        <p>Get goods are queueing on given host_goods
+(If queuer_goods is in another exchange, it will not be returned)</p>
 
     </div>
 
@@ -409,67 +406,7 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">category</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">description</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">photo_path</code>
-                        <span class="type">String=''</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">position_x</code>
-                        <span class="type">Float</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">position_y</code>
-                        <span class="type">Float</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">owner_uid</code>
+                        <code class="param-name">host_goods_gid</code>
                         <span class="type">Integer</span>
 
 
@@ -486,38 +423,20 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>New created goods object</p>
+                    <p>The queues including goods and owners</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_PUT api/goods/edit" class="method item">
-    <h3 class="name"><code>PUT api/goods/edit</code></h3>
+<div id="method_GET api/queue/of/person" class="method item">
+    <h3 class="name"><code>GET api/queue/of/person</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>gid</code>
-                </li>
-                <li class="arg">
-                        <code>name</code>
-                </li>
-                <li class="arg">
-                        <code>category</code>
-                </li>
-                <li class="arg">
-                        <code>description</code>
-                </li>
-                <li class="arg">
-                        <code>photo_path</code>
-                </li>
-                <li class="arg">
-                        <code>position_x</code>
-                </li>
-                <li class="arg">
-                        <code>position_y</code>
+                        <code>host_user_uid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -535,7 +454,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l146"><code>..&#x2F;routers&#x2F;goods.js:146</code></a>
+        <a href="../files/.._routers_queue.js.html#l125"><code>..&#x2F;routers&#x2F;queue.js:125</code></a>
         </p>
 
 
@@ -543,7 +462,7 @@
     </div>
 
     <div class="description">
-        <p>Edit a goods</p>
+        <p>Get goods are queueing on someone's goods</p>
 
     </div>
 
@@ -552,72 +471,13 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">gid</code>
+                        <code class="param-name">host_user_uid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                         
-                    </div>
+                        <p>Who owns the host_goods</p>
 
-                </li>
-                <li class="param">
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">category</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">description</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">photo_path</code>
-                        <span class="type">String</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">position_x</code>
-                        <span class="type">Float</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">position_y</code>
-                        <span class="type">Float</span>
-
-
-                    <div class="param-description">
-                         
                     </div>
 
                 </li>
@@ -629,29 +489,29 @@
 
             <div class="returns-description">
                         <span class="type">JSON</span>:
-                    <p>Updated goods object</p>
+                    <p>The queues including goods and owners</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_PUT api/goods/rate" class="method item">
-    <h3 class="name"><code>PUT api/goods/rate</code></h3>
+<div id="method_POST api/queue/post" class="method item">
+    <h3 class="name"><code>POST api/queue/post</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>gid</code>
+                        <code>host_goods_gid</code>
                 </li>
                 <li class="arg">
-                        <code>rate</code>
+                        <code>queuer_goods_gid</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
 
         <span class="returns-inline">
-            <span class="type">JSON</span>
+            <span class="type">JSON | Nothing</span>
         </span>
 
 
@@ -663,7 +523,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/.._routers_goods.js.html#l200"><code>..&#x2F;routers&#x2F;goods.js:200</code></a>
+        <a href="../files/.._routers_queue.js.html#l229"><code>..&#x2F;routers&#x2F;queue.js:229</code></a>
         </p>
 
 
@@ -671,7 +531,9 @@
     </div>
 
     <div class="description">
-        <p>Rate a goods</p>
+        <p>Post a queue
+(queuer_goods -[queue]-&gt; host_goods)
+(If queuer_goods is in another exchange return {})</p>
 
     </div>
 
@@ -680,23 +542,23 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">gid</code>
+                        <code class="param-name">host_goods_gid</code>
                         <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The ID of goods</p>
+                        <p>Which is queued</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">rate</code>
-                        <span class="type">Float</span>
+                        <code class="param-name">queuer_goods_gid</code>
+                        <span class="type">Integer</span>
 
 
                     <div class="param-description">
-                        <p>The rate point!</p>
+                        <p>Which is queueing</p>
 
                     </div>
 
@@ -708,8 +570,8 @@
             <h4>Returns:</h4>
 
             <div class="returns-description">
-                        <span class="type">JSON</span>:
-                    <p>Updated goods object</p>
+                        <span class="type">JSON | Nothing</span>:
+                    <p>New created queue object, already created one or {}</p>
 
             </div>
         </div>
