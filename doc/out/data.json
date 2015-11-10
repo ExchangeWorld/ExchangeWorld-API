@@ -37,6 +37,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "../routers/follow.js": {
+            "name": "../routers/follow.js",
+            "modules": {},
+            "classes": {
+                "Follow": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "../routers/message.js": {
             "name": "../routers/message.js",
             "modules": {},
@@ -101,6 +110,18 @@
             "file": "../routers/exchange.js",
             "line": 1,
             "description": "Provides some methods related to EXCHANGES"
+        },
+        "Follow": {
+            "name": "Follow",
+            "shortname": "Follow",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../routers/follow.js",
+            "line": 1,
+            "description": "Provides some methods related to follows\n(follower -[follow]-> followed)"
         }
     },
     "elements": {},
@@ -537,6 +558,92 @@
                 "type": "JSON"
             },
             "class": "Exchange"
+        },
+        {
+            "file": "../routers/follow.js",
+            "line": 17,
+            "description": "Get who follow the given followed_uid\n(follower -[follow]-> followed)",
+            "itemtype": "method",
+            "name": "GET api/follow/followers/of",
+            "params": [
+                {
+                    "name": "followed_uid",
+                    "description": "The one be followed",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Users following given followed_uid",
+                "type": "JSON"
+            },
+            "class": "Follow"
+        },
+        {
+            "file": "../routers/follow.js",
+            "line": 53,
+            "description": "Get who are followed by the given follower_uid\n(follower -[follow]-> followed)",
+            "itemtype": "method",
+            "name": "GET api/follow/followed/by",
+            "params": [
+                {
+                    "name": "follower_uid",
+                    "description": "The follower",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Users followed by given follower_uid",
+                "type": "JSON"
+            },
+            "class": "Follow"
+        },
+        {
+            "file": "../routers/follow.js",
+            "line": 89,
+            "description": "Post a follow\n(follower -[follow]-> followed)",
+            "itemtype": "method",
+            "name": "POST api/follow/post",
+            "params": [
+                {
+                    "name": "follower_uid",
+                    "description": "The follower",
+                    "type": "Integer"
+                },
+                {
+                    "name": "followed_uid",
+                    "description": "The followed",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "New created follow object, or if there is already one, return that one",
+                "type": "JSON"
+            },
+            "class": "Follow"
+        },
+        {
+            "file": "../routers/follow.js",
+            "line": 134,
+            "description": "Delete a follow\n(follower -[follow]-> followed)",
+            "itemtype": "method",
+            "name": "DELETE api/follow/delete",
+            "params": [
+                {
+                    "name": "follower_uid",
+                    "description": "The follower",
+                    "type": "Integer"
+                },
+                {
+                    "name": "followed_uid",
+                    "description": "The followed",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "Number of deleted follows",
+                "type": "JSON"
+            },
+            "class": "Follow"
         },
         {
             "file": "../routers/message.js",

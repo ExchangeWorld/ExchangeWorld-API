@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>../routers/message.js</title>
+    <title>../routers/follow.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -80,166 +80,51 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: ../routers/message.js</h1>
+<h1 class="file-heading">File: ../routers/follow.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
+/**
+ * Provides some methods related to follows
+ * (follower -[follow]-&gt; followed)
+ *
+ * @class Follow
+ */
+
 &#x27;use strict&#x27;;
 
 var express = require(&#x27;express&#x27;);
 var router = express.Router();
 
 // Including tables
-var messages = require(&#x27;../ORM/Messages&#x27;);
+var follows = require(&#x27;../ORM/follows&#x27;);
 var users = require(&#x27;../ORM/Users&#x27;);
 
-router.get(&#x27;/&#x27;, (req, res) =&gt; {
+/**
+ * Get who follow the given followed_uid
+ * (follower -[follow]-&gt; followed)
+ *
+ * @method GET api/follow/followers/of
+ * @param  {Integer} followed_uid The one be followed
+ * @return {JSON} Users following given followed_uid
+ */
+router.get(&#x27;/followers/of&#x27;, (req, res) =&gt; {
 
-	// Available GET params:
-	//
-	// receiver_uid
-	// sender_uid
-	// from
-	// number
-	//
+	var _followed_uid = parseInt(req.query.followed_uid, 10);
 
-	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
-	var _sender_uid = parseInt(req.query.sender_uid, 10);
-	var _from = parseInt(req.query.from, 10);
-	var _number = parseInt(req.query.number, 10);
-
-	_sender_uid = (_sender_uid == _sender_uid ? _sender_uid : null);
-	_from = (_from == _from ? _from : 0);
-	_number = (_number == _number ? _number : 10);
-
-	if (_sender_uid == null) {
-		messages
-			.findAll({
-				where: {
-					receiver_uid: _receiver_uid,
-					chatroom_cid: 0
-				},
-				order: [
-					[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-				],
-				include: [{
-					model: users,
-					as: &#x27;sender&#x27;,
-					required: true
-				}, {
-					model: users,
-					as: &#x27;receiver&#x27;,
-					required: true
-				}],
-				// logging: true,
-				// offset: _from,
-				// limit: _number
-			})
-			.then(result =&gt; {
-				res.json(result);
-			})
-			.catch(err =&gt; {
-				res.send({
-					error: err
-				});
-			});
-	} else {
-		messages
-			.findAll({
-				where: {
-					receiver_uid: _receiver_uid,
-					sender_uid: _sender_uid,
-					chatroom_cid: 0
-				},
-				order: [
-					[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-				],
-				include: [{
-					model: users,
-					as: &#x27;sender&#x27;,
-					required: true
-				}, {
-					model: users,
-					as: &#x27;receiver&#x27;,
-					required: true
-				}],
-				// logging: true,
-				// offset: _from,
-				// limit: _number
-			})
-			.then(result =&gt; {
-				res.json(result);
-			})
-			.catch(err =&gt; {
-				res.send({
-					error: err
-				});
-			});
-	}
-});
-
-router.get(&#x27;/between&#x27;, (req, res) =&gt; {
-
-	// Available GET params:
-	//
-	// receiver_uid
-	// sender_uid
-	// from
-	// number
-	//
-
-	var _user1_uid = parseInt(req.query.user1_uid, 10);
-	var _user2_uid = parseInt(req.query.user2_uid, 10);
-	var _from = parseInt(req.query.from, 10);
-	var _number = parseInt(req.query.number, 10);
-
-	_from = (_from == _from ? _from : 0);
-	_number = (_number == _number ? _number : 10);
-
-	messages
+	// Emit a find operation with orm in table &#x60;follows&#x60;
+	follows
 		.findAll({
 			where: {
-				$and: [{
-					$or: [{
-						receiver_uid: _user1_uid,
-						sender_uid: _user2_uid
-					}, {
-						receiver_uid: _user2_uid,
-						sender_uid: _user1_uid
-					}]
-
-				}, {
-					chatroom_cid: 0
-				}]
+				followed_uid: _followed_uid
 			},
-			order: [
-				[&#x27;mid&#x27;, &#x27;DESC&#x27;]
-			],
-			offset: _from,
-			limit: _number
-		})
-		.then(result =&gt; {
-			res.json(result);
-		})
-		.catch(err =&gt; {
-			res.send({
-				error: err
-			});
-		});
-});
-
-router.post(&#x27;/&#x27;, (req, res) =&gt; {
-
-	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
-	var _sender_uid = parseInt(req.body.sender_uid, 10);
-	var _content = req.body.content;
-
-	messages
-		.create({
-			receiver_uid: _receiver_uid,
-			sender_uid: _sender_uid,
-			content: _content,
-			chatroom_cid: 0
+			include: [{
+				model: users,
+				as: &#x27;followed&#x27;
+			}, {
+				model: users,
+				as: &#x27;follower&#x27;
+			}]
 		})
 		.then(result =&gt; {
 			res.json(result);
@@ -252,24 +137,105 @@ router.post(&#x27;/&#x27;, (req, res) =&gt; {
 });
 
 /**
- * use to update read/unread
+ * Get who are followed by the given follower_uid
+ * (follower -[follow]-&gt; followed)
+ *
+ * @method GET api/follow/followed/by
+ * @param  {Integer} follower_uid The follower
+ * @return {JSON} Users followed by given follower_uid
  */
-router.put(&#x27;/read&#x27;, (req, res) =&gt; {
+router.get(&#x27;/followed/by&#x27;, (req, res) =&gt; {
 
-	// Available PUT body params:
-	//
-	// mid
-	//
+	var _follower_uid = parseInt(req.query.follower_uid, 10);
 
-	// Get property:value in PUT body
-	var _mid = parseInt(req.body.mid, 10);
-
-	messages
-		.update({
-			unread: false
-		}, {
+	// Emit a find operation with orm in table &#x60;follows&#x60;
+	follows
+		.findAll({
 			where: {
-				mid: _mid
+				follower_uid: _follower_uid
+			},
+			include: [{
+				model: users,
+				as: &#x27;followed&#x27;
+			}, {
+				model: users,
+				as: &#x27;follower&#x27;
+			}]
+		})
+		.then(result =&gt; {
+			res.json(result);
+		})
+		.catch(err =&gt; {
+			res.send({
+				error: err
+			});
+		});
+});
+
+/**
+ * Post a follow
+ * (follower -[follow]-&gt; followed)
+ *
+ * @method POST api/follow/post
+ * @param  {Integer} follower_uid The follower
+ * @param  {Integer} followed_uid The followed
+ * @return {JSON} New created follow object, or if there is already one, return that one
+ */
+router.post(&#x27;/post&#x27;, (req, res) =&gt; {
+
+	var _follower_uid = parseInt(req.body.follower_uid, 10);
+	var _followed_uid = parseInt(req.body.followed_uid, 10);
+
+	// Create instance
+	// But if there is already the pair(followed_uid, follower_uid)
+	// Then don&#x27;t create another
+	follows
+		.findOne({
+			where: {
+				follower_uid: _follower_uid,
+				followed_uid: _followed_uid
+			}
+		})
+		.then(isThereAlready =&gt; {
+			if (isThereAlready != null) {
+				return isThereAlready;
+			} else {
+				return follows
+					.create({
+						follower_uid: _follower_uid,
+						followed_uid: _followed_uid
+					});
+			}
+		})
+		.then(result =&gt; {
+			res.json(result);
+		})
+		.catch(err =&gt; {
+			res.send({
+				error: err
+			});
+		});
+});
+
+/**
+ * Delete a follow
+ * (follower -[follow]-&gt; followed)
+ *
+ * @method DELETE api/follow/delete
+ * @param  {Integer} follower_uid The follower
+ * @param  {Integer} followed_uid The followed
+ * @return {JSON} Number of deleted follows
+ */
+router.delete(&#x27;/delete&#x27;, (req, res) =&gt; {
+
+	var _follower_uid = parseInt(req.query.follower_uid, 10);
+	var _followed_uid = parseInt(req.query.followed_uid, 10);
+
+	follows
+		.destroy({
+			where: {
+				follower_uid: _follower_uid,
+				followed_uid: _followed_uid
 			}
 		})
 		.then(result =&gt; {

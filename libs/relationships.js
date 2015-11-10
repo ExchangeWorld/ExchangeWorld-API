@@ -4,8 +4,7 @@ var Auths = require('../ORM/Auths');
 var Chatrooms = require('../ORM/Chatrooms');
 var Comments = require('../ORM/Comments');
 var Exchanges = require('../ORM/Exchanges');
-var Followers = require('../ORM/Followers');
-var Followings = require('../ORM/Followings');
+var Follows = require('../ORM/Follows');
 var Goods = require('../ORM/Goods');
 var Messages = require('../ORM/Messages');
 var Notifications = require('../ORM/Notifications');
@@ -84,42 +83,23 @@ module.exports = () => {
 		foreignKey: 'chatroom_cid'
 	});
 
-	// Followers & Users
-	// follower -> my
-	Followers.belongsTo(Users, {
-		as: 'my',
-		foreignKey: 'my_uid'
+	// Follows & Users
+	// follower -[follow]-> followed
+	Follows.belongsTo(Users, {
+		as: 'followed',
+		foreignKey: 'followed_uid'
 	});
-	Followers.belongsTo(Users, {
+	Follows.belongsTo(Users, {
 		as: 'follower',
 		foreignKey: 'follower_uid'
 	});
-	Users.hasMany(Followers, {
-		as: 'followers_my',
-		foreignKey: 'my_uid'
+	Users.hasMany(Follows, {
+		as: 'follows_followed',
+		foreignKey: 'followed_uid'
 	});
-	Users.hasMany(Followers, {
-		as: 'followers_follower',
+	Users.hasMany(Follows, {
+		as: 'follows_follower',
 		foreignKey: 'follower_uid'
-	});
-
-	// Followings & Users
-	// my -> following
-	Followings.belongsTo(Users, {
-		as: 'my',
-		foreignKey: 'my_uid'
-	});
-	Followings.belongsTo(Users, {
-		as: 'following',
-		foreignKey: 'following_uid'
-	});
-	Users.hasMany(Followings, {
-		as: 'followings_my',
-		foreignKey: 'my_uid'
-	});
-	Users.hasMany(Followings, {
-		as: 'followings_following',
-		foreignKey: 'following_uid'
 	});
 
 	// Goods & Users

@@ -42,6 +42,7 @@
                                 <li><a href="../classes/Chatroom.html">Chatroom</a></li>
                                 <li><a href="../classes/Comment.html">Comment</a></li>
                                 <li><a href="../classes/Exchange.html">Exchange</a></li>
+                                <li><a href="../classes/Follow.html">Follow</a></li>
                             </ul>
                 
                 
@@ -512,7 +513,7 @@ router.put(&#x27;/drop&#x27;, (req, res) =&gt; {
 router.put(&#x27;/agree&#x27;, (req, res) =&gt; {
 
 	var _eid = parseInt(req.body.eid, 10);
-	var _owner_uid = parseInt(Req.body.owner_uid, 10);
+	var _owner_uid = parseInt(req.body.owner_uid, 10);
 
 	exchanges
 		.findOne({
@@ -545,7 +546,7 @@ router.put(&#x27;/agree&#x27;, (req, res) =&gt; {
 		})
 		.then(result =&gt; {
 			if (result != null) {
-				if (result[&#x27;goods_one&#x27;][&#x27;owner&#x27;][&#x27;uid&#x27;] == owner_uid) {
+				if (result[&#x27;goods_one&#x27;][&#x27;owner&#x27;][&#x27;uid&#x27;] == _owner_uid) {
 					result.goods_one_agree = true;
 					result.save().then(() =&gt; {
 						if (result.goods_one_agree == true &amp;&amp; result.goods_two_agree == true) {
@@ -554,7 +555,7 @@ router.put(&#x27;/agree&#x27;, (req, res) =&gt; {
 						}
 					});
 					return result;
-				} else if (result[&#x27;goods_two&#x27;][&#x27;owner&#x27;][&#x27;uid&#x27;] == owner_uid) {
+				} else if (result[&#x27;goods_two&#x27;][&#x27;owner&#x27;][&#x27;uid&#x27;] == _owner_uid) {
 					result.goods_two_agree = true;
 					result.save().then(() =&gt; {
 						if (result.goods_one_agree == true &amp;&amp; result.goods_two_agree == true) {

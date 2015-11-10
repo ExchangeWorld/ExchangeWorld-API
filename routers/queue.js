@@ -239,7 +239,7 @@ router.post('/post', (req, res) => {
 			}
 		})
 		.then(result => {
-			if (result == {}) {
+			if (JSON.stringify(result) == JSON.stringify({})) {
 				res.json(result);
 			} else {
 				res.json(result[0]);
