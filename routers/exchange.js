@@ -309,10 +309,16 @@ router.post('/create', (req, res) => {
 		})
 		.then(isThereAlready => {
 			if (isThereAlready != null) {
-				isThereAlready.status = 'initiated';
-				isThereAlready.save().then(() => {
-					res.json(isThereAlready);
-				});
+				if (isThereAlready.status == 'completed') {
+					res.send({
+						error: 'The exchange was completed before'
+					});
+				} else {
+					isThereAlready.status = 'initiated';
+					isThereAlready.save().then(() => {
+						res.json(isThereAlready);
+					});
+				}
 			} else {
 				chatrooms
 					.create({
