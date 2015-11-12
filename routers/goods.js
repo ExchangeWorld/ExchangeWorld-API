@@ -14,7 +14,7 @@ var goods = require('../ORM/Goods');
 var users = require('../ORM/Users');
 var comments = require('../ORM/Comments');
 var stars = require('../ORM/Stars');
-var exchanges = require('..ORM/Exchanges');
+var exchanges = require('../ORM/Exchanges');
 
 /**
  * Get a goods by given gid
