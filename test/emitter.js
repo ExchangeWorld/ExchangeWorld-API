@@ -77,7 +77,7 @@ module.exports = {
 			generalJob(_path, 'DELETE', query, body, callback);
 		}
 	},
-	functional: {
+	callbackable: {
 		get: (_path, query, body, callback) => {
 			return callback => {
 				generalJob(_path, 'GET', query, body, callback)

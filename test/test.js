@@ -1,4 +1,4 @@
-var emitterF = require('./emitter').functional;
+var emitterF = require('./emitter').callbackable;
 var async = require('async');
 
 var newUser1 = {
