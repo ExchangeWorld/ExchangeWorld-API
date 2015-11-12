@@ -237,6 +237,7 @@ router.put('/rate', (req, res) => {
 
 /**
  * Delete a goods (but not really)
+ * or if the goods is still in an exchange, this req will be ignored
  *
  * @method Delete api/goods/delete
  * @param  {Integer} gid The ID of goods
