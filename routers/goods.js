@@ -14,6 +14,7 @@ var goods = require('../ORM/Goods');
 var users = require('../ORM/Users');
 var comments = require('../ORM/Comments');
 var stars = require('../ORM/Stars');
+var exchanges = require('..ORM/Exchanges');
 
 /**
  * Get a goods by given gid
@@ -227,7 +228,7 @@ router.put('/rate', (req, res) => {
 				res.json(_goods);
 			})
 			.catch(err => {
-				res.json({
+				res.send({
 					error: err
 				});
 			});
@@ -245,21 +246,40 @@ router.delete('/delete', (req, res) => {
 
 	var _gid = parseInt(req.query.gid, 10);
 
-	goods
-		.update({
-			deleted: 1
-		}, {
+	exchanges
+		.findOne({
 			where: {
-				gid: _gid
+				$or: [{
+					goods_one_gid: _gid
+				}, {
+					goods_two_gid: _gid
+				}],
+				status: 2
 			}
 		})
 		.then(result => {
-			res.json(result);
-		})
-		.catch(err => {
-			res.json({
-				error: err
-			});
+			if (result != null) {
+				res.send({
+					error: 'Exchange ' + result.eid + ' is in process'
+				});
+			} else {
+				goods
+					.update({
+						deleted: 1
+					}, {
+						where: {
+							gid: _gid
+						}
+					})
+					.then(result => {
+						res.json(result);
+					})
+					.catch(err => {
+						res.send({
+							error: err
+						});
+					});
+			}
 		});
 });
 
