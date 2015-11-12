@@ -27,11 +27,11 @@ var generalJob = (_path, method, query, body, callback) => {
 		};
 	}
 
-	console.log(options);
+	// console.log('Options', options);
 
 	var req = http.request(options, res => {
-		console.log('STATUS: ' + res.statusCode);
-		console.log('HEADERS: ' + JSON.stringify(res.headers));
+		// console.log('STATUS: ' + res.statusCode);
+		// console.log('HEADERS: ' + JSON.stringify(res.headers));
 		res.setEncoding('utf8');
 
 		var chunk = '';
@@ -46,12 +46,13 @@ var generalJob = (_path, method, query, body, callback) => {
 		res.on('end', () => {
 			// console.log('No more data in response.');
 			// console.log('\t :=>', JSON.parse(chunk));
-			callback(JSON.parse(chunk));
+			callback(null, JSON.parse(chunk));
 		});
 	});
 
 	req.on('error', e => {
-		console.log('\t:=> Problem with request: ' + e.message);
+		// console.log('\t:=> Problem with request: ' + e.message);
+		callback(e, null);
 	});
 
 	if (postData != '') {
@@ -62,16 +63,40 @@ var generalJob = (_path, method, query, body, callback) => {
 };
 
 module.exports = {
-	get: (_path, query, body, callback) => {
-		generalJob(_path, 'GET', query, body, callback);
+	direct: {
+		get: (_path, query, body, callback) => {
+			generalJob(_path, 'GET', query, body, callback);
+		},
+		post: (_path, query, body, callback) => {
+			generalJob(_path, 'POST', query, body, callback);
+		},
+		put: (_path, query, body, callback) => {
+			generalJob(_path, 'PUT', query, body, callback);
+		},
+		delete: (_path, query, body, callback) => {
+			generalJob(_path, 'DELETE', query, body, callback);
+		}
 	},
-	post: (_path, query, body, callback) => {
-		generalJob(_path, 'POST', query, body, callback);
-	},
-	put: (_path, query, body, callback) => {
-		generalJob(_path, 'PUT', query, body, callback);
-	},
-	delete: (_path, query, body, callback) => {
-		generalJob(_path, 'DELETE', query, body, callback);
+	functional: {
+		get: (_path, query, body, callback) => {
+			return callback => {
+				generalJob(_path, 'GET', query, body, callback)
+			};
+		},
+		post: (_path, query, body, callback) => {
+			return callback => {
+				generalJob(_path, 'POST', query, body, callback)
+			};
+		},
+		put: (_path, query, body, callback) => {
+			return callback => {
+				generalJob(_path, 'PUT', query, body, callback)
+			};
+		},
+		delete: (_path, query, body, callback) => {
+			return callback => {
+				generalJob(_path, 'DELETE', query, body, callback)
+			};
+		}
 	}
 };
