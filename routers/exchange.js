@@ -309,7 +309,10 @@ router.post('/create', (req, res) => {
 		})
 		.then(isThereAlready => {
 			if (isThereAlready != null) {
-				res.json(isThereAlready);
+				isThereAlready.status = 'initiated';
+				isThereAlready.save().then(() => {
+					res.json(isThereAlready);
+				});
 			} else {
 				chatrooms
 					.create({
@@ -459,26 +462,24 @@ router.put('/agree', (req, res) => {
 			}]
 		})
 		.then(result => {
-			if (result == null || result == undefined) {
-				return result;
-			}
-
-			if (result['goods_one']['owner']['uid'] == _owner_uid) {
-				result.goods_one_agree = true;
-				result.save().then(() => {
-					if (result.goods_one_agree == true && result.goods_two_agree == true) {
-						result.status = 'completed';
-						result.save().then(() => {});
-					}
-				});
-			} else if (result['goods_two']['owner']['uid'] == _owner_uid) {
-				result.goods_two_agree = true;
-				result.save().then(() => {
-					if (result.goods_one_agree == true && result.goods_two_agree == true) {
-						result.status = 'completed';
-						result.save().then(() => {});
-					}
-				});
+			if (result != null && result != undefined) {
+				if (result['goods_one']['owner']['uid'] == _owner_uid) {
+					result.goods_one_agree = true;
+					result.save().then(() => {
+						if (result.goods_one_agree == true && result.goods_two_agree == true) {
+							result.status = 'completed';
+							result.save().then(() => {});
+						}
+					});
+				} else if (result['goods_two']['owner']['uid'] == _owner_uid) {
+					result.goods_two_agree = true;
+					result.save().then(() => {
+						if (result.goods_one_agree == true && result.goods_two_agree == true) {
+							result.status = 'completed';
+							result.save().then(() => {});
+						}
+					});
+				}
 			}
 			return result;
 		})

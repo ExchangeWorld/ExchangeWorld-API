@@ -255,7 +255,7 @@ router.delete('/delete', (req, res) => {
 				}, {
 					goods_two_gid: _gid
 				}],
-				status: 2
+				status: 'initiated'
 			}
 		})
 		.then(result => {
