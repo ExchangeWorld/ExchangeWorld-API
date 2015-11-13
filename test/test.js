@@ -20,8 +20,8 @@ var newUser2 = {
 };
 
 async.series([
-	emitterF.post('/api/authenticate/register', '', newUser1),
-	emitterF.post('/api/authenticate/register', '', newUser2)
+	emitterF.get('/api/authenticate/login', newUser1, ''),
+	emitterF.get('/api/authenticate/login', newUser2, '')
 ], (err, results) => {
 	if (err) {
 		console.error(err);
