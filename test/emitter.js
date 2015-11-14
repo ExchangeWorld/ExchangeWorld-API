@@ -50,9 +50,7 @@ var generalJob = (_path, method, query, body, callback) => {
 		res.on('end', () => {
 			// console.log('No more data in response.');
 			// console.log('\t :=>', JSON.parse(chunk));
-			callback(null, {
-				o: JSON.parse(chunk)
-			});
+			callback(null, JSON.parse(chunk));
 		});
 	});
 
