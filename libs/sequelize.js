@@ -4,7 +4,7 @@ var Sequelize = require('sequelize');
 var dblogin = require('./dblogin');
 
 // Export a orm model with some config
-var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, {
+var sequelize = new Sequelize('exchangeworld-test', dblogin.ID, dblogin.password, {
 	host: 'exwd.csie.org',
 	port: 45432,
 

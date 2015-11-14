@@ -1,4 +1,4 @@
-var emitterF = require('./emitter').callbackable;
+var emitter = require('./emitter').callbackable;
 var async = require('async');
 
 var newUser1 = {
@@ -20,11 +20,15 @@ var newUser2 = {
 };
 
 async.series([
-	emitterF.get('/api/authenticate/login', newUser1, ''),
-	emitterF.get('/api/authenticate/login', newUser2, '')
+	emitter.post('api/authenticate/register', '', newUser1),
+	emitter.post('api/authenticate/register', '', newUser2),
+	emitter.get('/api/authenticate/login', newUser1, ''),
+	emitter.get('/api/authenticate/login', newUser2, '')
 ], (err, results) => {
 	if (err) {
 		console.error(err);
 	}
-	console.log(results);
+	console.log(results.map(m => {
+		return m.o;
+	}));
 });

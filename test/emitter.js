@@ -7,6 +7,10 @@ var generalJob = (_path, method, query, body, callback) => {
 
 	console.log(method, _path);
 
+	if (_path[0] != '/') {
+		_path = '/' + _path;
+	}
+
 	query = querystring.stringify(query);
 	var postData = querystring.stringify(body);
 
@@ -46,7 +50,9 @@ var generalJob = (_path, method, query, body, callback) => {
 		res.on('end', () => {
 			// console.log('No more data in response.');
 			// console.log('\t :=>', JSON.parse(chunk));
-			callback(null, JSON.parse(chunk));
+			callback(null, {
+				o: JSON.parse(chunk)
+			});
 		});
 	});
 
@@ -80,22 +86,22 @@ module.exports = {
 	callbackable: {
 		get: (_path, query, body, callback) => {
 			return callback => {
-				generalJob(_path, 'GET', query, body, callback)
+				generalJob(_path, 'GET', query, body, callback);
 			};
 		},
 		post: (_path, query, body, callback) => {
 			return callback => {
-				generalJob(_path, 'POST', query, body, callback)
+				generalJob(_path, 'POST', query, body, callback);
 			};
 		},
 		put: (_path, query, body, callback) => {
 			return callback => {
-				generalJob(_path, 'PUT', query, body, callback)
+				generalJob(_path, 'PUT', query, body, callback);
 			};
 		},
 		delete: (_path, query, body, callback) => {
 			return callback => {
-				generalJob(_path, 'DELETE', query, body, callback)
+				generalJob(_path, 'DELETE', query, body, callback);
 			};
 		}
 	}
