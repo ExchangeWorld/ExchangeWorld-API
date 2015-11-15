@@ -6,28 +6,62 @@
   goods = require('./data').goods;
   /*async = require 'async'*/
   /* Registering users */
-  emitter.post('/api/authenticate/register', '', users[0], function(err, result){
-    emitter.post('/api/authenticate/register', '', users[1], function(err, result){
-      emitter.post('/api/authenticate/register', '', users[2], function(err, result){});
-    });
-  });
-  /* Login and get tokens */
-  emitter.get('/api/authenticate/login', users[0], '', function(err, result){
-    users[0].token = result.token;
-    emitter.get('/api/authenticate/login', users[1], '', function(err, result){
-      users[1].token = result.token;
-      emitter.get('/api/authenticate/login', users[1], '', function(err, result){
-        users[2].token = result.token;
-      });
-    });
-  });
-  /* Posting goods */
-  emitter.post('/api/goods/post', users[0], goods[0], function(err, result){
-    emitter.post('/api/goods/post', users[1], goods[1], function(err, result){
-      emitter.post('/api/goods/post', users[2], goods[2], function(err, result){
-        emitter.post('/api/goods/post', users[0], goods[3], function(err, result){
-          emitter.post('/api/goods/post', users[1], goods[4], function(err, result){
-            emitter.post('/api/goods/post', users[2], goods[5], function(err, result){});
+  emitter.post('/api/authenticate/register', '', users[0], '', function(err, result){
+    emitter.post('/api/authenticate/register', '', users[1], '', function(err, result){
+      emitter.post('/api/authenticate/register', '', users[2], '', function(err, result){
+        /* Login and get tokens */
+        emitter.get('/api/authenticate/login', users[0], '', '', function(err, result){
+          users[0].token = result.token;
+          emitter.get('/api/authenticate/login', users[1], '', '', function(err, result){
+            users[1].token = result.token;
+            emitter.get('/api/authenticate/login', users[1], '', '', function(err, result){
+              users[2].token = result.token;
+              /* Posting goods */
+              emitter.post('/api/goods/post', users[0], goods[0], '', function(err, result){
+                emitter.post('/api/goods/post', users[1], goods[1], '', function(err, result){
+                  emitter.post('/api/goods/post', users[2], goods[2], '', function(err, result){
+                    emitter.post('/api/goods/post', users[0], goods[3], '', function(err, result){
+                      emitter.post('/api/goods/post', users[1], goods[4], '', function(err, result){
+                        emitter.post('/api/goods/post', users[2], goods[5], '', function(err, result){
+                          console.log(result);
+                          /* Getting goods */
+                          emitter.get('/api/goods', {
+                            gid: 0
+                          }, '', users[0], function(err, result){
+                            console.log(result);
+                            emitter.get('/api/goods', {
+                              gid: 1
+                            }, '', users[1], function(err, result){
+                              console.log(result);
+                              emitter.get('/api/goods', {
+                                gid: 2
+                              }, '', users[2], function(err, result){
+                                console.log(result);
+                                emitter.get('/api/goods', {
+                                  gid: 3
+                                }, '', users[0], function(err, result){
+                                  console.log(result);
+                                  emitter.get('/api/goods', {
+                                    gid: 4
+                                  }, '', users[1], function(err, result){
+                                    console.log(result);
+                                    emitter.get('/api/goods', {
+                                      gid: 5
+                                    }, '', users[2], function(err, result){
+                                      console.log(result);
+                                    });
+                                  });
+                                });
+                              });
+                            });
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
           });
         });
       });

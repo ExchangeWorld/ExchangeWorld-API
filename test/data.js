@@ -1,6 +1,7 @@
 var users = require('./data/users');
 var goods = require('./data/goods');
 
+// Modification and exporting
 module.exports = {
 	users: users.map(u => {
 		u.token = '';
