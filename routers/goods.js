@@ -155,7 +155,7 @@ router.post('/post', (req, res) => {
  * @param  {String} photo_path
  * @param  {Float} position_x
  * @param  {Float} position_y
- * @return {JSON} Updated goods object
+ * @return {JSON} Updated goods object or if not found then return null
  */
 router.put('/edit', (req, res) => {
 
@@ -176,7 +176,7 @@ router.put('/edit', (req, res) => {
 		})
 		.then(result => {
 			if (result == null) {
-				return {};
+				return null;
 			} else {
 				result.name = _name;
 				result.category = _category;
@@ -204,7 +204,7 @@ router.put('/edit', (req, res) => {
  * @method PUT api/goods/rate
  * @param  {Integer} gid The ID of goods
  * @param  {Float} rate The rate point!
- * @return {JSON} Updated goods object
+ * @return {JSON} Updated ? true : false
  */
 router.put('/rate', (req, res) => {
 
@@ -224,8 +224,8 @@ router.put('/rate', (req, res) => {
 					gid: _gid
 				}
 			})
-			.then(_goods => {
-				res.json(_goods);
+			.then(result => {
+				res.json(result == 1 ? true : false);
 			})
 			.catch(err => {
 				res.send({
@@ -241,7 +241,7 @@ router.put('/rate', (req, res) => {
  *
  * @method Delete api/goods/delete
  * @param  {Integer} gid The ID of goods
- * @return {JSON} Updated goods object
+ * @return {JSON} Deleted ? true : false
  */
 router.delete('/delete', (req, res) => {
 
@@ -273,7 +273,7 @@ router.delete('/delete', (req, res) => {
 						}
 					})
 					.then(result => {
-						res.json(result);
+						res.json(result == 1 ? true : false);
 					})
 					.catch(err => {
 						res.send({

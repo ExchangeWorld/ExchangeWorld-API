@@ -5,8 +5,6 @@ var querystring = require('querystring');
 
 var generalJob = (_path, method, query, body, token, callback) => {
 
-	console.log(method, _path);
-
 	if (_path[0] != '/') {
 		_path = '/' + _path;
 	}
@@ -25,6 +23,8 @@ var generalJob = (_path, method, query, body, token, callback) => {
 		options.path += '?' + query;
 	}
 
+	console.log(method, options.path);
+
 	if (token != '') {
 		if (query == '') {
 			options.path += '?' + token;
@@ -39,8 +39,6 @@ var generalJob = (_path, method, query, body, token, callback) => {
 			'Content-Length': postData.length
 		};
 	}
-
-	// console.log('Options', options);
 
 	var req = http.request(options, res => {
 		// console.log('STATUS: ' + res.statusCode);
