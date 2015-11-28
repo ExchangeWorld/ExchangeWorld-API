@@ -35,7 +35,7 @@ router.get('/', function(req, res, next) {
 					chatroom_cid: _exchange.chatroom_cid
 				},
 				order: [
-					['mid', 'ASC']
+					['mid', 'DESC']
 				],
 				offset: _from,
 				limit: _number
