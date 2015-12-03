@@ -75,6 +75,9 @@ router.get('/', (req, res) => {
 				},
 				deleted: 0
 			},
+			order:[
+				['gid', 'DESC']
+			],
 			include: [{
 				model: users,
 				as: 'owner',
