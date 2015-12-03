@@ -68,6 +68,9 @@ router.get('/', function(req, res, next) {
 			},
 			deleted: 0
 		},
+		order: [
+			['gid', 'DESC']
+		],
 		include: [{
 			model: users,
 			required: true
