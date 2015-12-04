@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var router  = express.Router();
 
@@ -9,9 +11,9 @@ var users    = require('../ORM/Users');
 router.get('/of/goods', function(req, res, next) {
 
 	// Available query params
-	// 
+	//
 	// goods_gid
-	// 
+	//
 
 	var _goods_gid = parseInt(req.query.goods_gid, 10);
 
@@ -40,11 +42,11 @@ router.get('/of/goods', function(req, res, next) {
 
 // Get Comments of a user
 router.get('/of/user', function(req, res, next) {
-	
+
 	// Available query params
-	// 
+	//
 	// commenter_uid
-	// 
+	//
 
 	var _commenter_uid = parseInt(req.query.commenter_uid, 10);
 
@@ -67,10 +69,10 @@ router.get('/of/user', function(req, res, next) {
 router.post('/post', function(req, res, next) {
 
 	// Necessary POST body params
-	// 
+	//
 	// goods_gid
 	// commenter_uid
-	// 
+	//
 
 	var _goods_gid     = parseInt(req.body.goods_gid, 10);
 	var _commenter_uid = parseInt(req.body.commenter_uid, 10);
@@ -99,10 +101,10 @@ router.post('/post', function(req, res, next) {
 router.put('/edit', function(req, res, next) {
 
 	// Necessary PUT body params
-	// 
+	//
 	// cid
 	// content
-	// 
+	//
 
 	var _cid     = parseInt(req.body.cid, 10);
 	var _content = req.body.content;
@@ -136,7 +138,7 @@ router.put('/edit', function(req, res, next) {
 router.delete('/delete', function(req, res, next) {
 
 	// Necessary DELETE query params
-	// 
+	//
 	// cid
 	//
 

@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var sec_ran = require('secure-random');
@@ -25,7 +27,7 @@ router.post('/register', function(req, res, next) {
 	var _email = req.body.email || '';
 	var _photo_path = req.body.photo_path || '';
 
-	// Create password for fb 
+	// Create password for fb
 	if (_fb == true) {
 		var id_length = _id.length;
 		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' +  _id.substring(0, id_length - 2));

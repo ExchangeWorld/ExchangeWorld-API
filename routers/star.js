@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var router  = express.Router();
 
@@ -9,9 +11,9 @@ var goods = require('../ORM/Goods');
 router.get('/to', function(req, res, next) {
 
 	// Available query params
-	// 
+	//
 	// goods_gid
-	// 
+	//
 
 	var _goods_gid = parseInt(req.query.goods_gid, 10);
 
@@ -34,9 +36,9 @@ router.get('/to', function(req, res, next) {
 router.get('/by', function(req, res, next) {
 
 	// Available query params
-	// 
+	//
 	// starring_user_uid
-	// 
+	//
 
 	var _starring_user_uid = parseInt(req.query.starring_user_uid, 10);
 
@@ -69,10 +71,10 @@ router.get('/by', function(req, res, next) {
 router.post('/post', function(req, res, next) {
 
 	// Necessary POST body params
-	// 
+	//
 	// goods_gid
 	// starring_user_uid
-	// 
+	//
 
 	var _goods_gid         = parseInt(req.body.goods_gid, 10);
 	var _starring_user_uid = parseInt(req.body.starring_user_uid, 10);
@@ -96,10 +98,10 @@ router.post('/post', function(req, res, next) {
 router.delete('/delete', function(req, res, next) {
 
 	// Necessary DELETE query params
-	// 
+	//
 	// goods_gid
 	// starring_user_uid
-	// 
+	//
 
 	var _goods_gid         = parseInt(req.query.goods_gid, 10);
 	var _starring_user_uid = parseInt(req.query.starring_user_uid, 10);

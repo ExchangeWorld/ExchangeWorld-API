@@ -1,10 +1,12 @@
+'use strict';
+
 var express   = require('express');
 var Sequelize = require('sequelize');
 var router    = express.Router();
 
 // Including tables
 var exchanges = require('../ORM/Exchanges');
-var chatrooms = require('../ORM/Chatrooms') 
+var chatrooms = require('../ORM/Chatrooms');
 var users     = require('../ORM/Users');
 var goods     = require('../ORM/Goods');
 
@@ -13,10 +15,10 @@ var goods     = require('../ORM/Goods');
 
 router.get('/allExchange', function(req, res, next) {
 
-	// Set association between tables (users, goods) 
+	// Set association between tables (users, goods)
 	users.hasMany(goods, {foreignKey: 'owner_uid'});
 	goods.belongsTo(users, {foreignKey: 'owner_uid'});
-	
+
 	exchanges.findAll({
 			where: {
 				status: 'initiated'
@@ -147,13 +149,13 @@ router.get('/ofn', function(req, res, next) {
 router.get('/', function(req, res, next) {
 
 	// Available query params
-	// 
+	//
 	// eid
-	// 
+	//
 
 	var _eid = parseInt(req.query.eid, 10);
 
-	// Set association between tables (users, goods) 
+	// Set association between tables (users, goods)
 	users.hasMany(goods, {foreignKey: 'owner_uid'});
 	goods.belongsTo(users, {foreignKey: 'owner_uid'});
 
@@ -449,7 +451,7 @@ router.put('/drop', function(req, res, next) {
 router.put('/agree', function(req, res, next) {
 
 	// Available body params
-	// 
+	//
 	// eid
 	// goods_gid
 	// agree (true or false)

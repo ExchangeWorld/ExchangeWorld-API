@@ -44,8 +44,8 @@ server.all('*', function(req, res, next) {
 	next();
 });
 
-/*USE TO CREATE NEW DATABASE*/
-//server.use('/api/CreateAllTables', require('./libs/CreateAllTable.js'));
+// For bots
+server.use('/bot', require('./routers/bot')));
 
 // Token authentications:
 // If the path is not /api/authenticate, then it needs authentication
