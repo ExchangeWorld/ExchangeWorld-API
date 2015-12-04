@@ -45,7 +45,7 @@ server.all('*', function(req, res, next) {
 });
 
 // For bots
-server.use('/bot', require('./routers/bot')));
+server.use('/bot', require('./routers/bot'));
 
 // Token authentications:
 // If the path is not /api/authenticate, then it needs authentication

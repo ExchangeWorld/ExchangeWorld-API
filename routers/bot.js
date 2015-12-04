@@ -23,7 +23,7 @@ router.get('/seek/:goods_gid', (req, res, next) => {
 			}
 		})
 		.then(result => {
-			res.send(defaultHTML + '<meta property="og:title" content="來跟我交換 ' + goods.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + (JSON.parse(goods.photo_path))[0] + '"/>');
+			res.send(defaultHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + (JSON.parse(result.photo_path))[0] + '"/>');
 		})
 		.catch(err => {
 			res.send(err);
