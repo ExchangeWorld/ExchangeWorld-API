@@ -28,11 +28,20 @@ if (msg.startsWith('/seek')) {
 			}
 		})
 		.then(result => {
-			process.stdout.write(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + (JSON.parse(result.photo_path))[0] + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
+
+			if (result == null) {
+				process.stdout.write(defaultHTML);
+				process.exit(0);
+			} else {
+				process.stdout.write(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + (JSON.parse(result.photo_path))[0] + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
+				process.exit(0);
+			}
 		})
 		.catch(err => {
 			process.stdout.write(defaultHTML);
+			process.exit(0);
 		});
 } else {
 	process.stdout.write(defaultHTML);
+	process.exit(0);
 }
