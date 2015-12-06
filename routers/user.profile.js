@@ -84,6 +84,15 @@ router.put('/edit', function(req, res, next) {
 	var _introduction = req.body.introduction;
 	var _wishlist     = req.body.wishlist;
 
+	// PERMISSION CHECK
+	var byuser = req.exwd.byuser;
+	if (!(byuser != -1 && byuser === _uid)) {
+		res.send({
+			error: 'Bad permission!'
+		});
+		return;
+	}
+
 	users.findOne({
 			where: {
 				uid: _uid
