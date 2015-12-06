@@ -53,6 +53,28 @@ server.all(/\/api\/(?!authenticate).+/, authenticate.token, function(req, res, n
 	next();
 });
 
+server.put('/api/*', (req, res, next) => {
+	if (req.query.byuser != null || req.query.byuser != undefined) {
+		req.exwd = {
+			byuser: req.query.byuser
+		};
+	} else {
+		req.exwd = {};
+	}
+	next();
+});
+
+server.delete('/api/*', (req, res, next) => {
+	if (req.query.byuser != null || req.query.byuser != undefined) {
+		req.exwd = {
+			byuser: req.query.byuser
+		};
+	} else {
+		req.exwd = {};
+	}
+	next();
+});
+
 /* ref: doc/seek.md */
 server.use('/api/goods/search', require('./routers/goods.search'));
 server.use('/api/goods', require('./routers/goods'));

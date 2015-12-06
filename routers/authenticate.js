@@ -150,10 +150,6 @@ var token_function = function(req, res, next) {
 		})
 		.then(function(result) {
 
-			// if (_token == '') {
-			// 	throw new Error('Empty token.');
-			// }
-
 			if (result != null && result != undefined) {
 				jwt.verify(result.token, '事實上我們做了快一年', function(err, decoded) {
 					if (err) {
