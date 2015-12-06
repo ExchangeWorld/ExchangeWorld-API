@@ -109,9 +109,23 @@ router.put('/edit', function(req, res, next) {
 	var _cid     = parseInt(req.body.cid, 10);
 	var _content = req.body.content;
 
+	// PERMISSION CHECK
+	var byuser = req.exwd.byuser;
+	if (byuser === -1) {
+		res.send({
+			error: 'Bad permission!'
+		});
+		return;
+	}
+
 	comments.findOne({
 			where: {
-				cid: _cid
+				cid: _cid,
+				commenter_uid: (byuser === -2 ? {
+					$gt: -1
+				} : {
+					$eq: byuser
+				})
 			}
 		})
 		.then(function(result) {
@@ -144,9 +158,23 @@ router.delete('/delete', function(req, res, next) {
 
 	var _cid = parseInt(req.query.cid, 10);
 
+	// PERMISSION CHECK
+	var byuser = req.exwd.byuser;
+	if (byuser === -1) {
+		res.send({
+			error: 'Bad permission!'
+		});
+		return;
+	}
+
 	comments.destroy({
 			where: {
-				cid: _cid
+				cid: _cid,
+				commenter_uid: (byuser === -2 ? {
+					$gt: -1
+				} : {
+					$eq: byuser
+				})
 			}
 		})
 		.then(function(result) {
