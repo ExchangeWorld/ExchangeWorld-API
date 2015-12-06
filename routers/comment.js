@@ -129,8 +129,10 @@ router.put('/edit', function(req, res, next) {
 			}
 		})
 		.then(function(result) {
-			result.content = _content;
-			result.save().then(function() {});
+			if (result != null) {
+				result.content = _content;
+				result.save().then(function() {});
+			}
 			return result;
 		})
 		.then(function(result) {
