@@ -99,11 +99,11 @@ sequelize_sync
 		var s = http.createServer(server);
 		s.on('error', err => {
 			if (err.code === 'EADDRINUSE') {
-				console.log('Development server is already started at port ' + 3000);
+				console.log('Development server is already started at port ' + 3002);
 			} else {
 				throw err;
 			}
 		});
 
-		s.listen(3000);
+		s.listen(3002);
 	});
