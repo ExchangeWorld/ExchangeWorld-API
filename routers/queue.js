@@ -165,21 +165,54 @@ router.delete('/delete', function(req, res, next) {
 	var _host_goods_gid   = parseInt(req.query.host_goods_gid, 10);
 	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);
 
-	queues.destroy({
+	// PERMISSION CHECK
+	var byuser = req.exwd.byuser;
+	if (byuser === -1) {
+		res.send({
+			error: 'Bad permission!'
+		});
+		return;
+	}
+
+	goods.findOne({
 			where: {
-				host_goods_gid: _host_goods_gid,
-				queuer_goods_gid: _queuer_goods_gid
+				gid: _queuer_goods_gid,
+				owner_uid: byuser
 			}
 		})
-		.then(function(result) {
-			res.json(result);
+		.then(theGoods => {
+			if (theGoods == null) {
+				if (byuser === -2) {
+					return 'OK';
+				} else {
+					return null;
+				}
+			} else {
+				return 'OK';
+			}
 		})
-		.catch(function(err) {
-			res.send({
-				error: err
-			});
-			//res.json({error: err});
-		});
-});
+		.then(result => {
+			if (result !== 'OK') {
+				res.send({
+					error: 'Bad permission!'
+				});
+			} else {
+				queues.destroy({
+						where: {
+							host_goods_gid: _host_goods_gid,
+							queuer_goods_gid: _queuer_goods_gid
+						}
+					})
+					.then(function(result) {
+						res.json(result);
+					})
+					.catch(function(err) {
+						res.send({
+							error: err
+						});
+					});
+			}
+		})
+	});
 
 module.exports = router;
