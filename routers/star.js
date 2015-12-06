@@ -32,6 +32,44 @@ router.get('/to', function(req, res, next) {
 		});
 });
 
+// Get stars that start to the someone's goods
+router.get('/toOwner', function(req, res, next) {
+	var _owner_uid = parseInt(req.query.owner_uid, 10);
+
+	goods.findAll({
+			where: {
+				owner_uid: _owner_uid
+			}
+		})
+		.then(result => {
+			if (result == null || result.length == 0) {
+				return null;
+			} else {
+				var theGoodsGids = result.map(r => r.dataValues.gid);
+				return stars.findAll({
+					where: {
+						goods_gid: {
+							$in: theGoodsGids
+						}
+					}
+				});
+			}
+		})
+		.then(theStars => {
+			if (theStars == null || theStars.length == 0) {
+				res.json([]);
+			} else {
+				res.json(theStars);
+			}
+		})
+		.catch(err => {
+			console.log(err);
+			res.send({
+				error: err
+			});
+		});
+});
+
 // Get goods that user stars
 router.get('/by', function(req, res, next) {
 
