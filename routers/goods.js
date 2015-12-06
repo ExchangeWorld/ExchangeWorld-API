@@ -141,11 +141,25 @@ router.put('/edit', function(req, res, next) {
 	var _position_x  = parseFloat(req.body.position_x);
 	var _position_y  = parseFloat(req.body.position_y);
 
+	// PERMISSION CHECK
+	var byuser = req.exwd.byuser;
+	if (byuser === -1) {
+		res.send({
+			error: 'Bad permission!'
+		});
+		return;
+	}
+
 
 	// Find the good which got right gid and update values
 	goods.findOne({
 			where: {
-				gid: _gid
+				gid: _gid,
+				owner_uid: (byuser === -2 ? {
+					$gt: -1
+				} : {
+					$eq: byuser
+				})
 			}
 		})
 		.then(function(result) {
@@ -221,9 +235,23 @@ router.delete('/delete', function(req, res, next) {
 	// Get property:value in DELETE query
 	var _gid = parseInt(req.query.gid, 10);
 
+	// PERMISSION CHECK
+	var byuser = req.exwd.byuser;
+	if (byuser === -1) {
+		res.send({
+			error: 'Bad permission!'
+		});
+		return;
+	}
+
 	goods.findOne({
 			where: {
-				gid: _gid
+				gid: _gid,
+				owner_uid: (byuser === -2 ? {
+					$gt: -1
+				} : {
+					$eq: byuser
+				})
 			}
 		})
 		.then(function(result) {
