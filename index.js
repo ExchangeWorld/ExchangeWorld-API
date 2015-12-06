@@ -59,7 +59,9 @@ server.put('/api/*', (req, res, next) => {
 			byuser: parseInt(req.query.byuser, 10)
 		};
 	} else {
-		req.exwd = {};
+		req.exwd = {
+			byuser: -1
+		};
 	}
 	next();
 });
@@ -70,7 +72,9 @@ server.delete('/api/*', (req, res, next) => {
 			byuser: parseInt(req.query.byuser, 10)
 		};
 	} else {
-		req.exwd = {};
+		req.exwd = {
+			byuser: -1
+		};
 	}
 	next();
 });
