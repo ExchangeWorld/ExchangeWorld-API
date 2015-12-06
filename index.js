@@ -9,6 +9,8 @@ var favicon = require('serve-favicon');
 var compression = require('compression');
 var multer = require('multer');
 
+var byuserDe = require('./ipc_child/byuser');
+
 var server = express();
 
 var orm_startup = require('./libs/orm_startup');
@@ -56,7 +58,7 @@ server.all(/\/api\/(?!authenticate).+/, authenticate.token, function(req, res, n
 server.put('/api/*', (req, res, next) => {
 	if (req.query.byuser != null || req.query.byuser != undefined) {
 		req.exwd = {
-			byuser: parseInt(req.query.byuser, 10)
+			byuser: byuserDe(parseInt(req.query.byuser, 10))
 		};
 	} else {
 		req.exwd = {
@@ -69,7 +71,7 @@ server.put('/api/*', (req, res, next) => {
 server.delete('/api/*', (req, res, next) => {
 	if (req.query.byuser != null || req.query.byuser != undefined) {
 		req.exwd = {
-			byuser: parseInt(req.query.byuser, 10)
+			byuser: byuserDe(parseInt(req.query.byuser, 10))
 		};
 	} else {
 		req.exwd = {
