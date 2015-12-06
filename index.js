@@ -56,7 +56,7 @@ server.all(/\/api\/(?!authenticate).+/, authenticate.token, function(req, res, n
 server.put('/api/*', (req, res, next) => {
 	if (req.query.byuser != null || req.query.byuser != undefined) {
 		req.exwd = {
-			byuser: req.query.byuser
+			byuser: parseInt(req.query.byuser, 10)
 		};
 	} else {
 		req.exwd = {};
@@ -67,7 +67,7 @@ server.put('/api/*', (req, res, next) => {
 server.delete('/api/*', (req, res, next) => {
 	if (req.query.byuser != null || req.query.byuser != undefined) {
 		req.exwd = {
-			byuser: req.query.byuser
+			byuser: parseInt(req.query.byuser, 10)
 		};
 	} else {
 		req.exwd = {};
