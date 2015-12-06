@@ -102,7 +102,7 @@ server.use(function(err, req, res, next) {
 var s = http.createServer(server);
 s.on('error', function(err) {
 	if (err.code === 'EADDRINUSE') {
-		gutil.log('Development server is already started at port ' + 3002);
+		gutil.log('Development server is already started at port ' + 3001);
 	} else {
 		throw err;
 	}
