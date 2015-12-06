@@ -146,7 +146,7 @@ router.delete('/delete', function(req, res, next) {
 
 	// PERMISSION CHECK
 	var byuser = req.exwd.byuser;
-	if (!(byuser != -1 && byuser === _starring_user_uid)) {
+	if (byuser === -1 || (byuser !== -2 && byuser !== _starring_user_uid)) {
 		res.send({
 			error: 'Bad permission!'
 		});

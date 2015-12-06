@@ -86,7 +86,7 @@ router.put('/edit', function(req, res, next) {
 
 	// PERMISSION CHECK
 	var byuser = req.exwd.byuser;
-	if (!(byuser != -1 && byuser === _uid)) {
+	if (byuser === -1 || (byuser !== -2 && byuser !== _uid)) {
 		res.send({
 			error: 'Bad permission!'
 		});
