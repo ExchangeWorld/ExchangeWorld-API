@@ -92,6 +92,15 @@ router.delete('/delete', function(req, res, next) {
 	var _my_uid       = parseInt(req.query.my_uid, 10);
 	var _follower_uid = parseInt(req.query.follower_uid, 10);
 
+	// PERMISSION CHECK
+	var byuser = req.exwd.byuser;
+	if (byuser === -1 || (byuser !== -2 && byuser !== _my_uid)) {
+		res.send({
+			error: 'Bad permission!'
+		});
+		return;
+	}
+
 	followers.destroy({
 			where: {
 				my_uid: _my_uid,
