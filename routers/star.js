@@ -144,6 +144,15 @@ router.delete('/delete', function(req, res, next) {
 	var _goods_gid         = parseInt(req.query.goods_gid, 10);
 	var _starring_user_uid = parseInt(req.query.starring_user_uid, 10);
 
+	// PERMISSION CHECK
+	var byuser = req.exwd.byuser;
+	if (!(byuser != -1 && byuser === _starring_user_uid)) {
+		res.send({
+			error: 'Bad permission!'
+		});
+		return;
+	}
+
 	stars.destroy({
 			where: {
 				goods_gid: _goods_gid,
