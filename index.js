@@ -12,6 +12,8 @@ var multer = require('multer');
 var byuserDe = require('./ipc_child/byuser');
 
 var server = express();
+server.setMaxListeners(0);
+process.setMaxListeners(0);
 
 var orm_startup = require('./libs/orm_startup');
 orm_startup();
