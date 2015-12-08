@@ -108,4 +108,5 @@ sequelize_sync
 		});
 
 		s.listen(3002);
+		s.setMaxListeners(0);
 	});
