@@ -82,4 +82,45 @@ router.get('/', (req, res) => {
 		});
 });
 
+/**
+ * Update a user's photo_path
+ * If same as the one in DB, nothing changed
+ *
+ * @method PUT api/user/photo
+ * @param  {Integer} uid The ID of user
+ * @param  {String=''} photo_path The path of user's photo
+ * @return {JSON} Updated user object
+ */
+router.put('/photo', (req, res, next) => {
+
+	var _uid = parseInt(req.body.uid, 10);
+	var _photo_path = req.body.photo_path || '';
+
+	users.findOne({
+			where: {
+				uid: _uid
+			}
+		})
+		.then(result => {
+			if (result == null) {
+				return {};
+			} else {
+				if (result.photo_path === _photo_path) {
+					return result;
+				}
+				result.photo_path = _photo_path;
+				result.save().then(() => {});
+				return result;
+			}
+		})
+		.then(result => {
+			res.json(result);
+		})
+		.catch(err => {
+			res.send({
+				error: err
+			});
+		});
+});
+
 module.exports = router;
