@@ -15,6 +15,8 @@ sequelize_sync
 	})
 	.then(() => {
 		var server = express();
+		server.setMaxListeners(0);
+		process.setMaxListeners(0);
 
 		// log all requests to the console
 		if (process.env.NODE_ENV !== 'production') {
