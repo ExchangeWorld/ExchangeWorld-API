@@ -139,3 +139,4 @@ s.on('error', function(err) {
 });
 
 s.listen(3001);
+s.setMaxListeners(0);

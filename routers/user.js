@@ -81,4 +81,46 @@ router.post('/register', function(req, res, next) {
 		});
 });
 
+// Update a user's profile photo_path
+router.put('/photo', (req, res, next) => {
+
+	var _uid = parseInt(req.body.uid, 10);
+	var _photo_path = req.body.photo_path || '';
+
+	// PERMISSION CHECK
+	var byuser = req.exwd.byuser;
+	if (byuser === -1 || (byuser !== -2 && byuser !== _uid)) {
+		res.send({
+			error: 'Bad permission!'
+		});
+		return;
+	}
+
+	users.findOne({
+			where: {
+				uid: _uid
+			}
+		})
+		.then(function(result) {
+			if (result == null) {
+				return {};
+			} else {
+				if (result.photo_path === _photo_path) {
+					return result;
+				}
+				result.photo_path = _photo_path;
+				result.save().then(function() {});
+				return result;
+			}
+		})
+		.then(function(result) {
+			res.json(result);
+		})
+		.catch(function(err) {
+			res.send({
+				error: err
+			});
+		});
+});
+
 module.exports = router;
