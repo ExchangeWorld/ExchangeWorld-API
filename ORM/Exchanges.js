@@ -15,6 +15,7 @@ var Exchanges = sequelize.define('exchanges', {
 	eid: {
 		type: Sequelize.INTEGER.UNSIGNED,
 		allowNull: false,
+		unique: true,
 		autoIncrement: true,
 		primaryKey: true
 	},
