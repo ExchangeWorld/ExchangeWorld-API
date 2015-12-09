@@ -29,4 +29,10 @@ var Messages = sequelize.define('messages', {
 	}
 });
 
+// Other cols in relationships :
+//
+// chatroom_cid
+// sender_uid
+// receiver_uid
+
 module.exports = Messages;

@@ -66,4 +66,8 @@ var Goods = sequelize.define('goods', {
 	}
 });
 
+// Other cols in relationships :
+//
+// owner_uid
+
 module.exports = Goods;

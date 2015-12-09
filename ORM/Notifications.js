@@ -33,4 +33,9 @@ var Notifications = sequelize.define('notifications', {
 	}
 });
 
+// Other cols in relationships :
+//
+// sender_uid
+// receiver_uid
+
 module.exports = Notifications;

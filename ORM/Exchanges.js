@@ -36,4 +36,10 @@ var Exchanges = sequelize.define('exchanges', {
 	}
 });
 
+// Other cols in relationships :
+//
+// goods_one_gid
+// goods_two_gid
+// chatroom_cid
+
 module.exports = Exchanges;

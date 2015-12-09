@@ -18,4 +18,9 @@ var Follows = sequelize.define('follows', {
 	}
 });
 
+// Other cols in relationships :
+//
+// followed_uid
+// follower_uid
+
 module.exports = Follows;

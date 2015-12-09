@@ -17,4 +17,9 @@ var Stars = sequelize.define('stars', {
 	}
 });
 
+// Other cols in relationships :
+//
+// goods_gid
+// starring_user_uid
+
 module.exports = Stars;

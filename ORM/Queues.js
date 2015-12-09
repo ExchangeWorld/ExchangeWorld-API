@@ -17,4 +17,9 @@ var Queues = sequelize.define('queues', {
 	}
 });
 
+// Other cols in relationships :
+//
+// host_goods_gid
+// queuer_goods_gid
+
 module.exports = Queues;

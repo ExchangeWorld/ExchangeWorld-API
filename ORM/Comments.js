@@ -22,4 +22,9 @@ var Comments = sequelize.define('comments', {
 	}
 });
 
+// Other cols in relationships :
+//
+// goods_gid
+// commenter_uid
+
 module.exports = Comments;
