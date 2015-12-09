@@ -11,7 +11,7 @@ var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, 
 	dialect: 'postgres',
 
 	// We will use another async-logger soon
-	logging: false,
+	logging: true,
 
 	// maxConcurrentQueries: 200,
 
@@ -27,8 +27,6 @@ var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, 
 
 	define: {
 		timestamps: true,
-		createdAt: 'timestamp',
-		updatedAt: false,
 		deletedAt: false,
 		freezeTableName: true,
 		underscored: true,
