@@ -64,7 +64,7 @@ router.get('/', function(req, res, next) {
 				lt: boundArray[2]
 			},
 			status: {
-				$in: [0, 2]
+				$ne: 1
 			},
 			deleted: 0
 		},
