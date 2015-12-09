@@ -3,6 +3,7 @@
 var http = require('http');
 var express = require('express');
 var morgan = require('morgan');
+var helmet = require('helmet');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var compression = require('compression');
@@ -23,6 +24,9 @@ sequelize_sync
 			server.use(morgan('dev'));
 		}
 
+		// protect server from some well-known web vulnerabilities
+		server.use(helmet());
+
 		// for parsing application/json
 		server.use(bodyParser.json({
 			limit: '64mb'
@@ -36,8 +40,6 @@ sequelize_sync
 
 		server.use(cookieParser());
 		server.use(compression());
-
-		server.disable('x-powered-by');
 
 		server.all('*', (req, res, next) => {
 			res.header('Access-Control-Allow-Origin', '*');
