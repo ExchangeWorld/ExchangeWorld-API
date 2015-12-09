@@ -28,7 +28,8 @@ router.get('/', function(req, res, next) {
 	// Emit a find operation with orm model in table `goods`
 	goods.findAll({
 			where: {
-				gid: _gid
+				gid: _gid,
+				deleted: 0
 			},
 			include: [{
 				model: users,
