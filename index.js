@@ -64,7 +64,7 @@ server.put('/api/*', (req, res, next) => {
 		};
 	} else {
 		req.exwd = {
-			byuser: -2
+			byuser: -1
 		};
 	}
 	next();

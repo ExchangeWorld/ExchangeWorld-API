@@ -6,6 +6,6 @@
 
 var byuserDe = function(enc) {
 	return (((enc + 168) / 168) - 168) / 168;
-}
+};
 
 module.exports = byuserDe;
