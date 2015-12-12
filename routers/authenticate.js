@@ -9,9 +9,8 @@
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var sec_ran = require('secure-random');
-var Redis = require('ioredis');
+var redis = require('../libs/redis');
 var router = express.Router();
-var redis = new Redis();
 
 // Including tables
 var users = require('../ORM/Users');
