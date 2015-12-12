@@ -62,6 +62,10 @@ server.put('/api/*', (req, res, next) => {
 		req.exwd = {
 			byuser: byuserDe(parseInt(req.query.byuser, 10))
 		};
+	} else if (req.body.byuser != null || req.body.byuser != undefined) {
+		req.exwd = {
+			byuser: byuserDe(parseInt(req.body.byuser, 10))
+		};
 	} else {
 		req.exwd = {
 			byuser: -1
