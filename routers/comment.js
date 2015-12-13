@@ -22,7 +22,6 @@ var goods = require('../ORM/Goods');
  * @return {JSON} Comments including `commenter`
  */
 router.get('/of/goods', (req, res) => {
-
 	var _goods_gid = parseInt(req.query.goods_gid, 10);
 
 	comments
@@ -30,11 +29,15 @@ router.get('/of/goods', (req, res) => {
 			where: {
 				goods_gid: _goods_gid
 			},
-			order: 'cid DESC',
 			include: [{
 				model: users,
-				required: true
-			}]
+				as: 'commenter',
+				required: true,
+				attributes: ['uid', 'name', 'photo_path']
+			}],
+			order: [
+				['cid', ' DESC']
+			]
 		})
 		.then(result => {
 			res.json(result);
@@ -54,22 +57,41 @@ router.get('/of/goods', (req, res) => {
  * @return {JSON} Comments including `goods`, and they are not deleted
  */
 router.get('/of/user', (req, res) => {
+	var _commenter_uid;
 
-	var _commenter_uid = parseInt(req.query.commenter_uid, 10);
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_commenter_uid = parseInt(req.query.commenter_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_commenter_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
 
 	comments
 		.findAll({
 			where: {
 				commenter_uid: _commenter_uid
 			},
-			order: 'cid DESC',
 			include: [{
 				model: goods,
+				as: 'goods',
 				where: {
 					deleted: 0
 				},
 				required: true
-			}]
+			}],
+			order: [
+				['cid', ' DESC']
+			]
 		})
 		.then(result => {
 			res.json(result);
@@ -91,10 +113,26 @@ router.get('/of/user', (req, res) => {
  * @return {JSON} New created comment
  */
 router.post('/post', (req, res) => {
-
 	var _goods_gid = parseInt(req.body.goods_gid, 10);
-	var _commenter_uid = parseInt(req.body.commenter_uid, 10);
+	var _commenter_uid;
 	var _content = req.body.content;
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_commenter_uid = parseInt(req.query.commenter_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_commenter_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
 
 	comments
 		.create({
@@ -121,19 +159,47 @@ router.post('/post', (req, res) => {
  * @return {JSON} Updated comment
  */
 router.put('/edit', (req, res) => {
-
 	var _cid = parseInt(req.body.cid, 10);
+	var _commenter_uid;
 	var _content = req.body.content;
 
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_commenter_uid = parseInt(req.query.commenter_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_commenter_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	var queryTmp = (req.exwd.admin ? {
+		where: {
+			cid: _cid
+		}
+	} : {
+		where: {
+			cid: _cid,
+			commenter_uid: _commenter_uid
+		}
+	});
+
 	comments
-		.findOne({
-			where: {
-				cid: _cid
-			}
-		})
+		.findOne(queryTmp)
 		.then(result => {
+			if (result === null) {
+				return result;
+			}
+
 			result.content = _content;
-			result.save().then(() => {});
+			result.save().then(() => null);
 			return result;
 		})
 		.then(result => {
@@ -154,15 +220,39 @@ router.put('/edit', (req, res) => {
  * @return {JSON} Number of deleted comments
  */
 router.delete('/delete', (req, res) => {
-
 	var _cid = parseInt(req.query.cid, 10);
+	var _commenter_uid;
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_commenter_uid = parseInt(req.query.commenter_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_commenter_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	var queryTmp = (req.exwd.admin ? {
+		where: {
+			cid: _cid
+		}
+	} : {
+		where: {
+			cid: _cid,
+			commenter_uid: _commenter_uid
+		}
+	});
 
 	comments
-		.destroy({
-			where: {
-				cid: _cid
-			}
-		})
+		.destroy(queryTmp)
 		.then(result => {
 			res.json(result);
 		})

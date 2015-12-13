@@ -204,7 +204,7 @@ var token_function = (req, res, next) => {
 		req.exwd = {
 			admin: false,
 			anonymous: true,
-			byuser: -1,
+			uid: -1,
 			registered: false
 		};
 
@@ -231,7 +231,7 @@ var token_function = (req, res, next) => {
 						req.exwd = {
 							admin: false,
 							anonymous: false,
-							byuser: parseInt(result, 10),
+							uid: parseInt(result, 10),
 							registered: true
 						};
 
