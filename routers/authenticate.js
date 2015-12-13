@@ -17,7 +17,6 @@ var router = express.Router();
 // Including tables
 var users = require('../ORM/Users');
 var auths = require('../ORM/Auths');
-var tokens = require('../ORM/Tokens');
 
 // Hashcode generation functions
 var getSHA256 = strToEncrypt => {
