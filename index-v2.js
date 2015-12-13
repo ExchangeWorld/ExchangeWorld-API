@@ -2,44 +2,47 @@
 
 var http = require('http');
 var express = require('express');
-var morgan = require('morgan');
-var helmet = require('helmet');
+
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
 var compression = require('compression');
+var helmet = require('helmet');
+var morgan = require('morgan');
 
 var sequelize_sync = require('./libs/sync');
+
+var server = express();
+var serverContainer;
+
 sequelize_sync
 	.then(() => {
 		console.log('DB all synced ...');
 		console.log('Igniting API server ...');
 	})
 	.then(() => {
-		var server = express();
-		server.setMaxListeners(0);
-		process.setMaxListeners(0);
-
-		// log all requests to the console
-		if (process.env.NODE_ENV !== 'production') {
-			server.use(morgan('dev'));
-		}
-
 		// protect server from some well-known web vulnerabilities
 		server.use(helmet());
 
-		// for parsing application/json
-		server.use(bodyParser.json({
-			limit: '64mb'
-		}));
+		// compress req before all middlewares
+		server.use(compression());
 
-		// for parsing application/x-www-form-urlencoded
-		server.use(bodyParser.urlencoded({
+		// log all requests to the console
+		server.use(morgan('common'));
+
+		// setting for bodyparser
+		var bodyParserSetting = {
 			limit: '64mb',
 			extended: true
-		}));
+		};
 
-		server.use(cookieParser());
-		server.use(compression());
+		// for parsing application/json
+		server.post('*', bodyParser.json(bodyParserSetting));
+		server.put('*', bodyParser.json(bodyParserSetting));
+		server.options('*', bodyParser.json(bodyParserSetting));
+
+		// for parsing application/x-www-form-urlencoded
+		server.post('*', bodyParser.urlencoded(bodyParserSetting));
+		server.put('*', bodyParser.urlencoded(bodyParserSetting));
+		server.options('*', bodyParser.json(bodyParserSetting));
 
 		server.all('*', (req, res, next) => {
 			res.header('Access-Control-Allow-Origin', '*');
@@ -100,8 +103,8 @@ sequelize_sync
 		});
 
 		// Then start webserver if not already running
-		var s = http.createServer(server);
-		s.on('error', err => {
+		serverContainer = http.createServer(server);
+		serverContainer.on('error', err => {
 			if (err.code === 'EADDRINUSE') {
 				console.log('Development server is already started at port ' + 3002);
 			} else {
@@ -109,6 +112,9 @@ sequelize_sync
 			}
 		});
 
-		s.listen(3002);
-		s.setMaxListeners(0);
+		serverContainer.listen(3002);
+
+		server.setMaxListeners(0);
+		serverContainer.setMaxListeners(0);
+		process.setMaxListeners(0);
 	});
