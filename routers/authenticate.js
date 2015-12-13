@@ -202,7 +202,10 @@ var token_function = (req, res, next) => {
 	if (_token === '') {
 		// EXWD middleware >w<
 		req.exwd = {
-			byuser: -1
+			admin: false,
+			anonymous: true,
+			byuser: -1,
+			registered: false
 		};
 
 		next();
@@ -226,7 +229,10 @@ var token_function = (req, res, next) => {
 					} else {
 						// EXWD middleware >w<
 						req.exwd = {
-							byuser: parseInt(result, 10)
+							admin: false,
+							anonymous: false,
+							byuser: parseInt(result, 10),
+							registered: true
 						};
 
 						next();
