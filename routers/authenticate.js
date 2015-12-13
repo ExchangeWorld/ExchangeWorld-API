@@ -6,16 +6,36 @@
 
 'use strict';
 
+var path = require('path');
+var crypto = require('crypto');
+
 var express = require('express');
-var jwt = require('jsonwebtoken');
 var sec_ran = require('secure-random');
-var redis = require('../libs/redis');
+var redis = require(path.resolve(__dirname, '../libs/redis'));
 var router = express.Router();
 
 // Including tables
 var users = require('../ORM/Users');
 var auths = require('../ORM/Auths');
 var tokens = require('../ORM/Tokens');
+
+// Hashcode generation functions
+var getSHA256 = strToEncrypt => {
+	var sha256 = crypto.createHash('sha256');
+
+	sha256.update(strToEncrypt, 'utf8');
+
+	return sha256.digest('hex');
+};
+
+// Faster
+var getSHA1 = strToEncrypt => {
+	var sha1 = crypto.createHash('sha1');
+
+	sha1.update(strToEncrypt, 'utf8');
+
+	return sha1.digest('hex');
+};
 
 /**
  * Register a new user
@@ -30,8 +50,7 @@ var tokens = require('../ORM/Tokens');
  * @return {JSON} New created user object
  */
 router.post('/register', (req, res) => {
-
-	var _fb = ((req.body.fb || '') == 'true') ? true : false;
+	var _fb = ((req.body.fb || '') === 'true');
 	var _id = req.body.identity;
 	var _password = req.body.password || '';
 	var _name = req.body.name;
@@ -53,7 +72,6 @@ router.post('/register', (req, res) => {
 			photo_path: _photo_path
 		})
 		.then(result => {
-
 			var _salt = JSON.stringify(sec_ran.randomArray(7));
 
 			var _answer = getSHA256(_password + ' and this is a fucking hash with ' + _salt);
@@ -94,7 +112,7 @@ router.post('/register', (req, res) => {
 <pre>
 {
 	authentication: 'success',
-	token: result.token
+	token: token
 }
 </pre>
  * @example
@@ -106,8 +124,7 @@ router.post('/register', (req, res) => {
 </pre>
  */
 var login_function = (req, res) => {
-
-	var _fb = ((req.query.fb || '') == 'true') ? true : false;
+	var _fb = ((req.query.fb || '') === 'true');
 	var _id = req.query.identity;
 	var _password = req.query.password || '';
 
@@ -120,44 +137,45 @@ var login_function = (req, res) => {
 		.findOne({
 			where: {
 				user_identity: _id
-			}
+			},
+			include: [{
+				model: users,
+				required: true,
+				attributes: ['uid']
+			}]
 		})
 		.then(test_user => {
-			if (test_user != undefined && getSHA256(_password + ' and this is a fucking hash with ' + test_user.salt) === test_user.answer) {
+			if (test_user !== undefined && test_user !== null && getSHA256(_password + ' and this is a fucking hash with ' + test_user.salt) === test_user.answer) {
 				return test_user;
-			} else {
-				return 'not a user';
 			}
+			return 'not a user';
 		})
 		.then(test_user => {
-
-			if (test_user === 'not a user') {
+			if (test_user === 'not a user' || test_user.user === null || test_user.user.uid === null) {
 				res.json({
 					authentication: 'fail',
 					token: null
 				});
 			} else {
+				var _salt = JSON.stringify(sec_ran.randomArray(7));
+				var tmpToken = getSHA1(test_user.user_identity + _salt);
 
-				tokens
-					.create({
-						token: jwt.sign({
-							identity: _id,
-							password: _password
-						}, '事實上我們做了一年', {
-							expiresIn: '30m'
-						})
-					})
-					.then(result => {
-						res.json({
-							authentication: 'success',
-							token: result.token
-						});
-					})
-					.catch(err => {
+				redis.pipeline().set(tmpToken, test_user.user.uid).expire(tmpToken, 1200).exec((err, result) => {
+					if (err) {
 						res.send({
 							error: err
 						});
-					});
+					} else if (result[0][0] || result[1][0]) {
+						res.send({
+							error: [result[0][0], result[1][0]]
+						});
+					} else {
+						res.json({
+							authentication: 'success',
+							token: tmpToken
+						});
+					}
+				});
 			}
 		})
 		.catch(err => {
@@ -168,7 +186,6 @@ var login_function = (req, res) => {
 };
 router.get('/login', login_function);
 
-
 /**
  * Token validation
  *
@@ -178,72 +195,52 @@ router.get('/login', login_function);
  * @example
 <pre>
 {
-	authentication: 'timeout',
-	err: err
-}
-</pre>
- * @example
-<pre>
-{
 	authentication: 'fail',
+	token: null
 }
 </pre>
  */
 var token_function = (req, res, next) => {
-
 	var _token = req.query.token || '';
 
-	tokens
-		.findOne({
-			where: {
-				token: _token
-			}
-		})
-		.then(result => {
+	if (token === '') {
+		// EXWD middleware >w<
+		req.exwd = {
+			byuser: -1
+		};
 
-			if (result != null && result != undefined) {
-				jwt.verify(result.token, '事實上我們做了一年', (err, decoded) => {
+		next();
+	} else {
+		redis.get(_token, (err, result) => {
+			if (err) {
+				res.send({
+					error: err
+				});
+			} else if (result === null) {
+				res.json({
+					authentication: 'fail',
+					token: null
+				});
+			} else {
+				redis.pieline().set(_token, result).expire(_token, 1200).exec((err, res) => {
 					if (err) {
-						tokens
-							.destroy({
-								where: {
-									token: _token
-								}
-							})
-							.then(result => {
-								res.json({
-									authentication: 'timeout',
-									err: err
-								});
-							});
+						res.send({
+							error: err
+						});
 					} else {
+						// EXWD middleware >w<
+						req.exwd = {
+							byuser: result
+						};
+
 						next();
 					}
 				});
-			} else {
-				res.json({
-					authentication: 'fail'
-				});
 			}
-		})
-		.catch(err => {
-			res.send({
-				error: err
-			});
 		});
+	}
 };
 router.get('/', token_function);
-
-// Hashcode generation function
-var getSHA256 = strToEncrypt => {
-
-	var crypto = require('crypto');
-	var sha256 = crypto.createHash('sha256');
-
-	sha256.update(strToEncrypt, 'utf8');
-
-	return sha256.digest('hex');
-};
 
 module.exports = {
 	router: router,

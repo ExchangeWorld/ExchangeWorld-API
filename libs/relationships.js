@@ -12,11 +12,20 @@ var Messages = require(path.resolve(__dirname, '../ORM/Messages'));
 var Notifications = require(path.resolve(__dirname, '../ORM/Notifications'));
 var Queues = require(path.resolve(__dirname, '../ORM/Queues'));
 var Stars = require(path.resolve(__dirname, '../ORM/Stars'));
-var Tokens = require(path.resolve(__dirname, '../ORM/Tokens'));
 var Users = require(path.resolve(__dirname, '../ORM/Users'));
 
 module.exports = () => {
 	console.log('Setting Relationships ...');
+
+	// Auths & Users
+	Auths.belongsTo(Users, {
+		as: 'user',
+		foreignKey: 'user_uid'
+	});
+	Users.hasOne(Auths, {
+		as: 'user',
+		foreignKey: 'user_uid'
+	});
 
 	// Chatrooms & Messages
 	Messages.belongsTo(Chatrooms, {
