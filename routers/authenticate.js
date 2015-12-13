@@ -79,7 +79,8 @@ router.post('/register', (req, res) => {
 				.create({
 					user_identity: _id,
 					salt: _salt,
-					answer: _answer
+					answer: _answer,
+					user_uid: result.uid
 				})
 				.catch(err => {
 					res.send({
@@ -102,7 +103,7 @@ router.post('/register', (req, res) => {
 /**
  * Login
  *
- * @method GET api/authenticate/login
+ * @method POST api/authenticate/login
  * @param  {Boolean=false} fb If the login is with FB
  * @param  {String} identity The user ID. If it's with FB, fb_id as identity
  * @param  {String=''} password Password. If it's with FB, password will be checked by hash
@@ -123,9 +124,9 @@ router.post('/register', (req, res) => {
 </pre>
  */
 var login_function = (req, res) => {
-	var _fb = ((req.query.fb || '') === 'true');
-	var _id = req.query.identity;
-	var _password = req.query.password || '';
+	var _fb = ((req.body.fb || '') === 'true');
+	var _id = req.body.identity;
+	var _password = req.body.password || '';
 
 	if (_fb === true) {
 		var id_length = _id.length;
@@ -136,21 +137,17 @@ var login_function = (req, res) => {
 		.findOne({
 			where: {
 				user_identity: _id
-			},
-			include: [{
-				model: users,
-				required: true,
-				attributes: ['uid']
-			}]
+			}
 		})
 		.then(test_user => {
 			if (test_user !== undefined && test_user !== null && getSHA256(_password + ' and this is a fucking hash with ' + test_user.salt) === test_user.answer) {
 				return test_user;
 			}
+
 			return 'not a user';
 		})
 		.then(test_user => {
-			if (test_user === 'not a user' || test_user.user === null || test_user.user.uid === null) {
+			if (test_user === 'not a user' || test_user.user_uid === null) {
 				res.json({
 					authentication: 'fail',
 					token: null
@@ -159,7 +156,7 @@ var login_function = (req, res) => {
 				var _salt = JSON.stringify(sec_ran.randomArray(7));
 				var tmpToken = getSHA1(test_user.user_identity + _salt);
 
-				redis.pipeline().set(tmpToken, test_user.user.uid).expire(tmpToken, 1200).exec((err, result) => {
+				redis.pipeline().set(tmpToken, test_user.user_uid).expire(tmpToken, 1200).exec((err, result) => {
 					if (err) {
 						res.send({
 							error: err
@@ -183,7 +180,7 @@ var login_function = (req, res) => {
 			});
 		});
 };
-router.get('/login', login_function);
+router.post('/login', login_function);
 
 /**
  * Token validation
@@ -202,7 +199,7 @@ router.get('/login', login_function);
 var token_function = (req, res, next) => {
 	var _token = req.query.token || '';
 
-	if (token === '') {
+	if (_token === '') {
 		// EXWD middleware >w<
 		req.exwd = {
 			byuser: -1
@@ -221,7 +218,7 @@ var token_function = (req, res, next) => {
 					token: null
 				});
 			} else {
-				redis.pieline().set(_token, result).expire(_token, 1200).exec((err, res) => {
+				redis.pipeline().set(_token, result).expire(_token, 1200).exec((err, res) => {
 					if (err) {
 						res.send({
 							error: err
@@ -229,7 +226,7 @@ var token_function = (req, res, next) => {
 					} else {
 						// EXWD middleware >w<
 						req.exwd = {
-							byuser: result
+							byuser: parseInt(result, 10)
 						};
 
 						next();

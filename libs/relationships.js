@@ -23,7 +23,7 @@ module.exports = () => {
 		foreignKey: 'user_uid'
 	});
 	Users.hasOne(Auths, {
-		as: 'user',
+		as: 'auth',
 		foreignKey: 'user_uid'
 	});
 

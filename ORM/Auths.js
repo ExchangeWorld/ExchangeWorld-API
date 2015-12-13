@@ -31,4 +31,8 @@ var Auths = sequelize.define('auths', {
 	}
 });
 
+// Other cols in relationships :
+//
+// user_uid
+
 module.exports = Auths;
