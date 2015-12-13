@@ -36,7 +36,7 @@ router.get('/of/goods', (req, res) => {
 				attributes: ['uid', 'name', 'photo_path']
 			}],
 			order: [
-				['cid', ' DESC']
+				['cid', 'DESC']
 			]
 		})
 		.then(result => {
@@ -90,7 +90,7 @@ router.get('/of/user', (req, res) => {
 				required: true
 			}],
 			order: [
-				['cid', ' DESC']
+				['cid', 'DESC']
 			]
 		})
 		.then(result => {

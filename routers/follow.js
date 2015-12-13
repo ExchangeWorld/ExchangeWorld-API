@@ -23,7 +23,6 @@ var users = require('../ORM/Users');
  * @return {JSON} Users following given followed_uid
  */
 router.get('/followers/of', (req, res) => {
-
 	var _followed_uid = parseInt(req.query.followed_uid, 10);
 
 	// Emit a find operation with orm in table `follows`
@@ -34,11 +33,12 @@ router.get('/followers/of', (req, res) => {
 			},
 			include: [{
 				model: users,
-				as: 'followed'
-			}, {
-				model: users,
-				as: 'follower'
-			}]
+				as: 'followed',
+				attributes: ['uid', 'name', 'photo_path']
+			}],
+			order: [
+				['fid', 'DESC']
+			]
 		})
 		.then(result => {
 			res.json(result);
@@ -59,7 +59,6 @@ router.get('/followers/of', (req, res) => {
  * @return {JSON} Users followed by given follower_uid
  */
 router.get('/followed/by', (req, res) => {
-
 	var _follower_uid = parseInt(req.query.follower_uid, 10);
 
 	// Emit a find operation with orm in table `follows`
@@ -70,11 +69,12 @@ router.get('/followed/by', (req, res) => {
 			},
 			include: [{
 				model: users,
-				as: 'followed'
-			}, {
-				model: users,
-				as: 'follower'
-			}]
+				as: 'follower',
+				attributes: ['uid', 'name', 'photo_path']
+			}],
+			order: [
+				['fid', 'DESC']
+			]
 		})
 		.then(result => {
 			res.json(result);
@@ -96,22 +96,46 @@ router.get('/followed/by', (req, res) => {
  * @return {JSON} New created follow object, or if there is already one, return that one
  */
 router.post('/post', (req, res) => {
-
-	var _follower_uid = parseInt(req.body.follower_uid, 10);
+	var _follower_uid;
 	var _followed_uid = parseInt(req.body.followed_uid, 10);
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_follower_uid = parseInt(req.query.follower_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_follower_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if (_follower_uid === _followed_uid) {
+		res.send({
+			error: 'One cannot follow oneself'
+		});
+		return;
+	}
 
 	// Create instance
 	// But if there is already the pair(followed_uid, follower_uid)
 	// Then don't create another
 	follows
-		.findOrCreatee({
+		.findOrCreate({
 			where: {
 				follower_uid: _follower_uid,
 				followed_uid: _followed_uid
 			}
 		})
 		.then((result, created) => {
-			res.json(result);
+			// console.log(JSON.stringify(result), JSON.stringify(created));
+			res.json(result[0]);
 		})
 		.catch(err => {
 			res.send({
@@ -130,9 +154,25 @@ router.post('/post', (req, res) => {
  * @return {JSON} Number of deleted follows
  */
 router.delete('/delete', (req, res) => {
-
-	var _follower_uid = parseInt(req.query.follower_uid, 10);
+	var _follower_uid;
 	var _followed_uid = parseInt(req.query.followed_uid, 10);
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_follower_uid = parseInt(req.query.follower_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_follower_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
 
 	follows
 		.destroy({

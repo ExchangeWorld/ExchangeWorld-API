@@ -14,7 +14,7 @@ var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, 
 	dialect: 'postgres',
 
 	// We will use another async-logger soon
-	logging: (env.NODE_ENV !== 'production'),
+	logging: (env.NODE_ENV !== 'production' ? console.log : false),
 
 	// maxConcurrentQueries: 200,
 
