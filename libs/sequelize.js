@@ -1,17 +1,20 @@
 'use strict';
 
+var path = require('path');
 var Sequelize = require('sequelize');
-var dblogin = require('./dblogin');
+
+var dblogin = require(path.resolve(__dirname, './dblogin'));
+var env = require(path.resolve(__dirname, './env'));
 
 // Export a orm model with some config
 var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, {
-	host: 'exwd.csie.org',
-	port: 45432,
+	host: (env.NODE_ENV === 'production' ? 'localhost' : 'exwd.csie.org'),
+	port: (env.NODE_ENV === 'production' ? 5432 : 45432),
 
 	dialect: 'postgres',
 
 	// We will use another async-logger soon
-	logging: true,
+	logging: (env.NODE_ENV !== 'production'),
 
 	// maxConcurrentQueries: 200,
 
@@ -21,7 +24,7 @@ var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, 
 
 	pool: {
 		maxConnections: 16,
-		minConnections: 4,
+		minConnections: 2,
 		maxIdleTime: 3000
 	},
 

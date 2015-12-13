@@ -1,17 +1,19 @@
 'use strict';
 
-var Auths = require('../ORM/Auths');
-var Chatrooms = require('../ORM/Chatrooms');
-var Comments = require('../ORM/Comments');
-var Exchanges = require('../ORM/Exchanges');
-var Follows = require('../ORM/Follows');
-var Goods = require('../ORM/Goods');
-var Messages = require('../ORM/Messages');
-var Notifications = require('../ORM/Notifications');
-var Queues = require('../ORM/Queues');
-var Stars = require('../ORM/Stars');
-var Tokens = require('../ORM/Tokens');
-var Users = require('../ORM/Users');
+var path = require('path');
+
+var Auths = require(path.resolve(__dirname, '../ORM/Auths'));
+var Chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
+var Comments = require(path.resolve(__dirname, '../ORM/Comments'));
+var Exchanges = require(path.resolve(__dirname, '../ORM/Exchanges'));
+var Follows = require(path.resolve(__dirname, '../ORM/Follows'));
+var Goods = require(path.resolve(__dirname, '../ORM/Goods'));
+var Messages = require(path.resolve(__dirname, '../ORM/Messages'));
+var Notifications = require(path.resolve(__dirname, '../ORM/Notifications'));
+var Queues = require(path.resolve(__dirname, '../ORM/Queues'));
+var Stars = require(path.resolve(__dirname, '../ORM/Stars'));
+var Tokens = require(path.resolve(__dirname, '../ORM/Tokens'));
+var Users = require(path.resolve(__dirname, '../ORM/Users'));
 
 module.exports = () => {
 	console.log('Setting Relationships ...');

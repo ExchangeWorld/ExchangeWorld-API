@@ -26,7 +26,7 @@ sequelize_sync
 		server.use(compression());
 
 		// log all requests to the console
-		server.use(morgan('common'));
+		server.use(morgan(process.env.NODE_ENV === 'production' ? 'short' : 'dev'));
 
 		// setting for bodyparser
 		var bodyParserSetting = {
