@@ -28,3 +28,6 @@ node_modules
 
 # Doc
 doc
+
+# Env
+ENV
