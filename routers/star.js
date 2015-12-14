@@ -22,7 +22,6 @@ var users = require('../ORM/Users');
  * @return {JSON} The stars including users
  */
 router.get('/to', (req, res) => {
-
 	var _goods_gid = parseInt(req.query.goods_gid, 10);
 
 	stars
@@ -32,7 +31,8 @@ router.get('/to', (req, res) => {
 			},
 			include: [{
 				model: users,
-				as: 'starring_user'
+				as: 'starring_user',
+				attributes: ['uid', 'name', 'photo_path']
 			}]
 		})
 		.then(result => {
@@ -53,7 +53,6 @@ router.get('/to', (req, res) => {
  * @return {JSON} The stars including goods
  */
 router.get('/by', (req, res) => {
-
 	var _starring_user_uid = parseInt(req.query.starring_user_uid, 10);
 
 	stars
@@ -66,7 +65,8 @@ router.get('/by', (req, res) => {
 				as: 'goods',
 				where: {
 					deleted: 0
-				}
+				},
+				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
 			}]
 		})
 		.then(result => {
@@ -88,17 +88,35 @@ router.get('/by', (req, res) => {
  * @return {JSON} New created star object or already created one
  */
 router.post('/post', (req, res) => {
-
 	var _goods_gid = parseInt(req.body.goods_gid, 10);
-	var _starring_user_uid = parseInt(req.body.starring_user_uid, 10);
+	var _starring_user_uid;
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_starring_user_uid = parseInt(req.body.starring_user_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_starring_user_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
 
 	stars
 		.findOrCreate({
-			goods_gid: _goods_gid,
-			starring_user_uid: _starring_user_uid
+			where: {
+				goods_gid: _goods_gid,
+				starring_user_uid: _starring_user_uid
+			}
 		})
 		.then((result, created) => {
-			res.json(result);
+			res.json(result[0]);
 		})
 		.catch(err => {
 			res.send({
@@ -116,9 +134,25 @@ router.post('/post', (req, res) => {
  * @return {JSON} Number of deleted stars
  */
 router.delete('/delete', (req, res) => {
-
 	var _goods_gid = parseInt(req.query.goods_gid, 10);
-	var _starring_user_uid = parseInt(req.query.starring_user_uid, 10);
+	var _starring_user_uid;
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_starring_user_uid = parseInt(req.query.starring_user_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_starring_user_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
 
 	stars
 		.destroy({
