@@ -74,9 +74,6 @@ router.get('/', (req, res) => {
 				},
 				deleted: 0
 			},
-			order: [
-				['gid', 'DESC']
-			],
 			include: [{
 				model: users,
 				as: 'owner',
@@ -86,7 +83,11 @@ router.get('/', (req, res) => {
 				model: stars,
 				as: 'star_goods',
 				attributes: ['sid', 'starring_user_uid']
-			}]
+			}],
+			attributes: ['gid', 'name','photo_path','category'],
+			order: [
+				['gid', 'DESC']
+			]
 		})
 		.then(result => {
 			res.json(result);
