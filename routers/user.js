@@ -57,7 +57,7 @@ router.get('/', (req, res) => {
 				as: 'follows_follower'
 			}, {
 				model: stars,
-				as: 'star_starring_user'
+				as: 'star_starring_user',
 				include: [{
 					model: goods,
 					as: 'goods',
