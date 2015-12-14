@@ -119,7 +119,7 @@ router.post('/post', (req, res) => {
 
 	// REQ EXWD CHECK
 	if (req.exwd.admin) {
-		_commenter_uid = parseInt(req.query.commenter_uid, 10);
+		_commenter_uid = parseInt(req.body.commenter_uid, 10);
 	} else if (req.exwd.anonymous) {
 		res.send({
 			error: 'Permission denied'
@@ -165,7 +165,7 @@ router.put('/edit', (req, res) => {
 
 	// REQ EXWD CHECK
 	if (req.exwd.admin) {
-		_commenter_uid = parseInt(req.query.commenter_uid, 10);
+		_commenter_uid = parseInt(req.body.commenter_uid, 10);
 	} else if (req.exwd.anonymous) {
 		res.send({
 			error: 'Permission denied'

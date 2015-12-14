@@ -101,7 +101,7 @@ router.post('/post', (req, res) => {
 
 	// REQ EXWD CHECK
 	if (req.exwd.admin) {
-		_follower_uid = parseInt(req.query.follower_uid, 10);
+		_follower_uid = parseInt(req.body.follower_uid, 10);
 	} else if (req.exwd.anonymous) {
 		res.send({
 			error: 'Permission denied'
