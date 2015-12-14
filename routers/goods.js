@@ -15,6 +15,7 @@ var users = require('../ORM/Users');
 var comments = require('../ORM/Comments');
 var stars = require('../ORM/Stars');
 var exchanges = require('../ORM/Exchanges');
+var queues = require('../ORM/Queues');
 
 /**
  * Get a goods by given gid
@@ -351,6 +352,19 @@ router.delete('/delete', (req, res) => {
 					}, queryGoodsTmp)
 					.then(result => {
 						res.json(result);
+						return result;
+					})
+					.then(result => {
+						queues
+							.destroy({
+								where: {
+									$or: [{
+										host_goods_gid: _gid
+									}, {
+										queuer_goods_gid: _gid
+									}]
+								}
+							});
 					})
 					.catch(err => {
 						res.send({

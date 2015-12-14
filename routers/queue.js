@@ -342,11 +342,13 @@ router.post('/post', (req, res) => {
 
 	var queryGoodsTmp = (req.exwd.admin ? {
 		gid: _queuer_goods_gid,
-		exchanged: 0
+		exchanged: 0,
+		deleted: 0
 	} : {
 		gid: _queuer_goods_gid,
 		owner_uid: _queuer_user_uid,
-		exchanged: 0
+		exchanged: 0,
+		deleted: 0
 	});
 
 	goods
@@ -368,7 +370,7 @@ router.post('/post', (req, res) => {
 		.then(result => {
 			if (result === '') {
 				res.send({
-					error: 'The goods you want to put on the queue is not yours or it\'s already exchanging'
+					error: 'The goods cannot be queued'
 				});
 			} else {
 				res.json(result[0]);
