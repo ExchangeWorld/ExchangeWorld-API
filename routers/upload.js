@@ -11,7 +11,17 @@ var fs = require('fs');
 var router = express.Router();
 
 // Including tables for photoPath
-var goods = require('../ORM/Goods');
+// var goods = require('../ORM/Goods');
+
+// Hashcode generation function
+var getSHA256 = strToEncrypt => {
+	var crypto = require('crypto');
+	var sha256 = crypto.createHash('sha256');
+
+	sha256.update(strToEncrypt, 'utf8');
+
+	return sha256.digest('hex');
+};
 
 /**
  * Post an image
@@ -24,12 +34,11 @@ var goods = require('../ORM/Goods');
  * @return {URL} Image's src
  */
 router.post('/image', (req, res) => {
-
 	// Get file size
-	var imgSize = req.body.filesize;
+	// var imgSize = req.body.filesize;
 
 	// Get filename
-	var imgName = req.body.filename;
+	// var imgName = req.body.filename;
 
 	// Get base64 encoded imgData from request body
 	var imgData = req.body.base64;
@@ -39,7 +48,7 @@ router.post('/image', (req, res) => {
 
 	// Remove annotations and fix space to +
 	// And become pure base64 string
-	var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "").replace(/\s/g, "+");
+	var base64Data = imgData.replace(/^data:image\/\w+;base64,/, '').replace(/\s/g, '+');
 
 	// Open a buffer stream
 	var dataBuffer = new Buffer(base64Data, 'base64');
@@ -65,16 +74,5 @@ router.post('/image', (req, res) => {
 		}
 	});
 });
-
-// Hashcode generation function
-var getSHA256 = strToEncrypt => {
-
-	var crypto = require('crypto');
-	var sha256 = crypto.createHash('sha256');
-
-	sha256.update(strToEncrypt, 'utf8');
-
-	return sha256.digest('hex');
-};
 
 module.exports = router;
