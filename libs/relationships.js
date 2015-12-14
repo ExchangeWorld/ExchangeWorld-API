@@ -76,11 +76,17 @@ module.exports = () => {
 		foreignKey: 'goods_two_gid'
 	});
 	Goods.hasMany(Exchanges, {
-		as: 'exchange_goods_one',
+		as: {
+			plural: 'exchange_goods_one',
+			singular: 'exchange_goods_one'
+		},
 		foreignKey: 'goods_one_gid'
 	});
 	Goods.hasMany(Exchanges, {
-		as: 'exchange_goods_two',
+		as: {
+			plural: 'exchange_goods_two',
+			singular: 'exchange_goods_two'
+		},
 		foreignKey: 'goods_two_gid'
 	});
 
@@ -105,11 +111,17 @@ module.exports = () => {
 		foreignKey: 'follower_uid'
 	});
 	Users.hasMany(Follows, {
-		as: 'follows_followed',
+		as: {
+			plural: 'follows_followed',
+			singular: 'follows_followed'
+		},
 		foreignKey: 'followed_uid'
 	});
 	Users.hasMany(Follows, {
-		as: 'follows_follower',
+		as: {
+			plural: 'follows_follower',
+			singular: 'follows_follower'
+		},
 		foreignKey: 'follower_uid'
 	});
 
@@ -136,11 +148,17 @@ module.exports = () => {
 		foreignKey: 'receiver_uid'
 	});
 	Users.hasMany(Messages, {
-		as: 'messages_sender',
+		as: {
+			plural: 'messages_sender',
+			singular: 'messages_sender'
+		},
 		foreignKey: 'sender_uid'
 	});
 	Users.hasMany(Messages, {
-		as: 'messages_receiver',
+		as: {
+			plural: 'messages_receiver',
+			singular: 'messages_receiver'
+		},
 		foreignKey: 'receiver_uid'
 	});
 
@@ -154,11 +172,17 @@ module.exports = () => {
 		foreignKey: 'receiver_uid'
 	});
 	Users.hasMany(Notifications, {
-		as: 'notifications_sender',
+		as: {
+			plural: 'notifications_sender',
+			singular: 'notifications_sender'
+		},
 		foreignKey: 'sender_uid'
 	});
 	Users.hasMany(Notifications, {
-		as: 'notifications_receiver',
+		as: {
+			plural: 'notifications_receiver',
+			singular: 'notifications_receiver'
+		},
 		foreignKey: 'receiver_uid'
 	});
 
@@ -172,11 +196,17 @@ module.exports = () => {
 		foreignKey: 'queuer_goods_gid'
 	});
 	Goods.hasMany(Queues, {
-		as: 'queues_host_goods',
+		as: {
+			plural: 'queues_host_goods',
+			singular: 'queues_host_goods'
+		},
 		foreignKey: 'host_goods_gid'
 	});
 	Goods.hasMany(Queues, {
-		as: 'queues_queuer_goods',
+		as: {
+			plural: 'queues_queuer_goods',
+			singular: 'queues_queuer_goods'
+		},
 		foreignKey: 'queuer_goods_gid'
 	});
 
@@ -186,7 +216,10 @@ module.exports = () => {
 		foreignKey: 'goods_gid'
 	});
 	Goods.hasMany(Stars, {
-		as: 'star_goods',
+		as: {
+			plural: 'star_goods',
+			singular: 'star_goods'
+		},
 		foreignKey: 'goods_gid'
 	});
 
@@ -196,7 +229,10 @@ module.exports = () => {
 		foreignKey: 'starring_user_uid'
 	});
 	Users.hasMany(Stars, {
-		as: 'star_starring_user',
+		as: {
+			plural: 'star_starring_user',
+			singular: 'star_starring_user'
+		},
 		foreignKey: 'starring_user_uid'
 	});
 };

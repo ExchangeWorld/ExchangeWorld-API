@@ -24,8 +24,36 @@ var users = require('../ORM/Users');
  * @return {JSON} The queues including goods and owners
  */
 router.get('/of/goods', (req, res) => {
-
+	var _owner_uid;
 	var _host_goods_gid = parseInt(req.query.host_goods_gid, 10);
+
+	// REQ EXWD CHECK
+	if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_owner_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	var queryGoodsTmp = (req.exwd.admin ? {
+		exchanged: {
+			$in: [0, 2]
+		},
+		deleted: 0
+	} : {
+		exchanged: {
+			$in: [0, 2]
+		},
+		deleted: 0,
+		owner_uid: _owner_uid
+	});
 
 	queues
 		.findAll({
@@ -35,6 +63,11 @@ router.get('/of/goods', (req, res) => {
 			include: [{
 				model: goods,
 				as: 'host_goods',
+				where: queryGoodsTmp,
+				attributes: ['gid']
+			}, {
+				model: goods,
+				as: 'queuer_goods',
 				where: {
 					exchanged: {
 						$in: [0, 2]
@@ -43,20 +76,14 @@ router.get('/of/goods', (req, res) => {
 				},
 				include: [{
 					model: users,
-					as: 'owner'
-				}]
-			}, {
-				model: goods,
-				as: 'queuer_goods',
-				where: {
-					exchanged: 0,
-					deleted: 0
-				},
-				include: [{
-					model: users,
-					as: 'owner'
-				}]
-			}]
+					as: 'owner',
+					attributes: ['uid', 'name', 'photo_path']
+				}],
+				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
+			}],
+			order: [
+				['qid', 'ASC']
+			]
 		})
 		.then(result => {
 			res.json(result);
@@ -76,8 +103,36 @@ router.get('/of/goods', (req, res) => {
  * @return {JSON} The queues including goods and owners
  */
 router.get('/by/goods', (req, res) => {
-
+	var _owner_uid;
 	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);
+
+	// REQ EXWD CHECK
+	if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_owner_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	var queryGoodsTmp = (req.exwd.admin ? {
+		exchanged: {
+			$in: [0, 2]
+		},
+		deleted: 0
+	} : {
+		exchanged: {
+			$in: [0, 2]
+		},
+		deleted: 0,
+		owner_uid: _owner_uid
+	});
 
 	queues
 		.findAll({
@@ -95,22 +150,19 @@ router.get('/by/goods', (req, res) => {
 				},
 				include: [{
 					model: users,
-					as: 'owner'
-				}]
+					as: 'owner',
+					attributes: ['uid', 'name', 'photo_path']
+				}],
+				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
 			}, {
 				model: goods,
 				as: 'queuer_goods',
-				where: {
-					exchanged: {
-						$in: [0, 2]
-					},
-					deleted: 0
-				},
-				include: [{
-					model: users,
-					as: 'owner'
-				}]
-			}]
+				where: queryGoodsTmp,
+				attributes: ['gid']
+			}],
+			order: [
+				['qid', 'DESC']
+			]
 		})
 		.then(result => {
 			res.json(result);
@@ -130,8 +182,24 @@ router.get('/by/goods', (req, res) => {
  * @return {JSON} The queues including goods and owners
  */
 router.get('/of/person', (req, res) => {
+	var _host_user_uid;
 
-	var _host_user_uid = parseInt(req.query.host_user_uid, 10);
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_host_user_uid = parseInt(req.query.host_user_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_host_user_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
 
 	queues
 		.findAll({
@@ -145,10 +213,7 @@ router.get('/of/person', (req, res) => {
 					},
 					deleted: 0
 				},
-				include: [{
-					model: users,
-					as: 'owner'
-				}]
+				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
 			}, {
 				model: goods,
 				as: 'queuer_goods',
@@ -160,8 +225,10 @@ router.get('/of/person', (req, res) => {
 				},
 				include: [{
 					model: users,
-					as: 'owner'
-				}]
+					as: 'owner',
+					attributes: ['uid', 'name', 'photo_path']
+				}],
+				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
 			}]
 		})
 		.then(result => {
@@ -182,8 +249,24 @@ router.get('/of/person', (req, res) => {
  * @return {JSON} The queues including goods and owners
  */
 router.get('/by/person', (req, res) => {
+	var _queuer_user_uid;
 
-	var _queuer_user_uid = parseInt(req.query.queuer_user_uid, 10);
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_queuer_user_uid = parseInt(req.query.queuer_user_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_queuer_user_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
 
 	queues
 		.findAll({
@@ -198,8 +281,10 @@ router.get('/by/person', (req, res) => {
 				},
 				include: [{
 					model: users,
-					as: 'owner'
-				}]
+					as: 'owner',
+					attributes: ['uid', 'name', 'photo_path']
+				}],
+				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
 			}, {
 				model: goods,
 				as: 'queuer_goods',
@@ -210,10 +295,7 @@ router.get('/by/person', (req, res) => {
 					},
 					deleted: 0
 				},
-				include: [{
-					model: users,
-					as: 'owner'
-				}]
+				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
 			}]
 		})
 		.then(result => {
@@ -237,42 +319,59 @@ router.get('/by/person', (req, res) => {
  * @return {JSON|Nothing} New created queue object, already created one or {}
  */
 router.post('/post', (req, res) => {
-
+	var _queuer_user_uid;
 	var _host_goods_gid = parseInt(req.body.host_goods_gid, 10);
 	var _queuer_goods_gid = parseInt(req.body.queuer_goods_gid, 10);
 
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_queuer_user_uid = null;
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_queuer_user_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	var queryGoodsTmp = (req.exwd.admin ? {
+		gid: _queuer_goods_gid,
+		exchanged: 0
+	} : {
+		gid: _queuer_goods_gid,
+		owner_uid: _queuer_user_uid,
+		exchanged: 0
+	});
+
 	goods
 		.findOne({
-			where: {
-				gid: _queuer_goods_gid,
-				exchanged: 2
-			}
+			where: queryGoodsTmp
 		})
 		.then(result => {
-			if (result != null) {
-				return {};
-			} else {
-				return queues
-					.findOrCreate({
-						where: {
-							host_goods_gid: _host_goods_gid,
-							queuer_goods_gid: _queuer_goods_gid
-						},
-						defaults: {
-							host_goods_gid: _host_goods_gid,
-							queuer_goods_gid: _queuer_goods_gid
-						}
-					});
+			if (result === null) {
+				return '';
 			}
+			return queues
+				.findOrCreate({
+					where: {
+						host_goods_gid: _host_goods_gid,
+						queuer_goods_gid: _queuer_goods_gid
+					}
+				});
 		})
 		.then(result => {
-			if (JSON.stringify(result) == JSON.stringify({})) {
-				res.json(result);
+			if (result === '') {
+				res.send({
+					error: 'The goods you want to put on the queue is already exchanging'
+				});
 			} else {
-				result
-					.then((r, created) => {
-						res.json(r);
-					});
+				res.json(result[0]);
 			}
 		})
 		.catch(err => {
@@ -291,19 +390,61 @@ router.post('/post', (req, res) => {
  * @return {JSON} Number of deleted queues
  */
 router.delete('/delete', (req, res) => {
-
+	var _queuer_user_uid;
 	var _host_goods_gid = parseInt(req.query.host_goods_gid, 10);
 	var _queuer_goods_gid = parseInt(req.query.queuer_goods_gid, 10);
 
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_queuer_user_uid = null;
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_queuer_user_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	var queryGoodsTmp = (req.exwd.admin ? {
+		gid: _queuer_goods_gid
+	} : {
+		owner_uid: _queuer_user_uid
+	});
+
 	queues
-		.destroy({
+		.findOne({
 			where: {
 				host_goods_gid: _host_goods_gid,
 				queuer_goods_gid: _queuer_goods_gid
-			}
+			},
+			include: [{
+				model: goods,
+				as: 'host_goods',
+				attributes: ['gid']
+			}, {
+				model: goods,
+				as: 'queuer_goods',
+				attributes: ['gid'],
+				where: queryGoodsTmp,
+				required: true
+			}]
 		})
 		.then(result => {
-			res.json(result);
+			if (result === null) {
+				res.json(0);
+			} else if (result.queuer_goods === null) {
+				res.send({
+					error: 'Opertaion denied, not your goods'
+				});
+			} else {
+				result.destroy().then(_tmp => res.json(_tmp));
+			}
 		})
 		.catch(err => {
 			res.send({
