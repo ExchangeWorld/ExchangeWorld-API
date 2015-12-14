@@ -45,11 +45,12 @@ router.get('/', (req, res) => {
 			}, {
 				model: stars,
 				as: 'star_goods',
-				include: [{
-					model: users,
-					as: 'starring_user',
-					attributes: ['uid']
-				}]
+				// include: [{
+				// 	model: users,
+				// 	as: 'starring_user',
+				// 	attributes: ['uid']
+				// }],
+				attributes: ['sid']
 			}]
 		})
 		.then(result => {

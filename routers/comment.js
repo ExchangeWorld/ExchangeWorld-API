@@ -87,6 +87,7 @@ router.get('/of/user', (req, res) => {
 				where: {
 					deleted: 0
 				},
+				attributes: ['gid', 'name', 'photo_path'],
 				required: true
 			}],
 			order: [
