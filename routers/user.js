@@ -32,6 +32,8 @@ router.get('/', (req, res) => {
 		_uid = 0;
 	}
 
+	console.log(_uid, _identity);
+
 	// Emit a find operation with orm in table `users`
 	users
 		.findOne({
@@ -48,13 +50,17 @@ router.get('/', (req, res) => {
 				where: {
 					deleted: 0
 				},
-				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
+				required: false
 			}, {
 				model: follows,
-				as: 'follows_followed'
+				as: 'follows_followed',
+				required: false,
+				attributes: ['fid']
 			}, {
 				model: follows,
-				as: 'follows_follower'
+				as: 'follows_follower',
+				required: false,
+				attributes: ['fid']
 			}, {
 				model: stars,
 				as: 'star_starring_user',
@@ -64,8 +70,11 @@ router.get('/', (req, res) => {
 					where: {
 						deleted: 0
 					},
+					required: false,
 					attributes: ['gid', 'name', 'photo_path', 'category']
-				}]
+				}],
+				required: false,
+				attributes: ['sid']
 			}]
 		})
 		.then(result => {
