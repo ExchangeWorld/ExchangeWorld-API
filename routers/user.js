@@ -24,21 +24,12 @@ var stars = require('../ORM/Stars');
  * @return {JSON} The user including many things
  */
 router.get('/', (req, res) => {
-
 	var _uid = parseInt(req.query.uid, 10);
-	var _identity = req.query.identity;
+	var _identity = req.query.identity || '';
 
 	// If uid or identity in query are not defined, then set them to zero or emptyString
-	if (_uid != _uid) {
+	if (!_uid) {
 		_uid = 0;
-	}
-
-	if (_identity == undefined) {
-		_identity = '';
-	}
-
-	if (!_identity.length > 0) {
-		_identity = '';
 	}
 
 	// Emit a find operation with orm in table `users`
@@ -57,7 +48,7 @@ router.get('/', (req, res) => {
 				where: {
 					deleted: 0
 				},
-				required: false
+				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
 			}, {
 				model: follows,
 				as: 'follows_followed'
@@ -66,19 +57,81 @@ router.get('/', (req, res) => {
 				as: 'follows_follower'
 			}, {
 				model: stars,
-				as: 'star_starring_user',
+				as: 'star_starring_user'
 				include: [{
 					model: goods,
 					as: 'goods',
 					where: {
 						deleted: 0
 					},
-					required: false
+					attributes: ['gid', 'name', 'photo_path', 'category']
 				}]
 			}]
 		})
 		.then(result => {
 			res.json(result);
+		});
+});
+
+/**
+ * Edit a user's profile
+ *
+ * @method PUT api/user/edit
+ * @param  {Integer} uid
+ * @param  {String} name
+ * @param  {String} email
+ * @param  {String} introduction
+ * @param  {String} wishlist
+ * @return {JSON|Nothing} Updated user object, or if not found, return null
+ */
+router.put('/edit', (req, res) => {
+	var _uid;
+	var _name = req.body.name;
+	var _email = req.body.email;
+	var _introduction = req.body.introduction;
+	var _wishlist = req.body.wishlist;
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_uid = parseInt(req.body._uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	users
+		.findOne({
+			where: {
+				uid: _uid
+			}
+		})
+		.then(result => {
+			if (result === null) {
+				return null;
+			}
+			result.name = _name;
+			result.email = _email;
+			result.introduction = _introduction;
+			result.wishlist = _wishlist;
+			result.save().then(() => null);
+			return result;
+		})
+		.then(result => {
+			res.json(result);
+		})
+		.catch(err => {
+			res.send({
+				error: err
+			});
 		});
 });
 
@@ -91,27 +144,28 @@ router.get('/', (req, res) => {
  * @param  {String=''} photo_path The path of user's photo
  * @return {JSON} Updated user object
  */
-router.put('/photo', (req, res, next) => {
-
-	var _uid = parseInt(req.body.uid, 10);
+router.put('/photo', (req, res) => {
+	var _uid = req.exwd.uid;
 	var _photo_path = req.body.photo_path || '';
 
-	users.findOne({
+	users
+		.findOne({
 			where: {
 				uid: _uid
 			}
 		})
 		.then(result => {
-			if (result == null) {
-				return {};
-			} else {
-				if (result.photo_path === _photo_path) {
-					return result;
-				}
-				result.photo_path = _photo_path;
-				result.save().then(() => {});
+			if (!result) {
+				return null;
+			}
+
+			if (result.photo_path === _photo_path) {
 				return result;
 			}
+
+			result.photo_path = _photo_path;
+			result.save().then(() => null);
+			return result;
 		})
 		.then(result => {
 			res.json(result);

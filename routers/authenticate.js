@@ -50,7 +50,7 @@ var getSHA1 = strToEncrypt => {
  */
 router.post('/register', (req, res) => {
 	var _fb = ((req.body.fb || '') === 'true');
-	var _id = req.body.identity;
+	var _id = req.body.identity || '';
 	var _password = req.body.password || '';
 	var _name = req.body.name;
 	var _email = req.body.email || '';
@@ -60,6 +60,15 @@ router.post('/register', (req, res) => {
 	if (_fb === true) {
 		var id_length = _id.length;
 		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' + _id.substring(0, id_length - 2));
+	}
+
+	// Check if the _id is not valid
+	if (_id === '') {
+		res.send({
+			error: 'ID must be specified'
+		});
+
+		return;
 	}
 
 	// Create user instance

@@ -66,8 +66,7 @@ sequelize_sync
 
 		server.use('/api/upload', require('./routers/upload'));
 
-		server.use('/api/user/profile/follow', require('./routers/follow'));
-		server.use('/api/user/profile', require('./routers/user.profile'));
+		server.use('/api/follow', require('./routers/follow'));
 		server.use('/api/user', require('./routers/user'));
 
 		server.use('/api/comment', require('./routers/comment'));
