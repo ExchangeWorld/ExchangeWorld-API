@@ -416,10 +416,11 @@ router.post('/create', (req, res) => {
 										g1.exchanged = 2;
 										g2.exchanged = 2;
 										g1.save().then(() => g2.save().then(() => isThereAlready.save().then(() => res.json(isThereAlready))));
+									} else {
+										res.json(null);
 									}
 								});
 						});
-
 				} else {
 					res.json(isThereAlready);
 				}
