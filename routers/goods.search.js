@@ -28,15 +28,14 @@ var stars = require('../ORM/Stars');
  * @return {JSON} The goods including users and stars
  */
 router.get('/', (req, res) => {
-
 	var name = req.query.name || '';
-	var wishlist = req.query.wishlist || '';
+	// var wishlist = req.query.wishlist || '';
 	var category = req.query.category || '';
-	var position_x = parseFloat(req.query.position_x) || -1.0;
-	var position_y = parseFloat(req.query.position_y) || -1.0;
+	// var position_x = parseFloat(req.query.position_x) || -1.0;
+	// var position_y = parseFloat(req.query.position_y) || -1.0;
 	var bound = req.query.bound || '-90,0,90,180';
-	var from = parseInt(req.query.from, 10) || -1;
-	var to = parseInt(req.query.to, 10) || -1;
+	// var from = parseInt(req.query.from, 10) || -1;
+	// var to = parseInt(req.query.to, 10) || -1;
 
 	/*
 	 * [ lat_lo, lng_lo, lat_hi, lng_hi ] for this bounds,
