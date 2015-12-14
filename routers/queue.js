@@ -21,7 +21,7 @@ var users = require('../ORM/Users');
  *
  * @method GET api/queue/of/goods
  * @param  {Integer} host_goods_gid
- * @return {JSON} The queues including goods and owners
+ * @return {JSON} The queues including goods and owners (ASC)
  */
 router.get('/of/goods', (req, res) => {
 	var _owner_uid;
@@ -100,7 +100,7 @@ router.get('/of/goods', (req, res) => {
  *
  * @method GET api/queue/by/goods
  * @param  {Integer} queuer_goods_gid
- * @return {JSON} The queues including goods and owners
+ * @return {JSON} The queues including goods and owners (DESC)
  */
 router.get('/by/goods', (req, res) => {
 	var _owner_uid;
@@ -368,7 +368,7 @@ router.post('/post', (req, res) => {
 		.then(result => {
 			if (result === '') {
 				res.send({
-					error: 'The goods you want to put on the queue is already exchanging'
+					error: 'The goods you want to put on the queue is not yours or it\'s already exchanging'
 				});
 			} else {
 				res.json(result[0]);
@@ -443,7 +443,7 @@ router.delete('/delete', (req, res) => {
 					error: 'Opertaion denied, not your goods'
 				});
 			} else {
-				result.destroy().then(_tmp => res.json(_tmp));
+				result.destroy().then(_tmp => res.json(1));
 			}
 		})
 		.catch(err => {
