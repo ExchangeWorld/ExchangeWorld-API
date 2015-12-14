@@ -12,7 +12,7 @@ var sequelize = require('../libs/sequelize');
  * @param  {Sequelize.FLOAT} position_x The position_x of the goods
  * @param  {Sequelize.FLOAT} position_y The position_y of the goods
  * @param  {Sequelize.FLOAT} rate The rate of the goods
- * @param  {Sequelize.INTEGER} exchanged If the goods is exchanged: 0 means not exchanged yet, 1 means exchanged, 2 means exchanging
+ * @param  {Sequelize.INTEGER} exchanged If the goods is exchanged: 0 means not exchanged yet, 1 means exchanged, 2 means exchanging, 3 means agreed but still not exchanged
  * @param  {Sequelize.INTEGER} deleted If the goods is deleted: 0 means not deleted yet, 1 means deleted
  */
 var Goods = sequelize.define('goods', {
