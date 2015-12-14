@@ -342,7 +342,9 @@ router.delete('/delete', (req, res) => {
 				}, {
 					goods_two_gid: _gid
 				}],
-				status: 'initiated'
+				status: {
+					$in: ['initiated', 'completed']
+				}
 			}
 		})
 		.then(result => {
@@ -374,7 +376,7 @@ router.delete('/delete', (req, res) => {
 					});
 			} else {
 				res.send({
-					error: 'Exchange ' + result.eid + ' is in process'
+					error: 'Exchange ' + result.eid + ' is in process or it is already exchanged'
 				});
 			}
 		});
