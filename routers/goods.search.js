@@ -75,16 +75,18 @@ router.get('/', (req, res) => {
 				},
 				deleted: 0
 			},
-			order:[
+			order: [
 				['gid', 'DESC']
 			],
 			include: [{
 				model: users,
 				as: 'owner',
-				required: true
+				required: true,
+				attributes: ['uid', 'photo_path']
 			}, {
 				model: stars,
-				as: 'star_goods'
+				as: 'star_goods',
+				attributes: ['sid', 'starring_user_uid']
 			}]
 		})
 		.then(result => {
