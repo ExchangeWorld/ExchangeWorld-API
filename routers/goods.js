@@ -24,7 +24,6 @@ var exchanges = require('../ORM/Exchanges');
  * @return {JSON} A goods including users, comments and stars
  */
 router.get('/', (req, res) => {
-
 	var _gid = parseInt(req.query.gid, 10);
 
 	// Emit a find operation with orm model in table `goods`
@@ -37,7 +36,8 @@ router.get('/', (req, res) => {
 			include: [{
 				model: users,
 				as: 'owner',
-				required: true
+				required: true,
+				attributes: ['uid', 'name', 'photo_path']
 			}, {
 				model: comments,
 				as: 'comments'
@@ -46,7 +46,8 @@ router.get('/', (req, res) => {
 				as: 'star_goods',
 				include: [{
 					model: users,
-					as: 'starring_user'
+					as: 'starring_user',
+					attributes: ['uid']
 				}]
 			}]
 		})
@@ -68,7 +69,6 @@ router.get('/', (req, res) => {
  * @return {JSON} The goods including comments and stars
  */
 router.get('/of', (req, res) => {
-
 	var _owner_uid = parseInt(req.query.owner_uid, 10);
 
 	// Emit a find operation with orm model in table `goods`
@@ -86,7 +86,8 @@ router.get('/of', (req, res) => {
 				as: 'star_goods',
 				include: [{
 					model: users,
-					as: 'starring_user'
+					as: 'starring_user',
+					attributes: ['uid', 'name', 'photo_path']
 				}]
 			}]
 		})
@@ -114,14 +115,30 @@ router.get('/of', (req, res) => {
  * @return {JSON} New created goods object
  */
 router.post('/post', (req, res) => {
-
 	var _name = req.body.name;
 	var _category = req.body.category;
 	var _description = req.body.description || '';
 	var _photo_path = req.body.photo_path || '';
 	var _position_x = parseFloat(req.body.position_x);
 	var _position_y = parseFloat(req.body.position_y);
-	var _owner_uid = parseInt(req.body.owner_uid, 10);
+	var _owner_uid;
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_owner_uid = parseInt(req.body.owner_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_owner_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
 
 	// Create instance
 	goods
@@ -158,7 +175,6 @@ router.post('/post', (req, res) => {
  * @return {JSON} Updated goods object
  */
 router.put('/edit', (req, res) => {
-
 	var _gid = parseInt(req.body.gid, 10);
 	var _name = req.body.name;
 	var _category = req.body.category;
@@ -166,27 +182,51 @@ router.put('/edit', (req, res) => {
 	var _photo_path = req.body.photo_path || '';
 	var _position_x = parseFloat(req.body.position_x);
 	var _position_y = parseFloat(req.body.position_y);
+	var _owner_uid;
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_owner_uid = null;
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_owner_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	var queryGoodsTmp = (req.exwd.admin ? {
+		where: {
+			gid: _gid
+		}
+	} : {
+		where: {
+			gid: _gid,
+			owner_uid: _owner_uid
+		}
+	});
 
 	// Find the good which got right gid and update values
 	goods
-		.findOne({
-			where: {
-				gid: _gid
-			}
-		})
+		.findOne(queryGoodsTmp)
 		.then(result => {
-			if (result == null) {
-				return {};
-			} else {
-				result.name = _name;
-				result.category = _category;
-				result.description = _description;
-				result.photo_path = _photo_path;
-				result.position_x = _position_x;
-				result.position_y = _position_y;
-				result.save().then(() => {});
-				return result;
+			if (result === null) {
+				return null;
 			}
+			result.name = _name;
+			result.category = _category;
+			result.description = _description;
+			result.photo_path = _photo_path;
+			result.position_x = _position_x;
+			result.position_y = _position_y;
+			result.save().then(() => null);
+			return result;
 		})
 		.then(result => {
 			res.json(result);
@@ -207,15 +247,28 @@ router.put('/edit', (req, res) => {
  * @return {JSON} Updated goods object
  */
 router.put('/rate', (req, res) => {
-
+	var rater_uid;
 	var _gid = parseInt(req.body.gid, 10);
 	var _rate = parseFloat(req.body.rate);
 
-	if (_rate != _rate) {
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		rater_uid = null;
+	} else if (req.exwd.anonymous) {
 		res.send({
-			error: 'rate is NaN'
+			error: 'Permission denied'
 		});
+		return;
+	} else if (req.exwd.registered) {
+		rater_uid = req.exwd.uid;
 	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if (_rate) {
 		goods
 			.update({
 				rate: _rate
@@ -232,6 +285,10 @@ router.put('/rate', (req, res) => {
 					error: err
 				});
 			});
+	} else {
+		res.send({
+			error: 'rate is NaN'
+		});
 	}
 });
 
@@ -244,8 +301,36 @@ router.put('/rate', (req, res) => {
  * @return {JSON} Updated goods object
  */
 router.delete('/delete', (req, res) => {
-
+	var _owner_uid;
 	var _gid = parseInt(req.query.gid, 10);
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_owner_uid = null;
+	} else if (req.exwd.anonymous) {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_owner_uid = req.exwd.uid;
+	} else {
+		res.send({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	var queryGoodsTmp = (req.exwd.admin ? {
+		where: {
+			gid: _gid
+		}
+	} : {
+		where: {
+			gid: _gid,
+			owner_uid: _owner_uid
+		}
+	});
 
 	exchanges
 		.findOne({
@@ -259,19 +344,11 @@ router.delete('/delete', (req, res) => {
 			}
 		})
 		.then(result => {
-			if (result != null) {
-				res.send({
-					error: 'Exchange ' + result.eid + ' is in process'
-				});
-			} else {
+			if (result === null) {
 				goods
 					.update({
 						deleted: 1
-					}, {
-						where: {
-							gid: _gid
-						}
-					})
+					}, queryGoodsTmp)
 					.then(result => {
 						res.json(result);
 					})
@@ -280,6 +357,10 @@ router.delete('/delete', (req, res) => {
 							error: err
 						});
 					});
+			} else {
+				res.send({
+					error: 'Exchange ' + result.eid + ' is in process'
+				});
 			}
 		});
 });
