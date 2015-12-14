@@ -406,9 +406,20 @@ router.post('/create', (req, res) => {
 					});
 				} else if (isThereAlready.status === 'dropped') {
 					isThereAlready.status = 'initiated';
-					isThereAlready.save().then(() => {
-						res.json(isThereAlready);
-					});
+					isThereAlready
+						.getGoods_one()
+						.then(g1 => {
+							isThereAlready
+								.getGoods_two()
+								.then(g2 => {
+									if (g1.deleted === 0 && g2.deleted === 0 && g1.exchanged === 0 && g2.exchanged === 0) {
+										g1.exchanged = 2;
+										g2.exchanged = 2;
+										g1.save().then(() => g2.save().then(() => isThereAlready.save().then(() => res.json(isThereAlready))));
+									}
+								});
+						});
+
 				} else {
 					res.json(isThereAlready);
 				}
@@ -425,7 +436,7 @@ router.post('/create', (req, res) => {
 									// If goods_two's status is ok
 									// And one of them is owner's goods
 									// Or it's operated by admin
-									if (g2 && (g1.owner_uid === _owner_uid || g2.owner_uid === _owner_uid || _owner_uid == null)) {
+									if (g2 && (g1.owner_uid === _owner_uid || g2.owner_uid === _owner_uid || _owner_uid === null)) {
 										g1.exchanged = 2;
 										g2.exchanged = 2;
 										g1.save();

@@ -19,27 +19,27 @@ sequelize_sync
 		console.log('Igniting API server ...');
 	})
 	.then(() => {
-		// protect server from some well-known web vulnerabilities
+		// Protect server from some well-known web vulnerabilities
 		server.use(helmet());
 
-		// compress req before all middlewares
+		// Compress req before all middlewares
 		server.use(compression());
 
-		// log all requests to the console
+		// Log all requests to the console
 		server.use(morgan(process.env.NODE_ENV === 'production' ? 'short' : 'dev'));
 
-		// setting for bodyparser
+		// Setting for bodyparser
 		var bodyParserSetting = {
 			limit: '64mb',
 			extended: true
 		};
 
-		// for parsing application/json
+		// For parsing application/json
 		server.post('*', bodyParser.json(bodyParserSetting));
 		server.put('*', bodyParser.json(bodyParserSetting));
 		server.options('*', bodyParser.json(bodyParserSetting));
 
-		// for parsing application/x-www-form-urlencoded
+		// For parsing application/x-www-form-urlencoded
 		server.post('*', bodyParser.urlencoded(bodyParserSetting));
 		server.put('*', bodyParser.urlencoded(bodyParserSetting));
 		server.options('*', bodyParser.json(bodyParserSetting));
