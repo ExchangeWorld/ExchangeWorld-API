@@ -84,7 +84,7 @@ router.get('/', (req, res) => {
 				as: 'star_goods',
 				attributes: ['sid', 'starring_user_uid']
 			}],
-			attributes: ['gid', 'name','photo_path','category'],
+			attributes: ['gid', 'name', 'photo_path', 'category'],
 			order: [
 				['gid', 'DESC']
 			]
