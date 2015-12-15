@@ -1,6 +1,7 @@
 'use strict';
 
 var http = require('http');
+var path = require('path');
 var express = require('express');
 
 var bodyParser = require('body-parser');
@@ -8,7 +9,8 @@ var compression = require('compression');
 var helmet = require('helmet');
 var morgan = require('morgan');
 
-var sequelize_sync = require('./libs/sync');
+var sequelize_sync = require(path.resolve(__dirname, './libs/sync'));
+var env = require(path.resolve(__dirname, './libs/env'));
 
 var server = express();
 var serverContainer;
@@ -26,7 +28,7 @@ sequelize_sync
 		server.use(compression());
 
 		// Log all requests to the console
-		server.use(morgan(process.env.NODE_ENV === 'production' ? 'short' : 'dev'));
+		server.use(morgan(env.NODE_ENV === 'production' ? 'short' : 'dev'));
 
 		// Setting for bodyparser
 		var bodyParserSetting = {
