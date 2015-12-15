@@ -29,6 +29,20 @@ var Auths = sequelize.define('auths', {
 		type: Sequelize.TEXT,
 		allowNull: false
 	}
+}, {
+	indexes: [{
+		unique: true,
+		fields: ['aid'],
+		method: 'BTREE'
+	}, {
+		unique: true,
+		fields: ['user_identity'],
+		method: 'BTREE'
+	}, {
+		unique: true,
+		fields: ['user_uid'],
+		method: 'BTREE'
+	}]
 });
 
 // Other cols in relationships :

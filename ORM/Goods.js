@@ -64,6 +64,36 @@ var Goods = sequelize.define('goods', {
 		allowNull: false,
 		defaultValue: 0
 	}
+}, {
+	indexes: [{
+		unique: true,
+		fields: ['gid'],
+		method: 'BTREE'
+	}, {
+		fields: ['position_x'],
+		method: 'BTREE'
+	}, {
+		fields: ['position_y'],
+		method: 'BTREE'
+	}, {
+		fields: ['rate'],
+		method: 'BTREE'
+	}, {
+		fields: ['exchanged'],
+		method: 'BTREE'
+	}, {
+		fields: ['deleted'],
+		method: 'BTREE'
+	}, {
+		fields: ['name'],
+		method: 'BTREE'
+	}, {
+		fields: ['category'],
+		method: 'BTREE'
+	}, {
+		fields: ['owner_uid'],
+		method: 'BTREE'
+	}]
 });
 
 // Other cols in relationships :

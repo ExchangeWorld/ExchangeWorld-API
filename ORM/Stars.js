@@ -15,6 +15,18 @@ var Stars = sequelize.define('stars', {
 		autoIncrement: true,
 		primaryKey: true
 	}
+}, {
+	indexes: [{
+		unique: true,
+		fields: ['sid'],
+		method: 'BTREE'
+	}, {
+		fields: ['goods_gid'],
+		method: 'BTREE'
+	}, {
+		fields: ['starring_user_uid'],
+		method: 'BTREE'
+	}]
 });
 
 // Other cols in relationships :

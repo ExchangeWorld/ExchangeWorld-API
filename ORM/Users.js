@@ -44,6 +44,19 @@ var Users = sequelize.define('users', {
 		type: Sequelize.TEXT,
 		allowNull: true
 	}
+}, {
+	indexes: [{
+		unique: true,
+		fields: ['uid'],
+		method: 'BTREE'
+	}, {
+		unique: true,
+		fields: ['identity'],
+		method: 'BTREE'
+	}, {
+		fields: ['wishlist'],
+		method: 'BTREE'
+	}]
 });
 
 module.exports = Users;

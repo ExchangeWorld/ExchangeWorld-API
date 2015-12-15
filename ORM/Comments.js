@@ -20,6 +20,18 @@ var Comments = sequelize.define('comments', {
 		type: Sequelize.TEXT,
 		allowNull: false
 	}
+}, {
+	indexes: [{
+		unique: true,
+		fields: ['cid'],
+		method: 'BTREE'
+	}, {
+		fields: ['goods_gid'],
+		method: 'BTREE'
+	}, {
+		fields: ['commenter_uid'],
+		method: 'BTREE'
+	}]
 });
 
 // Other cols in relationships :

@@ -34,6 +34,27 @@ var Exchanges = sequelize.define('exchanges', {
 		allowNull: false,
 		defaultValue: 'initiated'
 	}
+}, {
+	indexes: [{
+		unique: true,
+		fields: ['eid'],
+		method: 'BTREE'
+	}, {
+		fields: ['goods_one_agree'],
+		method: 'BTREE'
+	}, {
+		fields: ['goods_two_agree'],
+		method: 'BTREE'
+	}, {
+		fields: ['goods_one_gid'],
+		method: 'BTREE'
+	}, {
+		fields: ['goods_two_gid'],
+		method: 'BTREE'
+	}, {
+		fields: ['status'],
+		method: 'BTREE'
+	}]
 });
 
 // Other cols in relationships :

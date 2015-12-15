@@ -16,6 +16,18 @@ var Follows = sequelize.define('follows', {
 		autoIncrement: true,
 		primaryKey: true
 	}
+}, {
+	indexes: [{
+		unique: true,
+		fields: ['fid'],
+		method: 'BTREE'
+	}, {
+		fields: ['followed_uid'],
+		method: 'BTREE'
+	}, {
+		fields: ['follower_uid'],
+		method: 'BTREE'
+	}]
 });
 
 // Other cols in relationships :

@@ -15,6 +15,18 @@ var Queues = sequelize.define('queues', {
 		autoIncrement: true,
 		primaryKey: true
 	}
+}, {
+	indexes: [{
+		unique: true,
+		fields: ['qid'],
+		method: 'BTREE'
+	}, {
+		fields: ['host_goods_gid'],
+		method: 'BTREE'
+	}, {
+		fields: ['queuer_goods_gid'],
+		method: 'BTREE'
+	}]
 });
 
 // Other cols in relationships :
