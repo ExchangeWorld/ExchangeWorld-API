@@ -125,17 +125,14 @@ router.put('/edit', (req, res) => {
 		})
 		.then(result => {
 			if (result === null) {
-				return null;
+				res.json(null);
+			} else {
+				result.name = _name;
+				result.email = _email;
+				result.introduction = _introduction;
+				result.wishlist = _wishlist;
+				result.save().then(() => res.json(result));
 			}
-			result.name = _name;
-			result.email = _email;
-			result.introduction = _introduction;
-			result.wishlist = _wishlist;
-			result.save().then(() => null);
-			return result;
-		})
-		.then(result => {
-			res.json(result);
 		})
 		.catch(err => {
 			res.send({
@@ -173,7 +170,7 @@ router.put('/photo', (req, res) => {
 			}
 
 			result.photo_path = _photo_path;
-			result.save().then(() => null);
+			result.save();
 			return result;
 		})
 		.then(result => {

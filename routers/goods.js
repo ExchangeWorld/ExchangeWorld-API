@@ -219,19 +219,16 @@ router.put('/edit', (req, res) => {
 		.findOne(queryGoodsTmp)
 		.then(result => {
 			if (result === null) {
-				return null;
+				res.json(null);
+			} else {
+				result.name = _name;
+				result.category = _category;
+				result.description = _description;
+				result.photo_path = _photo_path;
+				result.position_x = _position_x;
+				result.position_y = _position_y;
+				result.save().then(() => res.json(result));
 			}
-			result.name = _name;
-			result.category = _category;
-			result.description = _description;
-			result.photo_path = _photo_path;
-			result.position_x = _position_x;
-			result.position_y = _position_y;
-			result.save().then(() => null);
-			return result;
-		})
-		.then(result => {
-			res.json(result);
 		})
 		.catch(err => {
 			res.send({

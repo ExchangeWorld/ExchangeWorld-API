@@ -196,15 +196,11 @@ router.put('/edit', (req, res) => {
 		.findOne(queryTmp)
 		.then(result => {
 			if (result === null) {
-				return result;
+				res.json(null);
+			} else {
+				result.content = _content;
+				result.save().then(() => res.json(result));
 			}
-
-			result.content = _content;
-			result.save().then(() => null);
-			return result;
-		})
-		.then(result => {
-			res.json(result);
 		})
 		.catch(err => {
 			res.send({
