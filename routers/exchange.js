@@ -6,15 +6,20 @@
 
 'use strict';
 
+var path = require('path');
+
 var express = require('express');
-var _ = require('lazy.js');
 var router = express.Router();
 
 // Including tables
-var exchanges = require('../ORM/Exchanges');
-var chatrooms = require('../ORM/Chatrooms');
-var users = require('../ORM/Users');
-var goods = require('../ORM/Goods');
+var exchanges = require(path.resolve(__dirname, '../ORM/Exchanges'));
+var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
+var users = require(path.resolve(__dirname, '../ORM/Users'));
+var goods = require(path.resolve(__dirname, '../ORM/Goods'));
+
+// Including special handmade queries
+var exchanges_of_user_all = require(path.resolve(__dirname, '../queries/exchanges_of_user_all'));
+var exchanges_of_user_one = require(path.resolve(__dirname, '../queries/exchanges_of_user_one'));
 
 /**
  * Get all of exchanges
@@ -97,84 +102,26 @@ router.get('/of/user/all', (req, res) => {
 		return;
 	}
 
-	exchanges
-		.findAll({
-			where: {
-				status: {
-					$ne: 'dropped'
-				}
-			},
-			include: [{
-				model: goods,
-				as: 'goods_one',
-				include: [{
-					model: users,
-					as: 'owner',
-					where: {
-						uid: _owner_uid
-					},
-					attributes: ['uid', 'name', 'photo_path'],
-					required: false
-				}],
-				where: {
-					deleted: 0
-				},
-				attributes: ['gid', 'name', 'photo_path', 'category', 'exchanged']
-			}, {
-				model: goods,
-				as: 'goods_two',
-				include: [{
-					model: users,
-					as: 'owner',
-					where: {
-						uid: _owner_uid
-					},
-					attributes: ['uid', 'name', 'photo_path'],
-					required: false
-				}],
-				where: {
-					deleted: 0
-				},
-				attributes: ['gid', 'name', 'photo_path', 'category', 'exchanged']
-			}],
-			order: [
-				['eid', 'DESC']
-			]
-		})
-		.then(result => {
-			console.log(result);
-			result.forEach(r => console.log(r));
+	exchanges_of_user_all(_owner_uid, (result => res.json(result.map(r => {
+		if (r.goods_one.owner.uid === _owner_uid) {
+			r.owner_goods = r.goods_one;
+			r.other_goods = r.goods_two;
+			r.owner_agree = r.goods_one_agree;
+			r.other_agree = r.goods_two_agree;
+		} else {
+			r.owner_goods = r.goods_two;
+			r.other_goods = r.goods_one;
+			r.owner_agree = r.goods_two_agree;
+			r.other_agree = r.goods_one_agree;
+		}
 
-			res.json(_(JSON.parse(JSON.stringify(result)))
-				.map(r => {
-					if (r.goods_one.owner === null || r.goods_one.owner === undefined) {
-						r.owner_goods = r.goods_two;
-						r.other_goods = r.goods_one;
-						r.owner_agree = r.goods_two_agree;
-						r.other_agree = r.goods_one_agree;
-					} else {
-						r.owner_goods = r.goods_one;
-						r.other_goods = r.goods_two;
-						r.owner_agree = r.goods_one_agree;
-						r.other_agree = r.goods_two_agree;
-					}
+		r.goods_one = undefined;
+		r.goods_two = undefined;
+		r.goods_one_agree = undefined;
+		r.goods_two_agree = undefined;
 
-					r.owner_goods.owner = undefined;
-					r.other_goods.owner = undefined;
-					r.goods_one = undefined;
-					r.goods_two = undefined;
-					r.goods_one_agree = undefined;
-					r.goods_two_agree = undefined;
-
-					return r;
-				})
-				.toArray());
-		})
-		.catch(err => {
-			res.send({
-				error: err
-			});
-		});
+		return r;
+	}))));
 });
 
 /**
@@ -206,77 +153,30 @@ router.get('/of/user/one', (req, res) => {
 		return;
 	}
 
-	exchanges
-		.findOne({
-			where: {
-				eid: _eid,
-				status: {
-					$ne: 'dropped'
-				}
-			},
-			include: [{
-				model: goods,
-				as: 'goods_one',
-				include: [{
-					model: users,
-					as: 'owner',
-					where: {
-						uid: _owner_uid
-					},
-					attributes: ['uid', 'name', 'photo_path'],
-					required: false
-				}],
-				where: {
-					deleted: 0
-				}
-			}, {
-				model: goods,
-				as: 'goods_two',
-				include: [{
-					model: users,
-					as: 'owner',
-					where: {
-						uid: _owner_uid
-					},
-					attributes: ['uid', 'name', 'photo_path'],
-					required: false
-				}],
-				where: {
-					deleted: 0
-				}
-			}]
-		})
-		.then(result => {
-			console.log(result);
+	exchanges_of_user_one(_eid, _owner_uid, r => {
+		if (r.length > 0) {
+			if (r[0].goods_one.owner.uid === _owner_uid) {
+				r[0].owner_goods = r[0].goods_one;
+				r[0].other_goods = r[0].goods_two;
+				r[0].owner_agree = r[0].goods_one_agree;
+				r[0].other_agree = r[0].goods_two_agree;
+			} else {
+				r[0].owner_goods = r[0].goods_two;
+				r[0].other_goods = r[0].goods_one;
+				r[0].owner_agree = r[0].goods_two_agree;
+				r[0].other_agree = r[0].goods_one_agree;
+			}
 
-			res.json((result => {
-				if (result.goods_one.owner === null || result.goods_one.owner === undefined) {
-					result.owner_goods = result.goods_two;
-					result.other_goods = result.goods_one;
-					result.owner_agree = result.goods_two_agree;
-					result.other_agree = result.goods_one_agree;
-				} else {
-					result.owner_goods = result.goods_one;
-					result.other_goods = result.goods_two;
-					result.owner_agree = result.goods_one_agree;
-					result.other_agree = result.goods_two_agree;
-				}
+			r[0].goods_one = undefined;
+			r[0].goods_two = undefined;
+			r[0].goods_one_agree = undefined;
+			r[0].goods_two_agree = undefined;
 
-				result.owner_goods.owner = undefined;
-				result.other_goods.owner = undefined;
-				result.goods_one = undefined;
-				result.goods_two = undefined;
-				result.goods_one_agree = undefined;
-				result.goods_two_agree = undefined;
-
-				return result;
-			})());
-		})
-		.catch(err => {
-			res.send({
-				error: err
-			});
-		});
+			res.json(r[0]);
+		} else {
+			res.json(null);
+		}
+	});
 });
 
 /**
@@ -405,75 +305,73 @@ router.post('/create', (req, res) => {
 						error: 'The exchange was completed before'
 					});
 				} else if (isThereAlready.status === 'dropped') {
-					isThereAlready.status = 'initiated';
-					isThereAlready
-						.getGoods_one()
-						.then(g1 => {
-							isThereAlready
-								.getGoods_two()
-								.then(g2 => {
-									if (g1.deleted === 0 && g2.deleted === 0 && g1.exchanged === 0 && g2.exchanged === 0) {
-										g1.exchanged = 2;
-										g2.exchanged = 2;
-										g1.save().then(() => g2.save().then(() => isThereAlready.save().then(() => res.json(isThereAlready))));
-									} else {
-										res.json(null);
-									}
+					isThereAlready.getGoods_one().then(g1 => {
+						isThereAlready.getGoods_two().then(g2 => {
+							if (g1.deleted === 0 && g2.deleted === 0 && g1.exchanged === 0 && g2.exchanged === 0) {
+								g1.exchanged = 2;
+								g2.exchanged = 2;
+								isThereAlready.status = 'initiated';
+								isThereAlready.goods_one_agree = false;
+								isThereAlready.goods_two_agree = false;
+								g1.save().then(() => g2.save().then(() => isThereAlready.save().then(() => res.json(isThereAlready))));
+							} else {
+								res.send({
+									error: 'The exchange cannot be created'
 								});
+							}
 						});
+					});
 				} else {
 					res.json(isThereAlready);
 				}
 			} else {
 				// Check two goods' status
-				goods
-					.findOne(queryGoodsOneTmp)
-					.then(g1 => {
+				goods.findOne(queryGoodsOneTmp).then(g1 => {
 						// If goods_one's status is ok
 						if (g1) {
-							goods
-								.findOne(queryGoodsTwoTmp)
-								.then(g2 => {
-									// If goods_two's status is ok
-									// And one of them is owner's goods
-									// Or it's operated by admin
-									if (g2 && (g1.owner_uid === _owner_uid || g2.owner_uid === _owner_uid || _owner_uid === null)) {
-										g1.exchanged = 2;
-										g2.exchanged = 2;
-										g1.save();
-										g2.save();
+							goods.findOne(queryGoodsTwoTmp).then(g2 => {
+								// If goods_two's status is ok
+								// And one of them is owner's goods
+								// Or it's operated by admin
+								if (g2 && (g1.owner_uid === _owner_uid || g2.owner_uid === _owner_uid || _owner_uid === null)) {
+									g1.exchanged = 2;
+									g2.exchanged = 2;
+									g1.save();
+									g2.save();
 
-										chatrooms
-											.create({
-												members: ''
-											})
-											.then(the_chatroom => {
-												exchanges
-													.create({
-														goods_one_gid: g1.gid,
-														goods_two_gid: g2.gid,
-														chatroom_cid: the_chatroom.cid
-													})
-													.then(the_exchange => {
-														res.json(the_exchange);
-													})
-													.catch(err => {
-														res.send({
-															error: err
-														});
+									chatrooms
+										.create({
+											members: ''
+										})
+										.then(the_chatroom => {
+											exchanges
+												.create({
+													goods_one_gid: g1.gid,
+													goods_two_gid: g2.gid,
+													chatroom_cid: the_chatroom.cid
+												})
+												.then(the_exchange => {
+													res.json(the_exchange);
+												})
+												.catch(err => {
+													console.log(err);
+													res.send({
+														error: err
 													});
-											})
-											.catch(err => {
-												res.send({
-													error: err
 												});
+										})
+										.catch(err => {
+											console.log(err);
+											res.send({
+												error: err
 											});
-									} else {
-										res.send({
-											error: 'The exchange cannot be created'
 										});
-									}
-								});
+								} else {
+									res.send({
+										error: 'The exchange cannot be created'
+									});
+								}
+							});
 						} else {
 							res.send({
 								error: 'The exchange cannot be created'
@@ -481,6 +379,7 @@ router.post('/create', (req, res) => {
 						}
 					})
 					.catch(err => {
+						console.log(err);
 						res.send({
 							error: err
 						});
@@ -488,6 +387,7 @@ router.post('/create', (req, res) => {
 			}
 		})
 		.catch(err => {
+			console.log(err);
 			res.send({
 				error: err
 			});
@@ -536,12 +436,16 @@ router.put('/drop', (req, res) => {
 						if (g1.owner_uid === _owner_uid || g2.owner_uid === _owner_uid || _owner_uid === null) {
 							g1.exchanged = 0;
 							g2.exchanged = 0;
+							result.status = 'dropped';
+							result.goods_one_agree = false;
+							result.goods_two_agree = false;
 							g1.save().then(() => g2.save().then(() => {
-								result.status = 'dropped';
 								result.save().then(() => res.json(result));
 							}));
 						} else {
-							res.json(result);
+							res.send({
+								error: 'Permission denied'
+							});
 						}
 					});
 				});
@@ -550,6 +454,7 @@ router.put('/drop', (req, res) => {
 			}
 		})
 		.catch(err => {
+			console.log(err);
 			res.send({
 				error: err
 			});
@@ -559,6 +464,8 @@ router.put('/drop', (req, res) => {
 /**
  * Accept an exchange by a user
  * And if two owners accept, then the exchange will be set status='completed'
+ * When completed, other exchanges include goods_one or goods_two will be set to status='dropped'
+ * And the goods that not goods_one or goods_two in the exchange will be set to exchanged=0
  *
  * @method PUT api/exchange/agree
  * @param  {Integer} eid The ID of an exchange
@@ -598,22 +505,92 @@ router.put('/agree', (req, res) => {
 				result.getGoods_one().then(g1 => {
 					result.getGoods_two().then(g2 => {
 						if (g1.owner_uid === _owner_uid || _owner_uid === null) {
-							g1.exchanged = 3;
-							g1.save().then(() => null);
+							result.goods_one_agree = true;
 						}
 						if (g2.owner_uid === _owner_uid || _owner_uid === null) {
-							g2.exchanged = 3;
-							g2.save().then(() => null);
+							result.goods_two_agree = true;
 						}
 
-						if (g1.exchanged === 3 && g2.exchanged === 3) {
-							result.status = 'completed';
-							g1.exchanged = 1;
-							g2.exchanged = 1;
-							g1.save().then(() => g2.save().then(() => result.save().then(() => res.json(result))));
-						} else {
-							res.json(result);
-						}
+						result.save().then(() => {
+							if (result.goods_one_agree && result.goods_two_agree) {
+								result.status = 'completed';
+								g1.exchanged = 1;
+								g2.exchanged = 1;
+								g1.save().then(() => g2.save().then(() => result.save().then(() => {
+									// Other exchanges that contain goods_one or goods_two will be setted to 'dropped'
+									exchanges
+										.findAll({
+											where: {
+												$or: [{
+													$or: [{
+														goods_one_gid: g1.gid
+													}, {
+														goods_one_gid: g2.gid
+													}]
+												}, {
+													$or: [{
+														goods_two_gid: g1.gid
+													}, {
+														goods_two_gid: g2.gid
+													}]
+												}],
+												eid: {
+													$ne: _eid
+												}
+											}
+										})
+										.then(other_exchange => {
+											if (other_exchange.length > 0) {
+												var other_gids = other_exchange
+													.map(oe => {
+														var tmpOeGid = 0;
+
+														if (oe.goods_one_gid === g1.gid || oe.goods_one_gid === g2.gid) {
+															tmpOeGid = oe.goods_two_gid;
+														} else if (oe.goods_two_gid === g1.gid || oe.goods_two_gid === g2.gid) {
+															tmpOeGid = oe.goods_one_gid;
+														}
+
+														return tmpOeGid;
+													});
+
+												// console.log('other_gids', other_gids);
+
+												goods
+													.update({
+														exchanged: 0
+													}, {
+														where: {
+															gid: {
+																$in: other_gids
+															},
+															exchanged: {
+																$ne: 1
+															}
+														}
+													})
+													.then(uuu => res.json(result))
+													.catch(err => {
+														console.log(err);
+														res.send({
+															error: err
+														});
+													});
+											} else {
+												res.json(result);
+											}
+										})
+										.catch(err => {
+											console.log(err);
+											res.send({
+												error: err
+											});
+										});
+								})));
+							} else {
+								res.json(result);
+							}
+						});
 					});
 				});
 			} else {
@@ -621,6 +598,7 @@ router.put('/agree', (req, res) => {
 			}
 		})
 		.catch(err => {
+			console.log(err);
 			res.send({
 				error: err
 			});
