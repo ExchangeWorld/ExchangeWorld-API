@@ -341,20 +341,22 @@ router.post('/post', (req, res) => {
 	}
 
 	var queryGoodsTmp = (req.exwd.admin ? {
-		gid: _queuer_goods_gid,
-		exchanged: 0,
-		deleted: 0
+		where: {
+			gid: _queuer_goods_gid,
+			exchanged: 0,
+			deleted: 0
+		}
 	} : {
-		gid: _queuer_goods_gid,
-		owner_uid: _queuer_user_uid,
-		exchanged: 0,
-		deleted: 0
+		where: {
+			gid: _queuer_goods_gid,
+			owner_uid: _queuer_user_uid,
+			exchanged: 0,
+			deleted: 0
+		}
 	});
 
 	goods
-		.findOne({
-			where: queryGoodsTmp
-		})
+		.findOne(queryGoodsTmp)
 		.then(result => {
 			if (result === null) {
 				return '';
