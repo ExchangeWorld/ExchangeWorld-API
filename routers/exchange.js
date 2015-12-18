@@ -130,7 +130,7 @@ router.get('/of/user/all', (req, res) => {
  * @method GET api/exchange/of/user/one
  * @param  {Integer} eid The ID of the exchange
  * @param  {Integer} owner_uid The owner
- * @return {JSON} (Array with one element) An exchange incluing goods( owner_goods, other_goods )
+ * @return {JSON} An exchange object including goods( owner_goods, other_goods )
  */
 router.get('/of/user/one', (req, res) => {
 	var _eid = parseInt(req.query.eid, 10);
