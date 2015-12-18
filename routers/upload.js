@@ -51,24 +51,31 @@ router.post('/image', function(req, res, next) {
 	// And if there is another person who uploaded a same base64 image,
 	// The things are still going right because that means same image, why not treat them same?
 	// Finally, send the "static file path" back
-	fs.writeFile(filePath, dataBuffer, function(err) {
-		if (err) {
-			res.send({error: err});
-		} else {
-			var pipeline = sharp(dataBuffer).rotate();
-			pipeline.clone()
-				.resize(500, null)
-				.progressive()
-				.toFile(filePath500, null);
-			pipeline.clone()
-				.resize(250, null)
-				.progressive()
-				.toFile(filePath250, null);
+	var pipeline = sharp(dataBuffer).rotate();
 
-			// res.send('images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
-			res.send('http://exwd.csie.org/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
-		}
-	});
+	pipeline.clone()
+		.resize(500, null)
+		.progressive()
+		.toFile(filePath500, null);
+	pipeline.clone()
+		.resize(250, null)
+		.progressive()
+		.toFile(filePath250, null);
+	pipeline.clone()
+		.resize(1600, 900)
+		.max()
+		.withoutEnlargement()
+		.progressive()
+		.toFile(filePath, (err, info) => {
+			if (err) {
+				res.send({
+					error: err
+				});
+			} else {
+				// res.send('images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
+				res.send('http://exwd.csie.org/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
+			}
+		});
 });
 
 // Hashcode generation function
