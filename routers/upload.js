@@ -4,6 +4,10 @@ var express = require('express');
 var fs      = require('fs');
 var router  = express.Router();
 
+// Sharp lib
+var sharp = require('sharp');
+sharp.concurrency(2);
+
 // Including tables for photoPath
 var goods = require('../ORM/Goods');
 
@@ -40,6 +44,8 @@ router.post('/image', function(req, res, next) {
 
 	// The file path pointing to the image file
 	var filePath = '../ExchangeWorld/images_global/' + hashData + '.' + imgFormat.replace(/image\//, '');
+	var filePath500 = '../ExchangeWorld/images_global/' + hashData + '-500.' + imgFormat.replace(/image\//, '');
+	var filePath250 = '../ExchangeWorld/images_global/' + hashData + '-250.' + imgFormat.replace(/image\//, '');
 
 	// Write to file with the filePath
 	// And if there is another person who uploaded a same base64 image,
@@ -49,6 +55,16 @@ router.post('/image', function(req, res, next) {
 		if (err) {
 			res.send({error: err});
 		} else {
+			var pipeline = sharp(dataBuffer).rotate();
+			pipeline.clone()
+				.resize(500, null)
+				.progressive()
+				.toFile(filePath500, null);
+			pipeline.clone()
+				.resize(250, null)
+				.progressive()
+				.toFile(filePath250, null);
+
 			// res.send('images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
 			res.send('http://exwd.csie.org/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
 		}
