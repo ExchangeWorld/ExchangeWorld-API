@@ -62,7 +62,7 @@ router.post('/image', function(req, res, next) {
 		.progressive()
 		.toFile(filePath250, null);
 	pipeline.clone()
-		.resize(1600, 900)
+		.resize(1600, 1200)
 		.max()
 		.withoutEnlargement()
 		.progressive()
