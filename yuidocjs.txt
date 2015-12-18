@@ -1,0 +1,3 @@
+npm install -g yuidocjs
+yuidoc --theme simple -o ./doc ./routers
+
