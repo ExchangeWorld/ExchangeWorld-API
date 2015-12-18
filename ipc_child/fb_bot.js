@@ -1,5 +1,7 @@
 'use strict';
 
+var path = require('path');
+
 var goods = require('../ORM/Goods');
 
 var templateHTML =
@@ -16,6 +18,8 @@ var defaultHTML = '<meta property="og:title" content="ExchangeWorld - 交換樂�
 
 // When the Static Server encounters a bot, will send a message to this .js
 
+var img250 = ff => path.resolve(path.dirname(ff), path.basename(ff).split(path.extname(ff))[0] + '-250' + path.extname(ff));
+
 // var msg = process.argv[2];
 // var _path = msg.split('/');
 process.setMaxListeners(0);
@@ -30,13 +34,13 @@ process.on('message', msg => {
 				}
 			})
 			.then(result => {
-				if (result == null) {
+				if (result === null) {
 					process.send(defaultHTML);
 				} else {
-					if(result.description.includes('<p>禮物')) {
+					if (result.description.includes('<p>禮物')) {
 						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + '神秘聖誕禮物' + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="http://exwd.csie.org/images/gift-fbbot.jpg"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
 					} else {
-						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + (JSON.parse(result.photo_path))[0] + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
+						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + img250((JSON.parse(result.photo_path))[0]) + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
 					}
 				}
 			})
