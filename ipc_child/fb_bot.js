@@ -18,7 +18,7 @@ var defaultHTML = '<meta property="og:title" content="ExchangeWorld - 交換樂�
 
 // When the Static Server encounters a bot, will send a message to this .js
 
-var img250 = ff => path.resolve(path.dirname(ff), './' + path.basename(ff).split(path.extname(ff))[0] + '-250' + path.extname(ff));
+var img250 = ff => path.dirname(ff) + '/' + path.basename(ff).split(path.extname(ff))[0] + '-250' + path.extname(ff);
 
 // var msg = process.argv[2];
 // var _path = msg.split('/');
