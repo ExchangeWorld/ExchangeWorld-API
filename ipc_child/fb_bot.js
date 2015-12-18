@@ -33,7 +33,11 @@ process.on('message', msg => {
 				if (result == null) {
 					process.send(defaultHTML);
 				} else {
-					process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + (JSON.parse(result.photo_path))[0] + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
+					if(result.description.includes('<p>禮物')) {
+						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + '神秘聖誕禮物' + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + (JSON.parse(result.photo_path))[0] + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/images/Gift.jpg"/>');
+					} else {
+						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + (JSON.parse(result.photo_path))[0] + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
+					}
 				}
 			})
 			.catch(err => {
