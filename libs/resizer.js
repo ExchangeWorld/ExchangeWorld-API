@@ -16,10 +16,11 @@ hashedFiles.forEach(f => {
 		.max()
 		.withoutEnlargement()
 		.progressive()
-		.toFile(path.resolve(imgdir, './' + f), (err, info) => {
+		.toBuffer((err, buffer, info) => {
 			if (err) {
 				console.log(f, err);
+			} else {
+				fs.writeFile( path.resolve(imgdir, './'+f),buffer, ()=>console.log(f,'good'));
 			}
-			console.log(f, info);
 		});
 });
