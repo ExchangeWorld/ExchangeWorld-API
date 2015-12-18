@@ -7,7 +7,7 @@ sharp.concurrency(0);
 
 var imgdir = path.resolve(os.homedir(), './ExchangeWorld/build/images');
 
-var hashedFiles = fs.readdirSync(imgdir).filter(f => f.includes('-500') === false && f.includes('-200') === false);
+var hashedFiles = fs.readdirSync(imgdir).filter(f => f.includes('-500') === false && f.includes('-250') === false);
 
 hashedFiles.forEach(f => {
 	var image = sharp(path.resolve(imgdir, './' + f));
