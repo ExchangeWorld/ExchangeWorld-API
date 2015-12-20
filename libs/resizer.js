@@ -9,9 +9,8 @@ var imgdir = path.resolve(os.homedir(), './ExchangeWorld/build/images');
 
 var hashedFiles = fs.readdirSync(imgdir).filter(f => f.includes('-500') === true);
 
-hashedFiles.forEach(f => {
+hashedFiles.map(f => f.replace('-500', '')).forEach(f => {
 	var image = sharp(path.resolve(imgdir, './' + f));
-
 	image
 		.clone()
 		.resize(160, 200)
