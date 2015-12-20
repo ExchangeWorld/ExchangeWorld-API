@@ -3,6 +3,15 @@
 var express = require('express');
 var router = express.Router();
 
+var nodemailer = require('nodemailer');
+var mailTransporter = nodemailer.createTransport({
+	service: 'Gmail',
+	auth: {
+		user: 'exchangeworld.notification@gmail.com',
+		pass: 'exwdtwnccucs'
+	}
+});
+
 // Including tables
 var notifications = require('../ORM/Notifications');
 var users         = require('../ORM/Users');
@@ -83,6 +92,40 @@ router.post('/', function(req, res, next) {
 			content      : _content
 		})
 		.then(function(result) {
+			users
+				.findOne({
+					where: {
+						uid: _receiver_uid
+					}
+				})
+				.then(receiver_user => {
+					if (receiver_user !== null && receiver_user.email !== '') {
+						result.content = result.content.replace(/你/g, '您');
+						var mailOptions = {
+							from: 'ExchangeWorld 交換世界 <exchangeworld.notification@gmail.com>',
+							to: receiver_user.email,
+							subject: 'ExchangeWorld 系統通知：' + result.content,
+							text: receiver_user.name + ' 您好！\n\n'
+							+ '「' + result.content + '」\n'
+							+'請到 http://exwd.csie.org' + result.trigger_url + ' 查看喔！\n'
+							+'\n (※此信件為系統發出信件，請勿直接回覆。若您有任何問題請至網站「回報」提出，謝謝！)\n'
+							+'\n==============================\n'
+							+'\nExchangeWorld - 交換樂趣！交換世界！\n'
+							+'「聖誕節交換禮物活動進行中！尋找您的聖誕老公公！」'
+							+'\n==> http://exwd.csie.org/seek?cate=Christmas\n'
+							+'\n©Copyright 2015 - ExchangeWorld. All rights reserved.'
+						};
+						mailTransporter.sendMail(mailOptions, (error, info) => {
+							if (error) {
+								console.log(error);
+							}
+							console.log('Message sent: ' + info.response);
+						});
+					}
+				})
+				.catch(function(err) {
+					console.log(err);
+				});
 			res.json(result);
 		})
 		.catch(function(err) {
