@@ -18,7 +18,7 @@ var defaultHTML = '<meta property="og:title" content="ExchangeWorld - 交換樂�
 
 // When the Static Server encounters a bot, will send a message to this .js
 
-var img160 = ff => 'http://exwd.csie.org/images/' + path.basename(ff).split(path.extname(ff))[0] + '-160' + path.extname(ff);
+var img250 = ff => 'http://exwd.csie.org/images/' + path.basename(ff).split(path.extname(ff))[0] + '-250' + path.extname(ff);
 
 // var msg = process.argv[2];
 // var _path = msg.split('/');
@@ -40,7 +40,7 @@ process.on('message', msg => {
 					if (result.description.includes('<p>禮物')) {
 						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + '神秘聖誕禮物' + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="http://exwd.csie.org/images/gift-fbbot.jpg"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
 					} else {
-						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + img160((JSON.parse(result.photo_path))[0]) + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
+						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + img250((JSON.parse(result.photo_path))[0]) + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
 					}
 				}
 			})

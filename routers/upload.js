@@ -46,7 +46,7 @@ router.post('/image', function(req, res, next) {
 	var filePath = '../ExchangeWorld/images_global/' + hashData + '.' + imgFormat.replace(/image\//, '');
 	var filePath500 = '../ExchangeWorld/images_global/' + hashData + '-500.' + imgFormat.replace(/image\//, '');
 	var filePath250 = '../ExchangeWorld/images_global/' + hashData + '-250.' + imgFormat.replace(/image\//, '');
-	var filePath160 = '../ExchangeWorld/images_global/' + hashData + '-160.' + imgFormat.replace(/image\//, '');
+	// var filePath160 = '../ExchangeWorld/images_global/' + hashData + '-160.' + imgFormat.replace(/image\//, '');
 
 	// Write to file with the filePath
 	// And if there is another person who uploaded a same base64 image,
@@ -64,11 +64,11 @@ router.post('/image', function(req, res, next) {
 		.progressive()
 		.withoutEnlargement()
 		.toFile(filePath250, null);
-	pipeline.clone()
-		.resize(160, null)
-		.progressive()
-		.withoutEnlargement()
-		.toFile(filePath160, null);
+	// pipeline.clone()
+	// 	.resize(160, null)
+	// 	.progressive()
+	// 	.withoutEnlargement()
+	// 	.toFile(filePath160, null);
 	pipeline.clone()
 		.resize(1600, 1200)
 		.max()
