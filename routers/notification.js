@@ -103,7 +103,7 @@ router.post('/', function(req, res, next) {
 						result.content = result.content.replace(/你/g, '您');
 						var mailOptions = {
 							from: 'ExchangeWorld 交換世界 <exchangeworld.notification@gmail.com>',
-							to: receiver_user.email,
+							to: receiver_user.name  + ' <' + receiver_user.email + '>',
 							subject: 'ExchangeWorld 系統通知：' + result.content,
 							text: receiver_user.name + ' 您好！\n\n'
 							+ '「' + result.content + '」\n'
