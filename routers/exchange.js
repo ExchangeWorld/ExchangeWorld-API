@@ -42,7 +42,8 @@ router.get('/of', function(req, res, next) {
 			where: {
 				owner_uid: _owner_uid,
 				status: {
-					$in: [0, 2]
+					// $in: [0, 2]
+					$ne: 0
 				},
 				deleted: 0
 			}
@@ -63,7 +64,9 @@ router.get('/of', function(req, res, next) {
 							}
 						}]
 					}, {
-						status: 'initiated'
+						status: {
+							$ne: 'dropped'
+						}
 					}]
 				}
 			});
@@ -161,7 +164,9 @@ router.get('/', function(req, res, next) {
 	exchanges.findAll({
 			where: {
 				eid: _eid,
-				status: 'initiated'
+				status: {
+					$ne: 'dropped'
+				}
 			}
 		})
 		.then(function(result) {
