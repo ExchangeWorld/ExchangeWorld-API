@@ -52,17 +52,19 @@ router.post('/image', function(req, res, next) {
 	// And if there is another person who uploaded a same base64 image,
 	// The things are still going right because that means same image, why not treat them same?
 	// Finally, send the "static file path" back
-	var pipeline = sharp(dataBuffer).rotate();
+	var pipeline = sharp(dataBuffer);
 
 	pipeline.clone()
+		.rotate()
 		.resize(500, null)
-		.progressive()
 		.withoutEnlargement()
+		.progressive()
 		.toFile(filePath500, null);
 	pipeline.clone()
+		.rotate()
 		.resize(250, null)
-		.progressive()
 		.withoutEnlargement()
+		.progressive()
 		.toFile(filePath250, null);
 	// pipeline.clone()
 	// 	.resize(160, null)
@@ -70,6 +72,7 @@ router.post('/image', function(req, res, next) {
 	// 	.withoutEnlargement()
 	// 	.toFile(filePath160, null);
 	pipeline.clone()
+		.rotate()
 		.resize(1600, 1200)
 		.max()
 		.withoutEnlargement()
