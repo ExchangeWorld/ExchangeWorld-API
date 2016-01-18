@@ -22,6 +22,28 @@ var stars = require('../ORM/Stars');
  * @param  {Integer} uid The ID of user
  * @param  {String} identity User's identity
  * @return {JSON} The user including many things
+ * @example
+<pre>
+{
+  "uid": 8,
+  "identity": "1234",
+  "name": "假帳號",
+  "email": "",
+  "photo_path": "hahaha",
+  "introduction": null,
+  "wishlist": null,
+  "created_at": "2016-01-18T02:36:29.740Z",
+  "updated_at": "2016-01-18T02:36:29.740Z",
+  "goods": [],
+  "follows_followed": [
+    {
+      "fid": 1
+    }
+  ],
+  "follows_follower": [],
+  "star_starring_user": []
+}
+</pre>
  */
 router.get('/', (req, res) => {
 	var _uid = parseInt(req.query.uid, 10);
@@ -83,7 +105,7 @@ router.get('/', (req, res) => {
 });
 
 /**
- * Edit a user's profile
+ * Edit a user's profile, need token
  *
  * @method PUT api/user/edit
  * @param  {Integer} uid
