@@ -19,7 +19,25 @@ var goods = require('../ORM/Goods');
  *
  * @method GET api/comment/of/goods
  * @param  {Integer} goods_gid The commented goods
- * @return {JSON} Comments including `commenter`
+ * @return {Array} Comments including `commenter`
+ * @example
+<pre>
+[
+  {
+    "cid": 1,
+    "content": "jjj",
+    "created_at": "2016-01-18T01:51:52.778Z",
+    "updated_at": "2016-01-18T01:51:52.778Z",
+    "goods_gid": 3,
+    "commenter_uid": 1,
+    "commenter": {
+      "uid": 1,
+      "name": "許書軒",
+      "photo_path": "https://scontent.xx.fbcdn.net/hprofile-xpa1/v/t1.0-1/c0.31.320.320/p320x320/1655895_607733372646261_973096312_n.jpg?oh=c0147be7e1838a34b761b5a6e1e8f723&oe=573B37D5"
+    }
+  }
+]
+</pre>
  */
 router.get('/of/goods', (req, res) => {
 	var _goods_gid = parseInt(req.query.goods_gid, 10);
@@ -54,7 +72,25 @@ router.get('/of/goods', (req, res) => {
  *
  * @method GET api/comment/of/user
  * @param  {Integer} commenter_uid The commenter's uid
- * @return {JSON} Comments including `goods`, and they are not deleted
+ * @return {Array} Comments including `goods`, and they are not deleted
+ * @example
+<pre>
+ [
+  {
+    "cid": 1,
+    "content": "jjj",
+    "created_at": "2016-01-18T01:51:52.778Z",
+    "updated_at": "2016-01-18T01:51:52.778Z",
+    "goods_gid": 3,
+    "commenter_uid": 1,
+    "goods": {
+      "gid": 3,
+      "name": "mm",
+      "photo_path": "[\"http://exwd.csie.org/images/ab1bc08bc7737995cc788881bc7d168bf6f774c9f4d40aaf2abae1a16fc7d3b9.jpeg\"]"
+    }
+  }
+]
+</pre>
  */
 router.get('/of/user', (req, res) => {
 	var _commenter_uid;
