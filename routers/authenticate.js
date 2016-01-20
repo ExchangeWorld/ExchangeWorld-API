@@ -133,6 +133,13 @@ var login_function = (req, res) => {
 	var _id = req.body.identity;
 	var _password = req.body.password || '';
 
+	if (!_id) {
+		res.status(400).json({
+			error: 'identity not given'
+		});
+		return;
+	}
+
 	if (_fb === true) {
 		var id_length = _id.length;
 		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' + _id.substring(0, id_length - 2));
@@ -221,7 +228,7 @@ var token_function = (req, res, next) => {
 					error: err
 				});
 			} else if (result === null) {
-				res.status(403).json({
+				res.status(401).json({
 					authentication: 'fail',
 					token: null
 				});

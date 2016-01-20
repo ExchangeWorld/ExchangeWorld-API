@@ -6,13 +6,14 @@
 
 'use strict';
 
+var path = require('path');
 var express = require('express');
 var router = express.Router();
 
 // Including tables
-var comments = require('../ORM/Comments');
-var users = require('../ORM/Users');
-var goods = require('../ORM/Goods');
+var comments = require(path.resolve(__dirname, '../ORM/Comments'));
+var users = require(path.resolve(__dirname, '../ORM/Users'));
+var goods = require(path.resolve(__dirname, '../ORM/Goods'));
 
 /**
  * Get comments of a goods
@@ -42,6 +43,13 @@ var goods = require('../ORM/Goods');
 router.get('/of/goods', (req, res) => {
 	var _goods_gid = parseInt(req.query.goods_gid, 10);
 
+	if (!_goods_gid) {
+		res.status(400).json({
+			error: 'goods_gid not given or it is wrong'
+		});
+		return;
+	}
+
 	comments
 		.findAll({
 			where: {
@@ -58,10 +66,10 @@ router.get('/of/goods', (req, res) => {
 			]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -99,15 +107,22 @@ router.get('/of/user', (req, res) => {
 	if (req.exwd.admin) {
 		_commenter_uid = parseInt(req.query.commenter_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_commenter_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if (!_commenter_uid) {
+		res.status(400).json({
+			error: '_commenter_uid not given or it is wrong'
 		});
 		return;
 	}
@@ -131,10 +146,10 @@ router.get('/of/user', (req, res) => {
 			]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -158,15 +173,22 @@ router.post('/post', (req, res) => {
 	if (req.exwd.admin) {
 		_commenter_uid = parseInt(req.body.commenter_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_commenter_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if ((!_goods_gid) || (!_commenter_uid) || (!_content)) {
+		res.status(400).json({
+			error: 'goods_gid, commenter_uid or content wrong'
 		});
 		return;
 	}
@@ -178,10 +200,10 @@ router.post('/post', (req, res) => {
 			content: _content
 		})
 		.then(result => {
-			res.json(result);
+			res.status(201).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -204,15 +226,22 @@ router.put('/edit', (req, res) => {
 	if (req.exwd.admin) {
 		_commenter_uid = parseInt(req.body.commenter_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_commenter_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if((!_cid) || (!commenter_uid) || (!_content)) {
+		res.status(400).json({
+			error: 'cid, commenter_uid or content wrong'
 		});
 		return;
 	}
@@ -232,14 +261,14 @@ router.put('/edit', (req, res) => {
 		.findOne(queryTmp)
 		.then(result => {
 			if (result === null) {
-				res.json(null);
+				res.status(404).json(null);
 			} else {
 				result.content = _content;
-				result.save().then(() => res.json(result));
+				result.save().then(() => res.status(200).json(result));
 			}
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
