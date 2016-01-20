@@ -1,6 +1,7 @@
 'use strict';
 
-var goods = require('../ORM/Goods');
+var path = require('path');
+var goods = require(path.resolve(__dirname, '../ORM/Goods'));
 
 var templateHTML =
 	'<meta property="fb:app_id" content="376506855853722">\
