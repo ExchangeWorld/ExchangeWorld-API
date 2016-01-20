@@ -1,5 +1,8 @@
+'use strict';
+
+var path = require('path');
 var Sequelize = require('sequelize');
-var sequelize = require('../libs/sequelize');
+var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Goods schema
@@ -86,10 +89,12 @@ var Goods = sequelize.define('goods', {
 		method: 'BTREE'
 	}, {
 		fields: ['name'],
-		method: 'BTREE'
+		using: 'spgist',
+		operator: 'text_ops'
 	}, {
 		fields: ['category'],
-		method: 'BTREE'
+		using: 'spgist',
+		operator: 'text_ops'
 	}, {
 		fields: ['owner_uid'],
 		method: 'BTREE'

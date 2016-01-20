@@ -1,5 +1,7 @@
 'use strict';
 
+var os = require('os');
+
 var path = require('path');
 var Sequelize = require('sequelize');
 
@@ -23,8 +25,8 @@ var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, 
 	// sync: { force: true },
 
 	pool: {
-		maxConnections: 16,
-		minConnections: 2,
+		maxConnections: os.cpus().length() / 2,
+		minConnections: 1,
 		maxIdleTime: 3000
 	},
 
