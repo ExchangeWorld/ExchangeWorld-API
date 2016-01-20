@@ -239,7 +239,7 @@ router.put('/edit', (req, res) => {
 		return;
 	}
 
-	if((!_cid) || (!commenter_uid) || (!_content)) {
+	if ((!_cid) || (!_commenter_uid) || (!_content)) {
 		res.status(400).json({
 			error: 'cid, commenter_uid or content wrong'
 		});
@@ -289,15 +289,22 @@ router.delete('/delete', (req, res) => {
 	if (req.exwd.admin) {
 		_commenter_uid = parseInt(req.query.commenter_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_commenter_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if ((!_cid) || (!_commenter_uid)) {
+		res.status(400).json({
+			error: 'cid or commenter_uid wrong'
 		});
 		return;
 	}
@@ -316,10 +323,10 @@ router.delete('/delete', (req, res) => {
 	comments
 		.destroy(queryTmp)
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
