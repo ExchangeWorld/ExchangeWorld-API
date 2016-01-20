@@ -15,6 +15,22 @@ var env = require(path.resolve(__dirname, './libs/env'));
 var server = express();
 var serverContainer;
 
+var routers = {
+	authenticate: require(path.resolve(__dirname, './routers/authenticate')),
+	search: require(path.resolve(__dirname, './routers/goods.search')),
+	goods: require(path.resolve(__dirname, './routers/goods')),
+	upload: require(path.resolve(__dirname, './routers/upload')),
+	follow: require(path.resolve(__dirname, './routers/follow')),
+	user: require(path.resolve(__dirname, './routers/user')),
+	comment: require(path.resolve(__dirname, './routers/comment')),
+	star: require(path.resolve(__dirname, './routers/star')),
+	queue: require(path.resolve(__dirname, './routers/queue')),
+	exchange: require(path.resolve(__dirname, './routers/exchange')),
+	notification: require(path.resolve(__dirname, './routers/notification')),
+	message: require(path.resolve(__dirname, './routers/message')),
+	chatroom: require(path.resolve(__dirname, './routers/chatroom'))
+};
+
 sequelize_sync
 	.then(() => {
 		console.log('DB all synced ...');
@@ -58,29 +74,28 @@ sequelize_sync
 		 * If fail, return {"authentication": "fail"}
 		 * If success, and then go next()
 		 */
-		var authenticate = require('./routers/authenticate');
-		server.all(/\/api\/(?!authenticate).+/, authenticate.token, (req, res, next) => {
+		server.all(/\/api\/(?!authenticate).+/, routers.authenticate.token, (req, res, next) => {
 			next();
 		});
 
-		server.use('/api/goods/search', require('./routers/goods.search'));
-		server.use('/api/goods', require('./routers/goods'));
+		server.use('/api/goods/search', routers.search);
+		server.use('/api/goods', routers.goods);
 
-		server.use('/api/upload', require('./routers/upload'));
+		server.use('/api/upload', routers.upload);
 
-		server.use('/api/follow', require('./routers/follow'));
-		server.use('/api/user', require('./routers/user'));
+		server.use('/api/follow', routers.follow);
+		server.use('/api/user', routers.user);
 
-		server.use('/api/comment', require('./routers/comment'));
-		server.use('/api/star', require('./routers/star'));
-		server.use('/api/queue', require('./routers/queue'));
+		server.use('/api/comment', routers.comment);
+		server.use('/api/star', routers.star);
+		server.use('/api/queue', routers.queue);
 
-		server.use('/api/exchange', require('./routers/exchange'));
-		server.use('/api/notification', require('./routers/notification'));
-		server.use('/api/message', require('./routers/message'));
-		server.use('/api/chatroom', require('./routers/chatroom'));
+		server.use('/api/exchange', routers.exchange);
+		server.use('/api/notification', routers.notification);
+		server.use('/api/message', routers.message);
+		server.use('/api/chatroom', routers.chatroom);
 
-		server.use('/api/authenticate', authenticate.router);
+		server.use('/api/authenticate', routers.authenticate.router);
 
 		// catch 404 and forward to error handler
 		server.use((req, res, next) => {
@@ -94,7 +109,7 @@ sequelize_sync
 		server.use((err, req, res, next) => {
 			res.status(err.status || 500);
 			err.statusCode = 500;
-			if (process.env.NODE_ENV !== 'production' && req.xhr) {
+			if (env.NODE_ENV !== 'production' && req.xhr) {
 				res.send(err);
 			} else if (req.xhr) {
 				res.send(err.message);
