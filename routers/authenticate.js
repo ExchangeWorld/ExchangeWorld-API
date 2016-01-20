@@ -15,24 +15,20 @@ var redis = require(path.resolve(__dirname, '../libs/redis'));
 var router = express.Router();
 
 // Including tables
-var users = require('../ORM/Users');
-var auths = require('../ORM/Auths');
+var users = require(path.resolve(__dirname, '../ORM/Users'));
+var auths = require(path.resolve(__dirname, '../ORM/Auths'));
 
 // Hashcode generation functions
 var getSHA256 = strToEncrypt => {
 	var sha256 = crypto.createHash('sha256');
-
 	sha256.update(strToEncrypt, 'utf8');
-
 	return sha256.digest('hex');
 };
 
 // Faster
 var getSHA1 = strToEncrypt => {
 	var sha1 = crypto.createHash('sha1');
-
 	sha1.update(strToEncrypt, 'utf8');
-
 	return sha1.digest('hex');
 };
 
@@ -92,7 +88,7 @@ router.post('/register', (req, res) => {
 					user_uid: result.uid
 				})
 				.catch(err => {
-					res.send({
+					res.status(500).json({
 						error: err
 					});
 				});
@@ -100,10 +96,10 @@ router.post('/register', (req, res) => {
 			return result;
 		})
 		.then(result => {
-			res.json(result);
+			res.status(201).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -157,7 +153,7 @@ var login_function = (req, res) => {
 		})
 		.then(test_user => {
 			if (test_user === 'not a user' || test_user.user_uid === null) {
-				res.json({
+				res.status(401).json({
 					authentication: 'fail',
 					token: null
 				});
@@ -167,15 +163,15 @@ var login_function = (req, res) => {
 
 				redis.pipeline().set(tmpToken, test_user.user_uid).expire(tmpToken, 1200).exec((err, result) => {
 					if (err) {
-						res.send({
+						res.status(500).json({
 							error: err
 						});
 					} else if (result[0][0] || result[1][0]) {
-						res.send({
+						res.status(500).json({
 							error: [result[0][0], result[1][0]]
 						});
 					} else {
-						res.json({
+						res.status(201).json({
 							authentication: 'success',
 							token: tmpToken
 						});
@@ -184,7 +180,7 @@ var login_function = (req, res) => {
 			}
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -221,18 +217,18 @@ var token_function = (req, res, next) => {
 	} else {
 		redis.get(_token, (err, result) => {
 			if (err) {
-				res.send({
+				res.status(500).json({
 					error: err
 				});
 			} else if (result === null) {
-				res.json({
+				res.status(403).json({
 					authentication: 'fail',
 					token: null
 				});
 			} else {
 				redis.pipeline().set(_token, result).expire(_token, 1200).exec((err, res) => {
 					if (err) {
-						res.send({
+						res.status(500).json({
 							error: err
 						});
 					} else {
