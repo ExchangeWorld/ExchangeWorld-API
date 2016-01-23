@@ -158,7 +158,7 @@ router.post('/post', (req, res) => {
 		})
 		.then((result, created) => {
 			// console.log(JSON.stringify(result), JSON.stringify(created));
-			res.status(200).json(result[0]);
+			res.status(201).json(result[0]);
 		})
 		.catch(err => {
 			res.status(500).json({
