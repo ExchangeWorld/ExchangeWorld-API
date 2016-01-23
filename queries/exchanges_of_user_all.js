@@ -20,5 +20,8 @@ module.exports = (_owner_uid, callback) => {
 		})
 		.then(results => {
 			callback(results);
+		})
+		.catch(err => {
+			callback(err);
 		});
 };

@@ -29,7 +29,7 @@ var exchanges_of_user_one = require(path.resolve(__dirname, '../queries/exchange
  */
 router.get('/all', (req, res) => {
 	if (!req.exwd.admin) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
@@ -66,10 +66,10 @@ router.get('/all', (req, res) => {
 			]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -89,20 +89,20 @@ router.get('/of/user/all', (req, res) => {
 	if (req.exwd.admin) {
 		_owner_uid = parseInt(req.query.owner_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_owner_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	}
 
-	exchanges_of_user_all(_owner_uid, (result => res.json(result.map(r => {
+	exchanges_of_user_all(_owner_uid, (result => res.status(200).json(result.map(r => {
 		if (r.goods_one.owner.uid === _owner_uid) {
 			r.owner_goods = r.goods_one;
 			r.other_goods = r.goods_two;
@@ -140,14 +140,14 @@ router.get('/of/user/one', (req, res) => {
 	if (req.exwd.admin) {
 		_owner_uid = parseInt(req.query.owner_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_owner_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
@@ -172,9 +172,9 @@ router.get('/of/user/one', (req, res) => {
 			r[0].goods_one_agree = undefined;
 			r[0].goods_two_agree = undefined;
 
-			res.json(r[0]);
+			res.status(200).json(r[0]);
 		} else {
-			res.json(null);
+			res.status(404).json(null);
 		}
 	});
 });
@@ -191,7 +191,7 @@ router.get('/', (req, res) => {
 
 	// REQ EXWD CHECK
 	if (!req.exwd.admin) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
@@ -225,10 +225,10 @@ router.get('/', (req, res) => {
 			}]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -256,15 +256,22 @@ router.post('/create', (req, res) => {
 	if (req.exwd.admin) {
 		_owner_uid = null;
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_owner_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if ((!_goods_one_gid) || (!_goods_two_gid) || (!_owner_uid)) {
+		res.status(400).json({
+			error: 'goods_one and _two are wrong'
 		});
 		return;
 	}
@@ -301,7 +308,7 @@ router.post('/create', (req, res) => {
 		.then(isThereAlready => {
 			if (isThereAlready) {
 				if (isThereAlready.status === 'completed') {
-					res.send({
+					res.status(403).json({
 						error: 'The exchange was completed before'
 					});
 				} else if (isThereAlready.status === 'dropped') {
@@ -313,16 +320,16 @@ router.post('/create', (req, res) => {
 								isThereAlready.status = 'initiated';
 								isThereAlready.goods_one_agree = false;
 								isThereAlready.goods_two_agree = false;
-								g1.save().then(() => g2.save().then(() => isThereAlready.save().then(() => res.json(isThereAlready))));
+								g1.save().then(() => g2.save().then(() => isThereAlready.save().then(() => res.status(200).json(isThereAlready))));
 							} else {
-								res.send({
-									error: 'The exchange cannot be created'
+								res.status(403).json({
+									error: 'The exchange cannot be created, one of goods is not available'
 								});
 							}
 						});
 					});
 				} else {
-					res.json(isThereAlready);
+					res.status(200).json(isThereAlready);
 				}
 			} else {
 				// Check two goods' status
@@ -351,36 +358,36 @@ router.post('/create', (req, res) => {
 													chatroom_cid: the_chatroom.cid
 												})
 												.then(the_exchange => {
-													res.json(the_exchange);
+													res.status(201).json(the_exchange);
 												})
 												.catch(err => {
 													console.log(err);
-													res.send({
+													res.status(500).json({
 														error: err
 													});
 												});
 										})
 										.catch(err => {
 											console.log(err);
-											res.send({
+											res.status(500).json({
 												error: err
 											});
 										});
 								} else {
-									res.send({
+									res.status(403).json({
 										error: 'The exchange cannot be created'
 									});
 								}
 							});
 						} else {
-							res.send({
+							res.status(403).json({
 								error: 'The exchange cannot be created'
 							});
 						}
 					})
 					.catch(err => {
 						console.log(err);
-						res.send({
+						res.status(500).json({
 							error: err
 						});
 					});
@@ -388,7 +395,7 @@ router.post('/create', (req, res) => {
 		})
 		.catch(err => {
 			console.log(err);
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -409,14 +416,14 @@ router.put('/drop', (req, res) => {
 	if (req.exwd.admin) {
 		_owner_uid = null;
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_owner_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
@@ -440,22 +447,22 @@ router.put('/drop', (req, res) => {
 							result.goods_one_agree = false;
 							result.goods_two_agree = false;
 							g1.save().then(() => g2.save().then(() => {
-								result.save().then(() => res.json(result));
+								result.save().then(() => res.status(200).json(result));
 							}));
 						} else {
-							res.send({
+							res.status(403).json({
 								error: 'Permission denied'
 							});
 						}
 					});
 				});
 			} else {
-				res.json(result);
+				res.status(404).json(result);
 			}
 		})
 		.catch(err => {
 			console.log(err);
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -480,14 +487,14 @@ router.put('/agree', (req, res) => {
 	if (req.exwd.admin) {
 		_owner_uid = null;
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_owner_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
@@ -569,37 +576,37 @@ router.put('/agree', (req, res) => {
 															}
 														}
 													})
-													.then(uuu => res.json(result))
+													.then(uuu => res.status(200).json(result))
 													.catch(err => {
 														console.log(err);
-														res.send({
+														res.status(500).json({
 															error: err
 														});
 													});
 											} else {
-												res.json(result);
+												res.status(200).json(result);
 											}
 										})
 										.catch(err => {
 											console.log(err);
-											res.send({
+											res.status(500).json({
 												error: err
 											});
 										});
 								})));
 							} else {
-								res.json(result);
+								res.status(200).json(result);
 							}
 						});
 					});
 				});
 			} else {
-				res.json(result);
+				res.status(404).json(result);
 			}
 		})
 		.catch(err => {
 			console.log(err);
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
