@@ -6,13 +6,15 @@
 
 'use strict';
 
+var path = require('path');
+
 var express = require('express');
 var router = express.Router();
 
 // Including tables
-var goods = require('../ORM/Goods');
-var users = require('../ORM/Users');
-var stars = require('../ORM/Stars');
+var goods = require(path.resolve(__dirname, '../ORM/Goods'));
+var users = require(path.resolve(__dirname, '../ORM/Users'));
+var stars = require(path.resolve(__dirname, '../ORM/Stars'));
 
 /**
  * Get goods by given query
@@ -90,10 +92,10 @@ router.get('/', (req, res) => {
 			]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
