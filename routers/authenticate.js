@@ -60,7 +60,7 @@ router.post('/register', (req, res) => {
 
 	// Check if the _id is not valid
 	if (_id === '') {
-		res.send({
+		res.status(400).json({
 			error: 'ID must be specified'
 		});
 

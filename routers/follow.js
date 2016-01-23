@@ -7,12 +7,14 @@
 
 'use strict';
 
+var path = require('path');
+
 var express = require('express');
 var router = express.Router();
 
 // Including tables
-var follows = require('../ORM/Follows');
-var users = require('../ORM/Users');
+var follows = require(path.resolve(__dirname, '../ORM/Follows'));
+var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 /**
  * Get who follow the given followed_uid
@@ -24,6 +26,13 @@ var users = require('../ORM/Users');
  */
 router.get('/followers/of', (req, res) => {
 	var _followed_uid = parseInt(req.query.followed_uid, 10);
+
+	if (!_followed_uid) {
+		res.status(400).json({
+			error: 'followed_uid is not given'
+		});
+		return;
+	}
 
 	// Emit a find operation with orm in table `follows`
 	follows
@@ -41,10 +50,10 @@ router.get('/followers/of', (req, res) => {
 			]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).send({
 				error: err
 			});
 		});
@@ -60,6 +69,13 @@ router.get('/followers/of', (req, res) => {
  */
 router.get('/followed/by', (req, res) => {
 	var _follower_uid = parseInt(req.query.follower_uid, 10);
+
+	if (!_follower_uid) {
+		res.status(400).json({
+			error: 'follower_uid is not given'
+		});
+		return;
+	}
 
 	// Emit a find operation with orm in table `follows`
 	follows
@@ -77,10 +93,10 @@ router.get('/followed/by', (req, res) => {
 			]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -103,21 +119,28 @@ router.post('/post', (req, res) => {
 	if (req.exwd.admin) {
 		_follower_uid = parseInt(req.body.follower_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_follower_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	}
 
+	if ((!_followed_uid) || (!_follower_uid)) {
+		res.status(400).json({
+			error: 'followed_uid or follower_uid are wrong'
+		});
+		return;
+	}
+
 	if (_follower_uid === _followed_uid) {
-		res.send({
+		res.status(403).json({
 			error: 'One cannot follow oneself'
 		});
 		return;
@@ -135,10 +158,10 @@ router.post('/post', (req, res) => {
 		})
 		.then((result, created) => {
 			// console.log(JSON.stringify(result), JSON.stringify(created));
-			res.json(result[0]);
+			res.status(200).json(result[0]);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -161,15 +184,22 @@ router.delete('/delete', (req, res) => {
 	if (req.exwd.admin) {
 		_follower_uid = parseInt(req.query.follower_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_follower_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if ((!_followed_uid) || (!_follower_uid)) {
+		res.status(400).json({
+			error: 'followed_uid or follower_uid are wrong'
 		});
 		return;
 	}
@@ -182,10 +212,10 @@ router.delete('/delete', (req, res) => {
 			}
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
