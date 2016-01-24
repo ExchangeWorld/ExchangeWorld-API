@@ -6,14 +6,16 @@
 
 'use strict';
 
+var path = require('path');
+
 var express = require('express');
 var router = express.Router();
 
 // Including tables
-var users = require('../ORM/Users');
-var goods = require('../ORM/Goods');
-var follows = require('../ORM/Follows');
-var stars = require('../ORM/Stars');
+var users = require(path.resolve(__dirname, '../ORM/Users'));
+var goods = require(path.resolve(__dirname, '../ORM/Goods'));
+var follows = require(path.resolve(__dirname, '../ORM/Follows'));
+var stars = require(path.resolve(__dirname, '../ORM/Stars'));
 
 /**
  * Get a user by given uid or identity
@@ -100,7 +102,12 @@ router.get('/', (req, res) => {
 			}]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
 		});
 });
 
@@ -126,14 +133,14 @@ router.put('/edit', (req, res) => {
 	if (req.exwd.admin) {
 		_uid = parseInt(req.body._uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
@@ -147,17 +154,17 @@ router.put('/edit', (req, res) => {
 		})
 		.then(result => {
 			if (result === null) {
-				res.json(null);
+				res.status(404).json(null);
 			} else {
 				result.name = _name;
 				result.email = _email;
 				result.introduction = _introduction;
 				result.wishlist = _wishlist;
-				result.save().then(() => res.json(result));
+				result.save().then(() => res.status(200).json(result));
 			}
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -196,10 +203,10 @@ router.put('/photo', (req, res) => {
 			return result;
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
