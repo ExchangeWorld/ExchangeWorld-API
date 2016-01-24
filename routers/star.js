@@ -6,13 +6,15 @@
 
 'use strict';
 
+var path = require('path');
+
 var express = require('express');
 var router = express.Router();
 
 // Including tables
-var stars = require('../ORM/Stars');
-var goods = require('../ORM/Goods');
-var users = require('../ORM/Users');
+var stars = require(path.resolve(__dirname, '../ORM/Stars'));
+var goods = require(path.resolve(__dirname, '../ORM/Goods'));
+var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 /**
  * Get users who star the goods
@@ -36,10 +38,10 @@ router.get('/to', (req, res) => {
 			}]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -70,10 +72,10 @@ router.get('/by', (req, res) => {
 			}]
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -95,14 +97,14 @@ router.post('/post', (req, res) => {
 	if (req.exwd.admin) {
 		_starring_user_uid = parseInt(req.body.starring_user_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_starring_user_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
@@ -116,10 +118,10 @@ router.post('/post', (req, res) => {
 			}
 		})
 		.then((result, created) => {
-			res.json(result[0]);
+			res.status(201).json(result[0]);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
@@ -141,14 +143,14 @@ router.delete('/delete', (req, res) => {
 	if (req.exwd.admin) {
 		_starring_user_uid = parseInt(req.query.starring_user_uid, 10);
 	} else if (req.exwd.anonymous) {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
 	} else if (req.exwd.registered) {
 		_starring_user_uid = req.exwd.uid;
 	} else {
-		res.send({
+		res.status(403).json({
 			error: 'Permission denied'
 		});
 		return;
@@ -162,10 +164,10 @@ router.delete('/delete', (req, res) => {
 			}
 		})
 		.then(result => {
-			res.json(result);
+			res.status(200).json(result);
 		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
