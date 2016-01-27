@@ -55,6 +55,7 @@
     "pg": "*",
     "pg-hstore": "*",
     "qs": "*",
+    "redbird": "*",
     "redis": "*",
     "response-time": "*",
     "secure-random": "*",
