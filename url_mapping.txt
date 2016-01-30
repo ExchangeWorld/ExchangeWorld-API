@@ -1,0 +1,60 @@
+comment has
+	goods
+	user
+
+/\/api\/comment\/([0-9]+)\/?$/
+/\/api\/comment\/([0-9]+)\/goods\/?$/
+/\/api\/comment\/([0-9]+)\/user\/?$/
+
+exchange has
+	goods
+	user
+
+/\/api\/exchange\/([0-9]+)\/?$/
+/\/api\/exchange\/([0-9]+)\/goods\/?$/
+/\/api\/exchange\/([0-9]+)\/user\/?$/
+
+follow has
+	user
+
+/\/api\/follow\/user\/([0-9]+)\/?$/
+
+goods has
+	comment
+	exchange
+	queue
+	star
+	user
+
+/\/api\/goods\/([0-9]+)\/comment\/?$/
+/\/api\/goods\/([0-9]+)\/exchange\/?$/
+/\/api\/goods\/([0-9]+)\/queue\/?$/
+/\/api\/goods\/([0-9]+)\/star\/?$/
+/\/api\/goods\/([0-9]+)\/user\/?$/
+
+queue has
+	goods
+	user
+
+/\/api\/queue\/goods\/([0-9]+)\/?$/
+/\/api\/queue\/user\/([0-9]+)\/?$/
+
+star has
+	user
+
+/\/api\/star\/user\/([0-9]+)/
+
+user has
+	comment
+	exchange
+	follow
+	goods
+	queue
+	star
+
+/\/api\/user\/([0-9]+)\/comment\/?$/
+/\/api\/user\/([0-9]+)\/exchange\/?$/
+/\/api\/user\/([0-9]+)\/follow\/?$/
+/\/api\/user\/([0-9]+)\/goods\/?$/
+/\/api\/user\/([0-9]+)\/queue\/?$/
+/\/api\/user\/([0-9]+)\/star\/?$/

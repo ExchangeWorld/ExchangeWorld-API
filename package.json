@@ -39,6 +39,7 @@
     "cookie-parser": "*",
     "express": "*",
     "helmet": "*",
+    "http-proxy": "*",
     "imagemin-pngcrush": "*",
     "ioredis": "*",
     "jsonwebtoken": "*",
