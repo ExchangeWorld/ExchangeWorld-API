@@ -77,7 +77,7 @@ if (cluster.isMaster) {
 			// For parsing application/x-www-form-urlencoded
 			server.post('*', bodyParser.urlencoded(bodyParserSetting));
 			server.put('*', bodyParser.urlencoded(bodyParserSetting));
-			server.options('*', bodyParser.json(bodyParserSetting));
+			server.options('*', bodyParser.urlencoded(bodyParserSetting));
 
 			server.all('*', (req, res, next) => {
 				res.header('Access-Control-Allow-Origin', '*');
