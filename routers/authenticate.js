@@ -58,6 +58,15 @@ router.post('/register', (req, res) => {
 		_password = getSHA256(_id.substring(id_length - 2, id_length) + ' and this is still a fucking hash with ' + _id.substring(0, id_length - 2));
 	}
 
+	// Check if the _password is not valid
+	if (_password === '') {
+		res.status(400).json({
+			error: 'Password must be specified'
+		});
+
+		return;
+	}
+
 	// Check if the _id is not valid
 	if (_id === '') {
 		res.status(400).json({
