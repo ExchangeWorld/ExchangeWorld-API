@@ -61,12 +61,20 @@ if (cluster.isMaster) {
 			req.urlObj.query.goods_gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/comment/of/goods';
 		}],
-		[/\/api\/goods\/([0-9]+)\/exchange\/?$/, (regex, req) => '/api/exchange'],
-		[/\/api\/goods\/([0-9]+)\/queue\/?$/, (regex, req) => '/api/queue'],
+		[/\/api\/goods\/([0-9]+)\/queue\/?$/, (regex, req) => {
+			req.urlObj.query.host_goods_gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/queue/of/goods';
+		}],
 		[/\/api\/goods\/([0-9]+)\/star\/?$/, (regex, req) => '/api/star'],
 
-		[/\/api\/queue\/goods\/([0-9]+)\/?$/, (regex, req) => '/api/queue'],
-		[/\/api\/queue\/user\/([0-9]+)\/?$/, (regex, req) => '/api/queue'],
+		[/\/api\/queue\/goods\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.queuer_goods_gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/queue/by/goods';
+		}],
+		[/\/api\/queue\/user\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.queuer_user_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/queue/by/person';
+		}],
 
 		[/\/api\/star\/user\/([0-9]+)/, (regex, req) => '/api/star'],
 
@@ -97,7 +105,10 @@ if (cluster.isMaster) {
 			req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[2], 10);
 			req.urlObj.pathname = '/api/goods';
 		}],
-		[/\/api\/user\/([0-9]+)\/queue\/?$/, (regex, req) => '/api/queue'],
+		[/\/api\/user\/([0-9]+)\/queue\/?$/, (regex, req) => {
+			req.urlObj.query.host_user_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/queue/of/person';
+		}],
 		[/\/api\/user\/([0-9]+)\/star\/?$/, (regex, req) => '/api/star']
 	];
 
@@ -114,7 +125,9 @@ if (cluster.isMaster) {
 		[/\/api\/goods\/?$/, (regex, req) => {
 			req.urlObj.pathname = '/api/goods/post';
 		}],
-		[/\/api\/queue\/?$/, (regex, req) => '/api/queue'],
+		[/\/api\/queue\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/queue/post';
+		}],
 		[/\/api\/star\/?$/, (regex, req) => '/api/star'],
 		[/\/api\/user\/?$/, (regex, req) => '/api/user']
 	];
@@ -140,7 +153,6 @@ if (cluster.isMaster) {
 			req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/goods/rate';
 		}],
-		[/\/api\/queue\/([0-9]+)\/?$/, (regex, req) => '/api/queue'],
 		[/\/api\/star\/([0-9]+)\/?$/, (regex, req) => '/api/star'],
 		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => '/api/user']
 	];
@@ -162,7 +174,12 @@ if (cluster.isMaster) {
 			req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/goods/delete';
 		}],
-		[/\/api\/queue\/([0-9]+)\/?$/, (regex, req) => '/api/queue'],
+		[/\/api\/queue\/([0-9]+)\/to\/([0-9]+)\/?$/, (regex, req) => {
+			var tmp = regex.exec(req.urlObj.pathname);
+			req.urlObj.query.queuer_goods_gid = parseInt(tmp[1], 10);
+			req.urlObj.query.host_goods_gid = parseInt(tmp[2], 10);
+			req.urlObj.pathname = '/api/queue/delete';
+		}],
 		[/\/api\/star\/([0-9]+)\/?$/, (regex, req) => '/api/star'],
 		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => '/api/user']
 	];
