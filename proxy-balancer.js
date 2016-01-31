@@ -1,6 +1,8 @@
 'use strict';
+const cluster_port = 3003;
 
 var cluster = require('cluster');
+var path = require('path');
 var url = require('url');
 var cpus = require('os').cpus().length;
 
@@ -171,6 +173,10 @@ if (cluster.isMaster) {
 		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => {
 			req.urlObj.query.uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/user/edit';
+		}],
+		[/\/api\/user\/([0-9]+)\/photo\/?$/, (regex, req) => {
+			req.urlObj.query.uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/user/photo';
 		}]
 	];
 
@@ -220,13 +226,30 @@ if (cluster.isMaster) {
 	};
 
 	var routeCluster = (req, res, callback) => {
+		var _url = req.urlObj.pathname;
 
+		if (/\/api\/goods\/search\/?$/.test(_url)) {
+			req.urlObj.host = 'localhost:3005';
+		} else if (/\/api\/goods\/?/.test(_url)) {
+			req.urlObj.host = 'localhost:3004';
+		} else if (/\/api\/user\/?/.test(_url)) {
+			req.urlObj.host = 'localhost:3006';
+		} else if (/\/api\/authenticate\/?/.test(_url)) {
+			req.urlObj.host = 'localhost:3006';
+		} else if (/\/api\/upload\/?/.test(_url)) {
+			req.urlObj.host = 'localhost:3007';
+		} else {
+			req.urlObj.host = 'localhost:3003';
+		}
+
+		callback(null, req, res);
 	};
 
 	var proxyBalancer = http.createServer((req, res) => {
 		async.waterfall([
 			async.apply(urlParsing, req, res),
-			resfulMapping
+			resfulMapping,
+			routeCluster
 		], (err, req, res) => {
 			proxy.web(req, res, {
 				target: url.format(req.urlObj),
@@ -292,13 +315,13 @@ if (cluster.isMaster) {
 		var serverContainer = http.createServer(server);
 		serverContainer.on('error', err => {
 			if (err.code === 'EADDRINUSE') {
-				console.log('Development server is already started at port ' + 3003);
+				console.log('Development server is already started at port ' + cluster_port);
 			} else {
 				throw err;
 			}
 		});
 
-		serverContainer.listen(3003);
+		serverContainer.listen(cluster_port);
 
 		server.setMaxListeners(0);
 		serverContainer.setMaxListeners(0);
