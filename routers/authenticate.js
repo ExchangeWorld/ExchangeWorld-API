@@ -45,7 +45,8 @@ var getSHA1 = strToEncrypt => {
  * @return {JSON} New created user object
  */
 router.post('/register', (req, res) => {
-	var _fb = ((req.body.fb || '') === 'true');
+	var _tmpfb = (req.body.fb || '');
+	var _fb = (_tmpfb === 'true' || _tmpfb === true);
 	var _id = req.body.identity || '';
 	var _password = req.body.password || '';
 	var _name = req.body.name;
@@ -138,7 +139,8 @@ router.post('/register', (req, res) => {
 </pre>
  */
 var login_function = (req, res) => {
-	var _fb = ((req.body.fb || '') === 'true');
+	var _tmpfb = (req.body.fb || '');
+	var _fb = (_tmpfb === 'true' || _tmpfb === true);
 	var _id = req.body.identity;
 	var _password = req.body.password || '';
 
