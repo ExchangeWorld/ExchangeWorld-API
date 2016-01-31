@@ -2,7 +2,7 @@
 
 var cluster = require('cluster');
 var url = require('url');
-var cpus = require('os').cpus().length / 2;
+var cpus = require('os').cpus().length;
 
 cluster.setMaxListeners(0);
 process.setMaxListeners(0);
@@ -47,7 +47,9 @@ if (cluster.isMaster) {
 			req.urlObj.query.eid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/exchange';
 		}],
+
 		[/\/api\/follow\/user\/([0-9]+)\/?$/, (regex, req) => '/api/follow'],
+
 		[/\/api\/goods\/([0-9]+)\/?$/, (regex, req) => '/api/goods'],
 		[/\/api\/goods\/([0-9]+)\/comment\/?$/, (regex, req) => {
 			req.urlObj.query.goods_gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
@@ -56,15 +58,27 @@ if (cluster.isMaster) {
 		[/\/api\/goods\/([0-9]+)\/exchange\/?$/, (regex, req) => '/api/exchange'],
 		[/\/api\/goods\/([0-9]+)\/queue\/?$/, (regex, req) => '/api/queue'],
 		[/\/api\/goods\/([0-9]+)\/star\/?$/, (regex, req) => '/api/star'],
+
 		[/\/api\/queue\/goods\/([0-9]+)\/?$/, (regex, req) => '/api/queue'],
 		[/\/api\/queue\/user\/([0-9]+)\/?$/, (regex, req) => '/api/queue'],
+
 		[/\/api\/star\/user\/([0-9]+)/, (regex, req) => '/api/star'],
+
 		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => '/api/user'],
 		[/\/api\/user\/([0-9]+)\/comment\/?$/, (regex, req) => {
 			req.urlObj.query.commenter_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/comment/of/user';
 		}],
-		[/\/api\/user\/([0-9]+)\/exchange\/?$/, (regex, req) => '/api/exchange'],
+		[/\/api\/user\/([0-9]+)\/exchange\/?$/, (regex, req) => {
+			req.urlObj.query.owner_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/exchange/of/user/all';
+		}],
+		[/\/api\/user\/([0-9]+)\/exchange\/([0-9]+)\/?$/, (regex, req) => {
+			var tmp = regex.exec(req.urlObj.pathname);
+			req.urlObj.query.owner_uid = parseInt(tmp[1], 10);
+			req.urlObj.query.eid = parseInt(tmp[2], 10);
+			req.urlObj.pathname = '/api/exchange/of/user/one';
+		}],
 		[/\/api\/user\/([0-9]+)\/follow\/?$/, (regex, req) => '/api/follow'],
 		[/\/api\/user\/([0-9]+)\/goods\/?$/, (regex, req) => '/api/goods'],
 		[/\/api\/user\/([0-9]+)\/queue\/?$/, (regex, req) => '/api/queue'],
@@ -75,7 +89,9 @@ if (cluster.isMaster) {
 		[/\/api\/comment\/?$/, (regex, req) => {
 			req.urlObj.pathname = '/api/comment/post';
 		}],
-		[/\/api\/exchange\/?$/, (regex, req) => '/api/exchange'],
+		[/\/api\/exchange\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/exchange/create';
+		}],
 		[/\/api\/follow\/?$/, (regex, req) => '/api/follow'],
 		[/\/api\/goods\/?$/, (regex, req) => '/api/goods'],
 		[/\/api\/queue\/?$/, (regex, req) => '/api/queue'],
@@ -88,7 +104,14 @@ if (cluster.isMaster) {
 			req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/comment/edit';
 		}],
-		[/\/api\/exchange\/([0-9]+)\/?$/, (regex, req) => '/api/exchange'],
+		[/\/api\/exchange\/([0-9]+)\/drop\/?$/, (regex, req) => {
+			req.urlObj.query.eid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/exchange/drop';
+		}],
+		[/\/api\/exchange\/([0-9]+)\/agree\/?$/, (regex, req) => {
+			req.urlObj.query.eid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/exchange/agree';
+		}],
 		[/\/api\/follow\/([0-9]+)\/?$/, (regex, req) => '/api/follow'],
 		[/\/api\/goods\/([0-9]+)\/?$/, (regex, req) => '/api/goods'],
 		[/\/api\/queue\/([0-9]+)\/?$/, (regex, req) => '/api/queue'],
@@ -101,7 +124,10 @@ if (cluster.isMaster) {
 			req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/comment/delete';
 		}],
-		[/\/api\/exchange\/([0-9]+)\/?$/, (regex, req) => '/api/exchange'],
+		[/\/api\/exchange\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.eid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/exchange/drop';
+		}],
 		[/\/api\/follow\/([0-9]+)\/?$/, (regex, req) => '/api/follow'],
 		[/\/api\/goods\/([0-9]+)\/?$/, (regex, req) => '/api/goods'],
 		[/\/api\/queue\/([0-9]+)\/?$/, (regex, req) => '/api/queue'],
