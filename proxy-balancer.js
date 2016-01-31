@@ -1,6 +1,5 @@
 'use strict';
 const cluster_port = 3002;
-const tester_port = 4003;
 
 var cluster = require('cluster');
 var path = require('path');
@@ -243,10 +242,6 @@ if (cluster.isMaster) {
 			req.urlObj.host = 'localhost:3003';
 		}
 
-		if (env.NODE_ENV === 'development') {
-			req.urlObj.host = 'localhost:' + tester_port;
-		}
-
 		callback(null, req, res);
 	};
 
@@ -320,13 +315,17 @@ if (cluster.isMaster) {
 		var serverContainer = http.createServer(server);
 		serverContainer.on('error', err => {
 			if (err.code === 'EADDRINUSE') {
-				console.log('Development server is already started at port ' + tester_port);
+				console.log('Development server is already started');
 			} else {
 				throw err;
 			}
 		});
 
-		serverContainer.listen(tester_port);
+		serverContainer.listen(3003);
+		serverContainer.listen(3004);
+		serverContainer.listen(3005);
+		serverContainer.listen(3006);
+		serverContainer.listen(3007);
 
 		server.setMaxListeners(0);
 		serverContainer.setMaxListeners(0);
