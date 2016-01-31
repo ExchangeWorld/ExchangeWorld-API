@@ -243,6 +243,10 @@ if (cluster.isMaster) {
 			req.urlObj.host = 'localhost:3003';
 		}
 
+		if (env.NODE_ENV === 'development') {
+			req.urlObj.host = 'localhost:' + tester_port;
+		}
+
 		callback(null, req, res);
 	};
 
