@@ -65,7 +65,10 @@ if (cluster.isMaster) {
 			req.urlObj.query.host_goods_gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/queue/of/goods';
 		}],
-		[/\/api\/goods\/([0-9]+)\/star\/?$/, (regex, req) => '/api/star'],
+		[/\/api\/goods\/([0-9]+)\/star\/?$/, (regex, req) => {
+			req.urlObj.query.goods_gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/star/to';
+		}],
 
 		[/\/api\/queue\/goods\/([0-9]+)\/?$/, (regex, req) => {
 			req.urlObj.query.queuer_goods_gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
@@ -75,8 +78,6 @@ if (cluster.isMaster) {
 			req.urlObj.query.queuer_user_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/queue/by/person';
 		}],
-
-		[/\/api\/star\/user\/([0-9]+)/, (regex, req) => '/api/star'],
 
 		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => '/api/user'],
 		[/\/api\/user\/([0-9]+)\/comment\/?$/, (regex, req) => {
@@ -109,7 +110,10 @@ if (cluster.isMaster) {
 			req.urlObj.query.host_user_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/queue/of/person';
 		}],
-		[/\/api\/user\/([0-9]+)\/star\/?$/, (regex, req) => '/api/star']
+		[/\/api\/user\/([0-9]+)\/star\/?$/, (regex, req) => {
+			req.urlObj.query.starring_user_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/star/by';
+		}]
 	];
 
 	restfulMappingRule.POST = [
@@ -128,7 +132,9 @@ if (cluster.isMaster) {
 		[/\/api\/queue\/?$/, (regex, req) => {
 			req.urlObj.pathname = '/api/queue/post';
 		}],
-		[/\/api\/star\/?$/, (regex, req) => '/api/star'],
+		[/\/api\/star\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/star/post';
+		}],
 		[/\/api\/user\/?$/, (regex, req) => '/api/user']
 	];
 
@@ -153,7 +159,6 @@ if (cluster.isMaster) {
 			req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/goods/rate';
 		}],
-		[/\/api\/star\/([0-9]+)\/?$/, (regex, req) => '/api/star'],
 		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => '/api/user']
 	];
 
@@ -180,8 +185,12 @@ if (cluster.isMaster) {
 			req.urlObj.query.host_goods_gid = parseInt(tmp[2], 10);
 			req.urlObj.pathname = '/api/queue/delete';
 		}],
-		[/\/api\/star\/([0-9]+)\/?$/, (regex, req) => '/api/star'],
-		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => '/api/user']
+		[/\/api\/star\/([0-9]+)\/to\/([0-9]+)\/?$/, (regex, req) => {
+			var tmp = regex.exec(req.urlObj.pathname);
+			req.urlObj.query.starring_user_uid = parseInt(tmp[1], 10);
+			req.urlObj.query.goods_gid = parseInt(tmp[2], 10);
+			req.urlObj.pathname = '/api/star/delete';
+		}]
 	];
 
 	var resfulMapping = (req, res, callback) => {
