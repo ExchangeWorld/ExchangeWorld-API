@@ -53,6 +53,9 @@ if (cluster.isMaster) {
 			req.urlObj.pathname = '/api/follow/followers/of';
 		}],
 
+		[/\/api\/goods\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/goods/search';
+		}],
 		[/\/api\/goods\/([0-9]+)\/?$/, (regex, req) => {
 			req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/goods';
@@ -179,8 +182,9 @@ if (cluster.isMaster) {
 			req.urlObj.query.eid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/exchange/drop';
 		}],
-		[/\/api\/follow\/user\/([0-9]+)\/?$/, (regex, req) => {
-			req.urlObj.query.followed_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+		[/\/api\/follow\/([0-9]+)\/to\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.follower_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.query.followed_uid = parseInt(regex.exec(req.urlObj.pathname)[2], 10);
 			req.urlObj.pathname = '/api/follow/delete';
 		}],
 		[/\/api\/goods\/([0-9]+)\/?$/, (regex, req) => {
