@@ -20,6 +20,7 @@ if (cluster.isMaster) {
 	var http = require('http');
 	var httpProxy = require('http-proxy');
 	var async = require('async');
+	var env = require(path.resolve(__dirname, './libs/env'));
 
 	var proxy = httpProxy.createProxyServer({
 		ws: true
@@ -237,63 +238,65 @@ if (cluster.isMaster) {
 	proxyBalancer.listen(3002);
 
 	// EXPRESS TEST
-	var express = require('express');
+	if (env.NODE_ENV === 'development') {
+		var express = require('express');
 
-	var bodyParser = require('body-parser');
-	var compression = require('compression');
-	var helmet = require('helmet');
-	var morgan = require('morgan');
-	var server = express();
-	// Protect server from some well-known web vulnerabilities
-	server.use(helmet());
+		var bodyParser = require('body-parser');
+		var compression = require('compression');
+		var helmet = require('helmet');
+		var morgan = require('morgan');
+		var server = express();
+		// Protect server from some well-known web vulnerabilities
+		server.use(helmet());
 
-	// Compress req before all middlewares
-	server.use(compression());
+		// Compress req before all middlewares
+		server.use(compression());
 
-	// Log all requests to the console
-	server.use(morgan('dev'));
+		// Log all requests to the console
+		server.use(morgan('dev'));
 
-	// Setting for bodyparser
-	var bodyParserSetting = {
-		limit: '64mb',
-		extended: true
-	};
+		// Setting for bodyparser
+		var bodyParserSetting = {
+			limit: '64mb',
+			extended: true
+		};
 
-	// For parsing application/json
-	server.post('*', bodyParser.json(bodyParserSetting));
-	server.put('*', bodyParser.json(bodyParserSetting));
-	server.options('*', bodyParser.json(bodyParserSetting));
+		// For parsing application/json
+		server.post('*', bodyParser.json(bodyParserSetting));
+		server.put('*', bodyParser.json(bodyParserSetting));
+		server.options('*', bodyParser.json(bodyParserSetting));
 
-	// For parsing application/x-www-form-urlencoded
-	server.post('*', bodyParser.urlencoded(bodyParserSetting));
-	server.put('*', bodyParser.urlencoded(bodyParserSetting));
-	server.options('*', bodyParser.urlencoded(bodyParserSetting));
+		// For parsing application/x-www-form-urlencoded
+		server.post('*', bodyParser.urlencoded(bodyParserSetting));
+		server.put('*', bodyParser.urlencoded(bodyParserSetting));
+		server.options('*', bodyParser.urlencoded(bodyParserSetting));
 
-	server.all('*', (req, res, next) => {
-		res.header('Access-Control-Allow-Origin', '*');
-		res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-		res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-		next();
-	});
-
-	server.all('*', (req, res) => {
-		res.json({
-			query: req.query,
-			body: req.body
+		server.all('*', (req, res, next) => {
+			res.header('Access-Control-Allow-Origin', '*');
+			res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+			res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+			next();
 		});
-	});
 
-	var serverContainer = http.createServer(server);
-	serverContainer.on('error', err => {
-		if (err.code === 'EADDRINUSE') {
-			console.log('Development server is already started at port ' + 3003);
-		} else {
-			throw err;
-		}
-	});
+		server.all('*', (req, res) => {
+			res.json({
+				query: req.query,
+				body: req.body
+			});
+		});
 
-	serverContainer.listen(3003);
+		var serverContainer = http.createServer(server);
+		serverContainer.on('error', err => {
+			if (err.code === 'EADDRINUSE') {
+				console.log('Development server is already started at port ' + 3003);
+			} else {
+				throw err;
+			}
+		});
 
-	server.setMaxListeners(0);
-	serverContainer.setMaxListeners(0);
+		serverContainer.listen(3003);
+
+		server.setMaxListeners(0);
+		serverContainer.setMaxListeners(0);
+	}
 }
