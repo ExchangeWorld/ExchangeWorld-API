@@ -79,7 +79,10 @@ if (cluster.isMaster) {
 			req.urlObj.pathname = '/api/queue/by/person';
 		}],
 
-		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => '/api/user'],
+		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/user';
+		}],
 		[/\/api\/user\/([0-9]+)\/comment\/?$/, (regex, req) => {
 			req.urlObj.query.commenter_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/comment/of/user';
@@ -135,7 +138,9 @@ if (cluster.isMaster) {
 		[/\/api\/star\/?$/, (regex, req) => {
 			req.urlObj.pathname = '/api/star/post';
 		}],
-		[/\/api\/user\/?$/, (regex, req) => '/api/user']
+		[/\/api\/user\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/authenticate/register';
+		}]
 	];
 
 	restfulMappingRule.PUT = [
@@ -159,7 +164,10 @@ if (cluster.isMaster) {
 			req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 			req.urlObj.pathname = '/api/goods/rate';
 		}],
-		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => '/api/user']
+		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/user/edit';
+		}]
 	];
 
 	restfulMappingRule.DELETE = [
