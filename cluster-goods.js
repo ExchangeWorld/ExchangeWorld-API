@@ -1,4 +1,5 @@
 'use strict';
+const cluster_port = 3004;
 
 var cluster = require('cluster');
 var cpus = require('os').cpus().length;
@@ -34,18 +35,7 @@ if (cluster.isMaster) {
 
 	var routers = {
 		authenticate: require(path.resolve(__dirname, './routers/authenticate')),
-		search: require(path.resolve(__dirname, './routers/goods.search')),
-		goods: require(path.resolve(__dirname, './routers/goods')),
-		upload: require(path.resolve(__dirname, './routers/upload')),
-		follow: require(path.resolve(__dirname, './routers/follow')),
-		user: require(path.resolve(__dirname, './routers/user')),
-		comment: require(path.resolve(__dirname, './routers/comment')),
-		star: require(path.resolve(__dirname, './routers/star')),
-		queue: require(path.resolve(__dirname, './routers/queue')),
-		exchange: require(path.resolve(__dirname, './routers/exchange')),
-		notification: require(path.resolve(__dirname, './routers/notification')),
-		message: require(path.resolve(__dirname, './routers/message')),
-		chatroom: require(path.resolve(__dirname, './routers/chatroom'))
+		goods: require(path.resolve(__dirname, './routers/goods'))
 	};
 
 	sequelize_sync
@@ -95,24 +85,7 @@ if (cluster.isMaster) {
 				next();
 			});
 
-			server.use('/api/goods/search', routers.search);
 			server.use('/api/goods', routers.goods);
-
-			server.use('/api/upload', routers.upload);
-
-			server.use('/api/follow', routers.follow);
-			server.use('/api/user', routers.user);
-
-			server.use('/api/comment', routers.comment);
-			server.use('/api/star', routers.star);
-			server.use('/api/queue', routers.queue);
-
-			server.use('/api/exchange', routers.exchange);
-			server.use('/api/notification', routers.notification);
-			server.use('/api/message', routers.message);
-			server.use('/api/chatroom', routers.chatroom);
-
-			server.use('/api/authenticate', routers.authenticate.router);
 
 			// catch 404 and forward to error handler
 			server.use((req, res, next) => {
@@ -139,13 +112,13 @@ if (cluster.isMaster) {
 			serverContainer = http.createServer(server);
 			serverContainer.on('error', err => {
 				if (err.code === 'EADDRINUSE') {
-					console.log('Development server is already started at port ' + 3002);
+					console.log('Development server is already started at port ' + cluster_port);
 				} else {
 					throw err;
 				}
 			});
 
-			serverContainer.listen(3002);
+			serverContainer.listen(cluster_port);
 
 			server.setMaxListeners(0);
 			serverContainer.setMaxListeners(0);

@@ -219,6 +219,10 @@ if (cluster.isMaster) {
 		callback(null, req, res);
 	};
 
+	var routeCluster = (req, res, callback) => {
+
+	};
+
 	var proxyBalancer = http.createServer((req, res) => {
 		async.waterfall([
 			async.apply(urlParsing, req, res),
