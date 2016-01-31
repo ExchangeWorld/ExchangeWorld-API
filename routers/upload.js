@@ -42,6 +42,14 @@ router.post('/image', function (req, res, next) {
 	 * imgFormat = png
 	 */
 
+	// REQ EXWD CHECK
+	if (req.exwd.anonymous) {
+		res.status(403).json({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
 	// Get file size
 	var imgSize = req.body.filesize;
 
