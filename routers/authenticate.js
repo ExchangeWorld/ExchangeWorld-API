@@ -49,7 +49,7 @@ router.post('/register', (req, res) => {
 	var _fb = (_tmpfb === 'true' || _tmpfb === true);
 	var _id = req.body.identity || '';
 	var _password = req.body.password || '';
-	var _name = req.body.name;
+	var _name = req.body.name || '';
 	var _email = req.body.email || '';
 	var _photo_path = req.body.photo_path || '';
 
@@ -72,6 +72,15 @@ router.post('/register', (req, res) => {
 	if (_id === '') {
 		res.status(400).json({
 			error: 'ID must be specified'
+		});
+
+		return;
+	}
+
+	// Check if the _id is not valid
+	if (_name === '') {
+		res.status(400).json({
+			error: 'Name must be specified'
 		});
 
 		return;
