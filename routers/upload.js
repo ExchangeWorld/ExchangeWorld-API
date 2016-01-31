@@ -98,7 +98,7 @@ router.post('/image', function (req, res, next) {
 		.progressive()
 		.toFile(filePath, (err, info) => {
 			if (err) {
-				res.send({
+				res.status(500).json({
 					error: err
 				});
 			} else {
