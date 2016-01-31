@@ -213,6 +213,87 @@ if (cluster.isMaster) {
 		}]
 	];
 
+	restfulMappingRule.OPTIONS = [
+		[/\/api\/comment\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/comment/post';
+		}],
+		[/\/api\/exchange\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/exchange/create';
+		}],
+		[/\/api\/follow\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/follow/post';
+		}],
+		[/\/api\/goods\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/goods/post';
+		}],
+		[/\/api\/queue\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/queue/post';
+		}],
+		[/\/api\/star\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/star/post';
+		}],
+		[/\/api\/user\/?$/, (regex, req) => {
+			req.urlObj.pathname = '/api/authenticate/register';
+		}],
+		[/\/api\/comment\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/comment/edit';
+		}],
+		[/\/api\/exchange\/([0-9]+)\/drop\/?$/, (regex, req) => {
+			req.urlObj.query.eid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/exchange/drop';
+		}],
+		[/\/api\/exchange\/([0-9]+)\/agree\/?$/, (regex, req) => {
+			req.urlObj.query.eid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/exchange/agree';
+		}],
+		[/\/api\/goods\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/goods/edit';
+		}],
+		[/\/api\/goods\/([0-9]+)\/rate\/?$/, (regex, req) => {
+			req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/goods/rate';
+		}],
+		[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/user/edit';
+		}],
+		[/\/api\/user\/([0-9]+)\/photo\/?$/, (regex, req) => {
+			req.urlObj.query.uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/user/photo';
+		}],
+		[/\/api\/comment\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/comment/delete';
+		}],
+		[/\/api\/exchange\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.eid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/exchange/drop';
+		}],
+		[/\/api\/follow\/([0-9]+)\/to\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.follower_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.query.followed_uid = parseInt(regex.exec(req.urlObj.pathname)[2], 10);
+			req.urlObj.pathname = '/api/follow/delete';
+		}],
+		[/\/api\/goods\/([0-9]+)\/?$/, (regex, req) => {
+			req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+			req.urlObj.pathname = '/api/goods/delete';
+		}],
+		[/\/api\/queue\/([0-9]+)\/to\/([0-9]+)\/?$/, (regex, req) => {
+			var tmp = regex.exec(req.urlObj.pathname);
+			req.urlObj.query.queuer_goods_gid = parseInt(tmp[1], 10);
+			req.urlObj.query.host_goods_gid = parseInt(tmp[2], 10);
+			req.urlObj.pathname = '/api/queue/delete';
+		}],
+		[/\/api\/star\/([0-9]+)\/to\/([0-9]+)\/?$/, (regex, req) => {
+			var tmp = regex.exec(req.urlObj.pathname);
+			req.urlObj.query.starring_user_uid = parseInt(tmp[1], 10);
+			req.urlObj.query.goods_gid = parseInt(tmp[2], 10);
+			req.urlObj.pathname = '/api/star/delete';
+		}]
+	];
+
 	var resfulMapping = (req, res, callback) => {
 		var pathname = req.urlObj.pathname;
 		var patterns = restfulMappingRule[req.method];
