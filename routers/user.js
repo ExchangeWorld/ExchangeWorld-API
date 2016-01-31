@@ -132,6 +132,9 @@ router.put('/edit', (req, res) => {
 	// REQ EXWD CHECK
 	if (req.exwd.admin) {
 		_uid = parseInt(req.body._uid, 10);
+		if (!_uid) {
+			_uid = parseInt(req.query.uid, 10);
+		}
 	} else if (req.exwd.anonymous) {
 		res.status(403).json({
 			error: 'Permission denied'

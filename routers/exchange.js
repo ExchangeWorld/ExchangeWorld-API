@@ -410,6 +410,9 @@ router.post('/create', (req, res) => {
  */
 router.put('/drop', (req, res) => {
 	var _eid = parseInt(req.body.eid, 10);
+	if (!_eid) {
+		_eid = parseInt(req.query.eid, 10);
+	}
 	var _owner_uid;
 
 	// REQ EXWD CHECK
@@ -481,6 +484,9 @@ router.put('/drop', (req, res) => {
  */
 router.put('/agree', (req, res) => {
 	var _eid = parseInt(req.body.eid, 10);
+	if (!_eid) {
+		_eid = parseInt(req.query.eid, 10);
+	}
 	var _owner_uid;
 
 	// REQ EXWD CHECK

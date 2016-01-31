@@ -194,6 +194,9 @@ router.post('/post', (req, res) => {
  */
 router.put('/edit', (req, res) => {
 	var _gid = parseInt(req.body.gid, 10);
+	if (!_gid) {
+		_gid = parseInt(req.query.gid, 10);
+	}
 	var _name = req.body.name;
 	var _category = req.body.category;
 	var _description = req.body.description || '';
@@ -264,6 +267,9 @@ router.put('/edit', (req, res) => {
 router.put('/rate', (req, res) => {
 	var rater_uid;
 	var _gid = parseInt(req.body.gid, 10);
+	if (!_gid) {
+		_gid = parseInt(req.query.gid, 10);
+	}
 	var _rate = parseFloat(req.body.rate);
 
 	// REQ EXWD CHECK

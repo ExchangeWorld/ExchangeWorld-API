@@ -219,6 +219,9 @@ router.post('/post', (req, res) => {
  */
 router.put('/edit', (req, res) => {
 	var _cid = parseInt(req.body.cid, 10);
+	if (!_cid) {
+		_cid = parseInt(req.query.cid, 10);
+	}
 	var _commenter_uid;
 	var _content = req.body.content;
 
