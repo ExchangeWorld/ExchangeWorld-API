@@ -10,8 +10,9 @@ var express = require('express');
 var fs = require('fs');
 var router = express.Router();
 
-// Including tables for photoPath
-// var goods = require('../ORM/Goods');
+// Sharp lib
+var sharp = require('sharp');
+sharp.concurrency(2);
 
 // Hashcode generation function
 var getSHA256 = strToEncrypt => {
@@ -33,12 +34,19 @@ var getSHA256 = strToEncrypt => {
  * @param  {String} filetype
  * @return {URL} Image's src
  */
-router.post('/image', (req, res) => {
+router.post('/image', function (req, res, next) {
+
+	/*
+	 * POST body looks like:
+	 * imgData   = /9j/2wCEAAgGBgcGBQgHBwcJC...
+	 * imgFormat = png
+	 */
+
 	// Get file size
-	// var imgSize = req.body.filesize;
+	var imgSize = req.body.filesize;
 
 	// Get filename
-	// var imgName = req.body.filename;
+	var imgName = req.body.filename;
 
 	// Get base64 encoded imgData from request body
 	var imgData = req.body.base64;
@@ -58,21 +66,45 @@ router.post('/image', (req, res) => {
 
 	// The file path pointing to the image file
 	var filePath = '../ExchangeWorld/images_global/' + hashData + '.' + imgFormat.replace(/image\//, '');
+	var filePath500 = '../ExchangeWorld/images_global/' + hashData + '-500.' + imgFormat.replace(/image\//, '');
+	var filePath250 = '../ExchangeWorld/images_global/' + hashData + '-250.' + imgFormat.replace(/image\//, '');
+	// var filePath160 = '../ExchangeWorld/images_global/' + hashData + '-160.' + imgFormat.replace(/image\//, '');
 
 	// Write to file with the filePath
 	// And if there is another person who uploaded a same base64 image,
 	// The things are still going right because that means same image, why not treat them same?
 	// Finally, send the "static file path" back
-	fs.writeFile(filePath, dataBuffer, err => {
-		if (err) {
-			res.send({
-				error: err
-			});
-		} else {
-			// res.send('images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
-			res.send('http://exwd.csie.org/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
-		}
-	});
+	var pipeline = sharp(dataBuffer);
+
+	pipeline.clone()
+		.rotate()
+		.resize(500, null)
+		.withoutEnlargement()
+		.progressive()
+		.toFile(filePath500, null);
+
+	pipeline.clone()
+		.rotate()
+		.resize(250, null)
+		.withoutEnlargement()
+		.progressive()
+		.toFile(filePath250, null);
+
+	pipeline.clone()
+		.rotate()
+		.resize(1600, 1200)
+		.max()
+		.withoutEnlargement()
+		.progressive()
+		.toFile(filePath, (err, info) => {
+			if (err) {
+				res.send({
+					error: err
+				});
+			} else {
+				res.send('http://exwd.csie.org/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
+			}
+		});
 });
 
 module.exports = router;
