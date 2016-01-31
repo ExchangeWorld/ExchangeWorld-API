@@ -103,8 +103,6 @@ if (cluster.isMaster) {
 			server.use('/api/message', routers.message);
 			server.use('/api/chatroom', routers.chatroom);
 
-			server.use('/api/authenticate', routers.authenticate.router);
-
 			// catch 404 and forward to error handler
 			server.use((req, res, next) => {
 				var err = new Error('Not Found');
