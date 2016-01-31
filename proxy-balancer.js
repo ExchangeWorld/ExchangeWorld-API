@@ -57,6 +57,7 @@ if (cluster.isMaster) {
 		}],
 
 		[/\/api\/goods\/?$/, (regex, req) => {
+			if(req.urlObj.query.gid) return;
 			req.urlObj.pathname = '/api/goods/search';
 		}],
 		[/\/api\/goods\/([0-9]+)\/?$/, (regex, req) => {
