@@ -92,7 +92,17 @@ router.get('/', (req, res) => {
 			]
 		})
 		.then(result => {
-			res.status(200).json(result);
+			var _result = result.toJSON();
+
+			// If the requester is registerrd, ADD starred property
+			if (req.exwd.registered) {
+				_result = _result.map(_goods => {
+					_goods.starredByUser = _goods.star_goods.some(_star => _star.starring_user_uid === req.exwd.uid);
+					return _goods;
+				});
+			}
+
+			res.status(200).json(_result);
 		})
 		.catch(err => {
 			res.status(500).json({

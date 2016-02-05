@@ -33,6 +33,7 @@ if (cluster.isMaster) {
 	var serverContainer;
 
 	var routers = {
+		authenticate: require(path.resolve(__dirname, './routers/authenticate')),
 		search: require(path.resolve(__dirname, './routers/goods.search'))
 	};
 
@@ -55,6 +56,15 @@ if (cluster.isMaster) {
 				res.header('Access-Control-Allow-Origin', '*');
 				res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
 				res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+				next();
+			});
+
+			/* Token authentications:
+			 * If the path is not /api/authenticate, then it needs authentication
+			 * If fail, return {"authentication": "fail"}
+			 * If success, and then go next()
+			 */
+			server.all(/\/api\/(?!authenticate).+/, routers.authenticate.token, (req, res, next) => {
 				next();
 			});
 

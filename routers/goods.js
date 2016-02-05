@@ -50,20 +50,23 @@ router.get('/', (req, res) => {
 				attributes: ['uid', 'name', 'photo_path']
 			}, {
 				model: comments,
-				as: 'comments'
+				as: 'comments',
+				required: false
 			}, {
 				model: stars,
 				as: 'star_goods',
-				// include: [{
-				// 	model: users,
-				// 	as: 'starring_user',
-				// 	attributes: ['uid']
-				// }],
-				attributes: ['sid']
+				required: false
 			}]
 		})
 		.then(result => {
-			res.status(200).json(result);
+			var _result = result.toJSON();
+
+			// If the requester is registerrd
+			if (req.exwd.registered) {
+				_result.starredByUser = _result.star_goods.some(_star => _star.starring_user_uid === req.exwd.uid);
+			}
+
+			res.status(200).json(_result);
 		})
 		.catch(err => {
 			res.status(500).json({
@@ -98,19 +101,26 @@ router.get('/of', (req, res) => {
 			},
 			include: [{
 				model: comments,
-				as: 'comments'
+				as: 'comments',
+				required: false
 			}, {
 				model: stars,
 				as: 'star_goods',
-				include: [{
-					model: users,
-					as: 'starring_user',
-					attributes: ['uid', 'name', 'photo_path']
-				}]
+				required: false
 			}]
 		})
 		.then(result => {
-			res.status(200).json(result);
+			var _result = result.toJSON();
+
+			// If the requester is registerrd, ADD starred property
+			if (req.exwd.registered) {
+				_result = _result.map(_goods => {
+					_goods.starredByUser = _goods.star_goods.some(_star => _star.starring_user_uid === req.exwd.uid);
+					return _goods;
+				});
+			}
+
+			res.status(200).json(_result);
 		})
 		.catch(err => {
 			res.status(500).json({
