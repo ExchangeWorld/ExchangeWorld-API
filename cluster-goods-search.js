@@ -33,6 +33,7 @@ if (cluster.isMaster) {
 	var serverContainer;
 
 	var routers = {
+		authenticate: require(path.resolve(__dirname, './routers/authenticate')),
 		search: require(path.resolve(__dirname, './routers/goods.search'))
 	};
 
