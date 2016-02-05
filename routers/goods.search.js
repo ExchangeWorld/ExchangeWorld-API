@@ -91,6 +91,9 @@ router.get('/', (req, res) => {
 				['gid', 'DESC']
 			]
 		})
+		.map(goods => {
+			return goods.favorited = Boolean(goods.star_goods.length);
+		})
 		.then(result => {
 			res.status(200).json(result);
 		})
