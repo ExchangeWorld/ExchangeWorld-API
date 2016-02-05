@@ -35,6 +35,7 @@
   "dependencies": {
     "async": "*",
     "body-parser": "*",
+    "bufferutil": "*",
     "compression": "*",
     "cookie-parser": "*",
     "express": "*",
@@ -63,7 +64,9 @@
     "sequelize": "*",
     "serve-favicon": "*",
     "sharp": "*",
+    "utf-8-validate": "*",
     "validator": "*",
+    "ws": "*",
     "zmq": "*"
   },
   "devDependencies": {
