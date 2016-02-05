@@ -248,10 +248,15 @@ var token_function = (req, res, next) => {
 					error: err
 				});
 			} else if (result === null) {
-				res.status(401).json({
-					authentication: 'fail',
-					token: null
-				});
+				// EXWD middleware >w<
+				req.exwd = {
+					admin: false,
+					anonymous: true,
+					uid: -1,
+					registered: false
+				};
+
+				next();
 			} else {
 				redis.pipeline().set(_token, result).expire(_token, 1200).exec((err, res) => {
 					if (err) {
