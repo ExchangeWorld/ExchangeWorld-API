@@ -280,6 +280,19 @@ var token_function = (req, res, next) => {
 	}
 };
 router.get('/', token_function);
+router.get('/check', token_function, (req, res) => {
+	if (req.exwd.registered) {
+		res.status(200).json({
+			status: 'alive',
+			token: req.query.token
+		});
+	} else {
+		res.status(410).json({
+			status: 'dead',
+			token: null
+		});
+	}
+});
 
 module.exports = {
 	router: router,
