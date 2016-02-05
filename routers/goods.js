@@ -63,6 +63,7 @@ router.get('/', (req, res) => {
 			}]
 		})
 		.then(result => {
+			result.favorited = Boolean(result.star_goods.length);
 			res.status(200).json(result);
 		})
 		.catch(err => {
