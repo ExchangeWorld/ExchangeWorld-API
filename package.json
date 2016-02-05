@@ -65,5 +65,8 @@
     "sharp": "*",
     "validator": "*",
     "zmq": "*"
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "*"
   }
 }
