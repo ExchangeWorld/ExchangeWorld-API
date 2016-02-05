@@ -63,6 +63,7 @@
     "sequelize": "*",
     "serve-favicon": "*",
     "sharp": "*",
-    "validator": "*"
+    "validator": "*",
+    "zmq": "*"
   }
 }
