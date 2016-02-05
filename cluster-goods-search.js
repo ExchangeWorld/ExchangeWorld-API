@@ -58,6 +58,15 @@ if (cluster.isMaster) {
 				next();
 			});
 
+			/* Token authentications:
+			 * If the path is not /api/authenticate, then it needs authentication
+			 * If fail, return {"authentication": "fail"}
+			 * If success, and then go next()
+			 */
+			server.all(/\/api\/(?!authenticate).+/, routers.authenticate.token, (req, res, next) => {
+				next();
+			});
+
 			server.use('/api/goods/search', routers.search);
 
 			// catch 404 and forward to error handler
