@@ -6,7 +6,7 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Users schema
- * @param  {Sequelize.INTEGER.UNSIGNED} uid User's ID
+ * @param  {Sequelize.BIGINT} uid User's ID
  * @param  {Sequelize.STRING} identity The user's identity
  * @param  {Sequelize.STRING} name The user's name
  * @param  {Sequelize.STRING} email The user's email
@@ -16,7 +16,7 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
  */
 var Users = sequelize.define('users', {
 	uid: {
-		type: Sequelize.INTEGER.UNSIGNED,
+		type: Sequelize.BIGINT,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,

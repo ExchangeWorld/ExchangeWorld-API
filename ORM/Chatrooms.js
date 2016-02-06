@@ -6,12 +6,12 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Chatrooms schema
- * @param  {Sequelize.INTEGER.UNSIGNED} cid Chatroom's ID
+ * @param  {Sequelize.BIGINT} cid Chatroom's ID
  * @param  {Sequelize.TEXT} members The members chatroom contains (in json)
  */
 var Chatrooms = sequelize.define('chatrooms', {
 	cid: {
-		type: Sequelize.INTEGER.UNSIGNED,
+		type: Sequelize.BIGINT,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,

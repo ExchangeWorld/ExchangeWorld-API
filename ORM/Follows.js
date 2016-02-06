@@ -7,13 +7,13 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 /**
  * Define Follows schema
  * follower -[follow]-> followed
- * @param  {Sequelize.INTEGER.UNSIGNED} fid Follows' ID
- * @param  {Sequelize.INTEGER.UNSIGNED} follower_uid Follower's ID
- * @param  {Sequelize.INTEGER.UNSIGNED} followed_uid Followed's uid
+ * @param  {Sequelize.BIGINT} fid Follows' ID
+ * @param  {Sequelize.BIGINT} follower_uid Follower's ID
+ * @param  {Sequelize.BIGINT} followed_uid Followed's uid
  */
 var Follows = sequelize.define('follows', {
 	fid: {
-		type: Sequelize.INTEGER.UNSIGNED,
+		type: Sequelize.BIGINT,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,

@@ -6,13 +6,13 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Stars schema
- * @param  {Sequelize.INTEGER.UNSIGNED} sid Star's ID
- * @param  {Sequelize.INTEGER.UNSIGNED} goods_gid The goods that is starred
- * @param  {Sequelize.INTEGER.UNSIGNED} starring_user_uid The user who star the goods
+ * @param  {Sequelize.BIGINT} sid Star's ID
+ * @param  {Sequelize.BIGINT} goods_gid The goods that is starred
+ * @param  {Sequelize.BIGINT} starring_user_uid The user who star the goods
  */
 var Stars = sequelize.define('stars', {
 	sid: {
-		type: Sequelize.INTEGER.UNSIGNED,
+		type: Sequelize.BIGINT,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,

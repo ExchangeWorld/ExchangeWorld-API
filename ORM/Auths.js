@@ -6,14 +6,14 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Auths schema
- * @param  {Sequelize.INTEGER.UNSIGNED} aid Auth's ID
+ * @param  {Sequelize.BIGINT} aid Auth's ID
  * @param  {Sequelize.STRING} user_identity User's Identity
  * @param  {Sequelize.TEXT} salt Random generated salt
  * @param  {Sequelize.TEXT} answer Real password + salt = answer
  */
 var Auths = sequelize.define('auths', {
 	aid: {
-		type: Sequelize.INTEGER.UNSIGNED,
+		type: Sequelize.BIGINT,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,

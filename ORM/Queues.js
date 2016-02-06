@@ -6,13 +6,13 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Queues schema
- * @param  {Sequelize.INTEGER.UNSIGNED} qid Queue's ID
- * @param  {Sequelize.INTEGER.UNSIGNED} host_goods_gid The goods that is queued on
- * @param  {Sequelize.INTEGER.UNSIGNED} queuer_goods_gid The goods that is queueing
+ * @param  {Sequelize.BIGINT} qid Queue's ID
+ * @param  {Sequelize.BIGINT} host_goods_gid The goods that is queued on
+ * @param  {Sequelize.BIGINT} queuer_goods_gid The goods that is queueing
  */
 var Queues = sequelize.define('queues', {
 	qid: {
-		type: Sequelize.INTEGER.UNSIGNED,
+		type: Sequelize.BIGINT,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,

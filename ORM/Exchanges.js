@@ -6,17 +6,17 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Exchanges schema
- * @param  {Sequelize.INTEGER.UNSIGNED} eid Exchange's ID
- * @param  {Sequelize.INTEGER.UNSIGNED} goods_one_gid Smaller goods gid
- * @param  {Sequelize.INTEGER.UNSIGNED} goods_two_gid Larger goods gid
+ * @param  {Sequelize.BIGINT} eid Exchange's ID
+ * @param  {Sequelize.BIGINT} goods_one_gid Smaller goods gid
+ * @param  {Sequelize.BIGINT} goods_two_gid Larger goods gid
  * @param  {Sequelize.BOOLEAN} goods_one_agree Agreement of goods_one
  * @param  {Sequelize.BOOLEAN} goods_two_agree Agreement of goods_two
- * @param  {Sequelize.INTEGER.UNSIGNED} chatroom_cid The chatroom id for this exchange
+ * @param  {Sequelize.BIGINT} chatroom_cid The chatroom id for this exchange
  * @param  {Sequelize.STRING} status The status of this exchange: 'initiated', 'dropped', 'completed'
  */
 var Exchanges = sequelize.define('exchanges', {
 	eid: {
-		type: Sequelize.INTEGER.UNSIGNED,
+		type: Sequelize.BIGINT,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,
