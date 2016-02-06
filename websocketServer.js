@@ -3,7 +3,7 @@
 const websocket_port = 3080;
 
 var http = require('http');
-var websocket = require('websocket');
+var websocket = require('ws');
 
 var server = http.createServer((req, res) => {
 	res.end('this is exwd websocket server');
