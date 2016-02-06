@@ -347,9 +347,7 @@ router.post('/create', (req, res) => {
 									g2.save();
 
 									chatrooms
-										.create({
-											members: []
-										})
+										.create()
 										.then(the_chatroom => {
 											exchanges
 												.create({
