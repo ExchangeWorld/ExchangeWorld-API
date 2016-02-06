@@ -12,7 +12,7 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
  * @param  {Sequelize.STRING} email The user's email
  * @param  {Sequelize.TEXT} photo_path The user's photo's path
  * @param  {Sequelize.TEXT} introduction The user's introduction
- * @param  {Sequelize.TEXT} wishlist The user's wish list
+ * @param  {Sequelize.ARRAY(Sequelize.TEXT)} wishlist The user's wish list
  */
 var Users = sequelize.define('users', {
 	uid: {
@@ -44,7 +44,7 @@ var Users = sequelize.define('users', {
 		allowNull: true
 	},
 	wishlist: {
-		type: Sequelize.TEXT,
+		type: Sequelize.ARRAY(Sequelize.TEXT),
 		allowNull: true
 	}
 }, {
@@ -58,8 +58,8 @@ var Users = sequelize.define('users', {
 		method: 'BTREE'
 	}, {
 		fields: ['wishlist'],
-		using: 'spgist',
-		operator: 'text_ops'
+		using: 'gin',
+		operator: '_text_ops'
 	}]
 });
 
