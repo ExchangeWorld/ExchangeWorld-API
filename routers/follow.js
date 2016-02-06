@@ -42,7 +42,7 @@ router.get('/followers/of', (req, res) => {
 			},
 			include: [{
 				model: users,
-				as: 'followed',
+				as: 'follower',
 				attributes: ['uid', 'name', 'photo_path']
 			}],
 			order: [
@@ -85,7 +85,7 @@ router.get('/followed/by', (req, res) => {
 			},
 			include: [{
 				model: users,
-				as: 'follower',
+				as: 'followed',
 				attributes: ['uid', 'name', 'photo_path']
 			}],
 			order: [
