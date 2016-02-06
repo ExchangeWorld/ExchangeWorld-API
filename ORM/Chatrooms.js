@@ -36,7 +36,7 @@ var Chatrooms = sequelize.define('chatrooms', {
 	}, {
 		fields: ['members'],
 		using: 'gin',
-		operator: '_int8_ops'
+		operator: '_int4_ops'
 	}]
 });
 
