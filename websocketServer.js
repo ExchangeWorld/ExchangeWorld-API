@@ -3,30 +3,50 @@
 const websocket_port = 3080;
 
 var http = require('http');
+var cluster = require('cluster');
+var cpus = require('os').cpus().length;
+
 var websocket = require('ws');
 
-var server = http.createServer((req, res) => {
-	res.end('this is exwd websocket server');
-});
+cluster.setMaxListeners(0);
+process.setMaxListeners(0);
 
-var WebSocketServer = websocket.Server;
-var wss = new WebSocketServer({
-	server: server,
-	clientTracking: true
-});
+if (cluster.isMaster) {
+	for (var i = 0; i < cpus; i++) {
+		cluster.fork();
+	}
 
-var sockets = [];
-
-wss.on('connection', ws => {
-
-	ws.on('message', message => {
-		console.log(message.toString(), ws.upgradeReq.headers);
-		ws.send('hello dear');
+	cluster.on('exit', (worker, code, signal) => {
+		console.log('websocket-container worker %d died (%s). restarting...', worker.process.pid, signal || code);
+		cluster.fork();
+	});
+} else {
+	var webSocketServerContainer = http.createServer((req, res) => {
+		res.end('this is exwd websocket server');
 	});
 
-	ws.on('close', (code, msg) => {
-		console.log(code, msg.toString(), ws.upgradeReq.headers);
+	var webSocketServerClass = websocket.Server;
+	var webSocketServerInstance = new webSocketServerClass({
+		server: webSocketServerContainer,
+		clientTracking: true
 	});
-});
 
-server.listen(websocket_port);
+	var sockets = [];
+
+	webSocketServerInstance.on('connection', websocket => {
+
+		websocket.on('message', message => {
+			console.log(message.toString(), websocket.upgradeReq.headers);
+			websocket.send('hello dear');
+		});
+
+		websocket.on('close', (code, msg) => {
+			console.log(code, msg.toString(), websocket.upgradeReq.headers);
+		});
+	});
+
+	webSocketServerContainer.setMaxListeners(0);
+	webSocketServerInstance.setMaxListeners(0);
+
+	webSocketServerContainer.listen(websocket_port);
+}
