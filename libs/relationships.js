@@ -143,23 +143,12 @@ module.exports = () => {
 		as: 'sender',
 		foreignKey: 'sender_uid'
 	});
-	Messages.belongsTo(Users, {
-		as: 'receiver',
-		foreignKey: 'receiver_uid'
-	});
 	Users.hasMany(Messages, {
 		as: {
 			plural: 'messages_sender',
 			singular: 'messages_sender'
 		},
 		foreignKey: 'sender_uid'
-	});
-	Users.hasMany(Messages, {
-		as: {
-			plural: 'messages_receiver',
-			singular: 'messages_receiver'
-		},
-		foreignKey: 'receiver_uid'
 	});
 
 	// Notifications & Users
