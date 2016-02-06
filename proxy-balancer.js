@@ -49,7 +49,7 @@ if (cluster.isMaster) {
 	var resfulMapping = (req, res, callback) => {
 		var pathname = req.urlObj.pathname;
 		var patterns = restfulMappingRule[req.method];
-		var length = patterns.length;
+		var length = (patterns === undefined ? 0 : patterns.length);
 		for (var i = 0; i < length; i++) {
 			if (patterns[i][0].test(pathname)) {
 				patterns[i][1](patterns[i][0], req);
