@@ -26,7 +26,12 @@ if (cluster.isMaster) {
 
 	var restfulMappingRule = require(path.resolve(__dirname, './libs/restfulMappingRule'));
 
-	var proxy = httpProxy.createProxyServer({
+	var proxy = httpProxy.createProxyServer();
+	var proxyWebSocket = new httpProxy.createProxyServer({
+		target: {
+			host: 'localhost',
+			port: 8080
+		},
 		ws: true
 	});
 
@@ -79,7 +84,7 @@ if (cluster.isMaster) {
 		callback(null, req, res);
 	};
 
-	var proxyBalancer = http.createServer((req, res) => {
+	var proxyHttpBalancer = http.createServer((req, res) => {
 		async.waterfall([
 			async.apply(urlParsing, req, res),
 			resfulMapping,
@@ -94,9 +99,14 @@ if (cluster.isMaster) {
 	});
 
 	proxy.setMaxListeners(0);
-	proxyBalancer.setMaxListeners(0);
+	proxyWebSocket.setMaxListeners(0);
+	proxyHttpBalancer.setMaxListeners(0);
 
-	proxyBalancer.listen(cluster_port);
+	proxyHttpBalancer.on('upgrade', (req, socket, head) => {
+		proxyWebSocket.ws(req, socket, head);
+	});
+
+	proxyHttpBalancer.listen(cluster_port);
 
 	// EXPRESS TEST
 	if (env.NODE_ENV === 'development') {
