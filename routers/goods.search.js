@@ -92,7 +92,7 @@ router.get('/', (req, res) => {
 			]
 		})
 		.then(result => {
-			var _result = result.toJSON();
+			var _result = result.map(_goods => _goods.toJSON());
 
 			// If the requester is registerrd, ADD starred property
 			if (req.exwd.registered) {
