@@ -6,15 +6,15 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Messages schema
- * @param  {Sequelize.BIGINT} mid Message's ID
- * @param  {Sequelize.BIGINT} chatroom_cid The chatroom of this message
- * @param  {Sequelize.BIGINT} sender_uid Sender's uid
+ * @param  {Sequelize.INTEGER} mid Message's ID
+ * @param  {Sequelize.INTEGER} chatroom_cid The chatroom of this message
+ * @param  {Sequelize.INTEGER} sender_uid Sender's uid
  * @param  {Sequelize.TEXT} content The content of the message
  * @param  {Sequelize.BOOLEAN} unread If this message is not read
  */
 var Messages = sequelize.define('messages', {
 	mid: {
-		type: Sequelize.BIGINT,
+		type: Sequelize.INTEGER,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,

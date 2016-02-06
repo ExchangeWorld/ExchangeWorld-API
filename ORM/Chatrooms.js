@@ -6,20 +6,20 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Chatrooms schema
- * @param  {Sequelize.BIGINT} cid Chatroom's ID
- * @param  {Sequelize.ARRAY(Sequelize.BIGINT)} members The members (user_uid) in this chatroom
+ * @param  {Sequelize.INTEGER} cid Chatroom's ID
+ * @param  {Sequelize.ARRAY(Sequelize.INTEGER)} members The members (user_uid) in this chatroom
  * @param  {Sequelize.TEXT} last_message The last_message of this chatroom
  */
 var Chatrooms = sequelize.define('chatrooms', {
 	cid: {
-		type: Sequelize.BIGINT,
+		type: Sequelize.INTEGER,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,
 		primaryKey: true
 	},
 	members: {
-		type: Sequelize.ARRAY(Sequelize.BIGINT),
+		type: Sequelize.ARRAY(Sequelize.INTEGER),
 		defaultValue: [],
 		allowNull: false
 	},

@@ -6,8 +6,8 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Goods schema
- * @param  {Sequelize.BIGINT} gid The goods' ID
- * @param  {Sequelize.BIGINT} owner_uid The owner's uid
+ * @param  {Sequelize.INTEGER} gid The goods' ID
+ * @param  {Sequelize.INTEGER} owner_uid The owner's uid
  * @param  {Sequelize.TEXT} name The goods' name
  * @param  {Sequelize.TEXT} photo_path The goods' photo_paths (in json)
  * @param  {Sequelize.TEXT} category The category of the goods
@@ -20,7 +20,7 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
  */
 var Goods = sequelize.define('goods', {
 	gid: {
-		type: Sequelize.BIGINT,
+		type: Sequelize.INTEGER,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,

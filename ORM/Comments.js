@@ -6,14 +6,14 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
  * Define Comments schema
- * @param  {Sequelize.BIGINT} cid Comment's ID
+ * @param  {Sequelize.INTEGER} cid Comment's ID
  * @param  {Sequelize.TEXT} content The content of comment
- * @param  {Sequelize.BIGINT} goods_gid The goods commented
- * @param  {Sequelize.BIGINT} commenter_uid The user who commented
+ * @param  {Sequelize.INTEGER} goods_gid The goods commented
+ * @param  {Sequelize.INTEGER} commenter_uid The user who commented
  */
 var Comments = sequelize.define('comments', {
 	cid: {
-		type: Sequelize.BIGINT,
+		type: Sequelize.INTEGER,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,

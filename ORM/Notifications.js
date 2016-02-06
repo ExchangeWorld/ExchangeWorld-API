@@ -6,16 +6,16 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
 * Define Notifications schema
-* @param  {Sequelize.BIGINT} nid Notification's ID
-* @param  {Sequelize.BIGINT} sender_uid Sender's uid
-* @param  {Sequelize.BIGINT} receiver_uid Receiver's uid
+* @param  {Sequelize.INTEGER} nid Notification's ID
+* @param  {Sequelize.INTEGER} sender_uid Sender's uid
+* @param  {Sequelize.INTEGER} receiver_uid Receiver's uid
 * @param  {Sequelize.TEXT} trigger_url The URL of the notification trigger object
 * @param  {Sequelize.TEXT} content The content of the notification
 * @param  {Sequelize.BOOLEAN} unread If this notification is not read
  */
 var Notifications = sequelize.define('notifications', {
 	nid: {
-		type: Sequelize.BIGINT,
+		type: Sequelize.INTEGER,
 		allowNull: false,
 		unique: true,
 		autoIncrement: true,
