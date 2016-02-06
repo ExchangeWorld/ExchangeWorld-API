@@ -1,5 +1,6 @@
 'use strict';
 const cluster_port = 3002;
+const websocket_port = 3080;
 
 var cluster = require('cluster');
 var path = require('path');
@@ -30,7 +31,7 @@ if (cluster.isMaster) {
 	var proxyWebSocket = new httpProxy.createProxyServer({
 		target: {
 			host: 'localhost',
-			port: 8080
+			port: websocket_port
 		},
 		ws: true
 	});
