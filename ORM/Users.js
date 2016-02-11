@@ -13,6 +13,7 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
  * @param  {Sequelize.TEXT} photo_path The user's photo's path
  * @param  {Sequelize.TEXT} introduction The user's introduction
  * @param  {Sequelize.ARRAY(Sequelize.TEXT)} wishlist The user's wish list
+ * @param  {Sequelize.JSONB} extra_json extra information stored in jsonb
  */
 var Users = sequelize.define('users', {
 	uid: {
@@ -46,6 +47,11 @@ var Users = sequelize.define('users', {
 	wishlist: {
 		type: Sequelize.ARRAY(Sequelize.TEXT),
 		allowNull: true
+	},
+	extra_json: {
+		type: Sequelize.JSONB,
+		allowNull: false,
+		defaultValue: {}
 	}
 }, {
 	indexes: [{
@@ -60,6 +66,9 @@ var Users = sequelize.define('users', {
 		fields: ['wishlist'],
 		using: 'gin',
 		operator: '_text_ops'
+	}, {
+		fields: ['extra_json'],
+		using: 'gin'
 	}]
 });
 

@@ -17,6 +17,7 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
  * @param  {Sequelize.FLOAT} rate The rate of the goods
  * @param  {Sequelize.INTEGER} exchanged If the goods is exchanged: 0 means not exchanged yet, 1 means exchanged, 2 means exchanging
  * @param  {Sequelize.INTEGER} deleted If the goods is deleted: 0 means not deleted yet, 1 means deleted
+ * @param  {Sequelize.JSONB} extra_json extra information stored in jsonb
  */
 var Goods = sequelize.define('goods', {
 	gid: {
@@ -66,6 +67,11 @@ var Goods = sequelize.define('goods', {
 		type: Sequelize.INTEGER,
 		allowNull: false,
 		defaultValue: 0
+	},
+	extra_json: {
+		type: Sequelize.JSONB,
+		allowNull: false,
+		defaultValue: {}
 	}
 }, {
 	indexes: [{
@@ -98,6 +104,9 @@ var Goods = sequelize.define('goods', {
 	}, {
 		fields: ['owner_uid'],
 		method: 'BTREE'
+	}, {
+		fields: ['extra_json'],
+		using: 'gin'
 	}]
 });
 
