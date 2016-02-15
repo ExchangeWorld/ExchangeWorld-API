@@ -40,9 +40,7 @@ if (cluster.isMaster) {
 		star: require(path.resolve(__dirname, './routers/star')),
 		queue: require(path.resolve(__dirname, './routers/queue')),
 		exchange: require(path.resolve(__dirname, './routers/exchange')),
-		notification: require(path.resolve(__dirname, './routers/notification')),
-		message: require(path.resolve(__dirname, './routers/message')),
-		chatroom: require(path.resolve(__dirname, './routers/chatroom'))
+		notification: require(path.resolve(__dirname, './routers/notification'))
 	};
 
 	sequelize_sync
@@ -100,8 +98,6 @@ if (cluster.isMaster) {
 
 			server.use('/api/exchange', routers.exchange);
 			server.use('/api/notification', routers.notification);
-			server.use('/api/message', routers.message);
-			server.use('/api/chatroom', routers.chatroom);
 
 			// catch 404 and forward to error handler
 			server.use((req, res, next) => {
