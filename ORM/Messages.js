@@ -7,10 +7,9 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 /**
  * Define Messages schema
  * @param  {Sequelize.INTEGER} mid Message's ID
+ * @param  {Sequelize.TEXT} content The content of the message
  * @param  {Sequelize.INTEGER} chatroom_cid The chatroom of this message
  * @param  {Sequelize.INTEGER} sender_uid Sender's uid
- * @param  {Sequelize.TEXT} content The content of the message
- * @param  {Sequelize.BOOLEAN} unread If this message is not read
  */
 var Messages = sequelize.define('messages', {
 	mid: {
@@ -23,11 +22,6 @@ var Messages = sequelize.define('messages', {
 	content: {
 		type: Sequelize.TEXT,
 		allowNull: false
-	},
-	unread: {
-		type: Sequelize.BOOLEAN,
-		defaultValue: true,
-		allowNull: false
 	}
 }, {
 	indexes: [{
@@ -39,9 +33,6 @@ var Messages = sequelize.define('messages', {
 		method: 'BTREE'
 	}, {
 		fields: ['sender_uid'],
-		method: 'BTREE'
-	}, {
-		fields: ['unread'],
 		method: 'BTREE'
 	}]
 });
