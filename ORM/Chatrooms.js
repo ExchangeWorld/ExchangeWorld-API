@@ -23,6 +23,11 @@ var Chatrooms = sequelize.define('chatrooms', {
 		defaultValue: [],
 		allowNull: false
 	},
+	read_members: {
+		type: Sequelize.ARRAY(Sequelize.INTEGER),
+		defaultValue: [],
+		allowNull: false
+	},
 	last_message: {
 		type: Sequelize.TEXT,
 		defaultValue: '',
@@ -35,6 +40,10 @@ var Chatrooms = sequelize.define('chatrooms', {
 		method: 'BTREE'
 	}, {
 		fields: ['members'],
+		using: 'gin',
+		operator: '_int4_ops'
+	}, {
+		fields: ['read_members'],
 		using: 'gin',
 		operator: '_int4_ops'
 	}]

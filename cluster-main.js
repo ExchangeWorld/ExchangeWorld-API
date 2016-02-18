@@ -36,6 +36,7 @@ if (cluster.isMaster) {
 	var routers = {
 		authenticate: require(path.resolve(__dirname, './routers/authenticate')),
 		follow: require(path.resolve(__dirname, './routers/follow')),
+		chatroom: require(path.resolve(__dirname, './routers/chatroom')),
 		comment: require(path.resolve(__dirname, './routers/comment')),
 		star: require(path.resolve(__dirname, './routers/star')),
 		queue: require(path.resolve(__dirname, './routers/queue')),
@@ -91,7 +92,7 @@ if (cluster.isMaster) {
 			});
 
 			server.use('/api/follow', routers.follow);
-
+			server.use('/api/chatroom', routers.chatroom);
 			server.use('/api/comment', routers.comment);
 			server.use('/api/star', routers.star);
 			server.use('/api/queue', routers.queue);
