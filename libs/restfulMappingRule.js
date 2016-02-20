@@ -44,6 +44,10 @@ restfulMappingRule.GET = [
 		req.urlObj.query.uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 		req.urlObj.pathname = '/api/user';
 	}],
+	[/\/api\/user\/([0-9]+)\/chatroom\/?$/, (regex, req) => {
+		req.urlObj.query.user_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+		req.urlObj.pathname = '/api/chatroom/of/user';
+	}],
 	[/\/api\/user\/([0-9]+)\/comment\/?$/, (regex, req) => {
 		req.urlObj.query.commenter_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 		req.urlObj.pathname = '/api/comment/of/user';
@@ -81,6 +85,9 @@ restfulMappingRule.GET = [
 ];
 
 restfulMappingRule.POST = [
+	[/\/api\/chatroom\/?$/, (regex, req) => {
+		req.urlObj.pathname = '/api/chatroom/create';
+	}],
 	[/\/api\/comment\/?$/, (regex, req) => {
 		req.urlObj.pathname = '/api/comment/post';
 	}],
@@ -105,6 +112,14 @@ restfulMappingRule.POST = [
 ];
 
 restfulMappingRule.PUT = [
+	[/\/api\/chatroom\/([0-9]+)\/join\/?$/, (regex, req) => {
+		req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+		req.urlObj.pathname = '/api/chatroom/join';
+	}],
+	[/\/api\/chatroom\/([0-9]+)\/leave\/?$/, (regex, req) => {
+		req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+		req.urlObj.pathname = '/api/chatroom/leave';
+	}],
 	[/\/api\/comment\/([0-9]+)\/?$/, (regex, req) => {
 		req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 		req.urlObj.pathname = '/api/comment/edit';
@@ -136,6 +151,10 @@ restfulMappingRule.PUT = [
 ];
 
 restfulMappingRule.DELETE = [
+	[/\/api\/chatroom\/([0-9]+)\/?$/, (regex, req) => {
+		req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+		req.urlObj.pathname = '/api/chatroom/delete';
+	}],
 	[/\/api\/comment\/([0-9]+)\/?$/, (regex, req) => {
 		req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 		req.urlObj.pathname = '/api/comment/delete';

@@ -90,15 +90,18 @@ router.get('/of/user', (req, res) => {
 });
 
 /**
- * Join a chatroom
+ * Let a user join a chatroom
  *
  * @method PUT api/chatroom/join
  * @param  {Integer} cid The id of the room wanna join
- * @param  {Integer} user_uid The id of the user who will join the chatroom (Can be others! Like invitation)
+ * @param  {Integer} user_uid The id of the user who will join the chatroom (Can be others! Like invitation, but a user cannot invite itself to the chatroom)
  * @return {JSON} Modified chatroom object
  */
 router.put('/join', (req, res) => {
 	var _cid = parseInt(req.body.cid, 10);
+	if (!_cid) {
+		_cid = parseInt(req.query.cid, 10);
+	}
 	var _user_uid = parseInt(req.body.user_uid, 10);
 	var _requester_uid;
 
@@ -177,6 +180,9 @@ router.put('/join', (req, res) => {
  */
 router.put('/leave', (req, res) => {
 	var _cid = parseInt(req.body.cid, 10);
+	if (!_cid) {
+		_cid = parseInt(req.query.cid, 10);
+	}
 	var _user_uid = parseInt(req.body.user_uid, 10);
 	var _requester_uid;
 
