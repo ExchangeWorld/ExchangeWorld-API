@@ -90,10 +90,9 @@ var websocketAuthorize = (websocket, callbacks) => {
 						error: err
 					}));
 				} else {
-					websocket.send('{status:"good",message:"Let\'s websocket!"}');
+					// websocket.send('{status:"good",message:"Let\'s websocket!"}');
+					callbacks.forEach(cbf => cbf(websocket));
 				}
-
-				callbacks.forEach(cbf => cbf(websocket));
 			});
 		}
 	});
@@ -113,11 +112,49 @@ var websocketDelSession = websocket => {
 	var uid = websocket.exwd_uid;
 	var tmpIndex = indexOf(webSocketServerInstance_message.clients, websocket);
 
-	websocketClientsInIndex[uid] = websocketClientsInIndex[uid].filter(i => i !== tmpIndex);
+	if (uid in websocketClientsInIndex) {
+		websocketClientsInIndex[uid].splice(tmpIndex, 1);
+	}
 };
 
 var websocketClientPushMessage = (websocket, msg) => {
+	msg.sender_uid = websocket.exwd_uid;
 
+	messages
+		.create({
+			chatroom_cid: msg.chatroom_cid,
+			sender_uid: msg.sender_uid,
+			content: msg.content
+		})
+		.then(msg => {
+			chatrooms
+				.findOne({
+					where: {
+						cid: msg.chatroom_cid
+					}
+				})
+				.then(result => {
+					result.last_message = msg.content;
+					result.read_members = [];
+					return result.save();
+				})
+				.then(result => {
+					result.members
+						.filter(member => member !== msg.sender_uid)
+						.map(member => websocketClientsInIndex[member])
+						.forEach(user => {
+							user.forEach(client => webSocketServerInstance_message.clients[client].send(JSON.stringify(msg)));
+						});
+				})
+				.catch(err => {
+					websocket.send(JSON.stringify(err));
+				});
+		})
+		.catch(err => {
+			websocket.send(JSON.stringify(err));
+		});
+
+	console.log(websocketClientsInIndex);
 };
 
 var websocketOnMessage = websocket => {

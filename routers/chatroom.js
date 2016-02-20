@@ -102,7 +102,7 @@ router.post('/create', (req, res) => {
 
 	if (_members_json.length < 2) {
 		res.status(400).json({
-			error: 'members_json is wrong'
+			error: 'members_json is too short'
 		});
 		return;
 	}
