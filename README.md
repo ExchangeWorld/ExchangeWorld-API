@@ -64,9 +64,6 @@ RESTFUL URL:
 --------------------
 
 - GET
-  - message:
-    1. 這個聊天室的聊天訊息
-      - ```/api/chatroom/聊天室CID/message```
   - chatroom:
     1. 這個使用者的聊天室資訊
 	  - ```/api/user/使用者UID/chatroom```
@@ -102,6 +99,11 @@ RESTFUL URL:
       - ```/api/user/使用者UID/goods```
     4. 這個使用者的這個物品 (其實等於 /api/goods/物品GID )
       - ```/api/user/使用者UID/goods/物品GID```
+
+  - message:
+    1. 這個聊天室的聊天訊息
+ 	 - ```/api/chatroom/聊天室CID/message```
+
 
   - queue:
     1. 去排 這個物品 的 排們
