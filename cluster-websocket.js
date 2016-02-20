@@ -5,7 +5,7 @@ const websocket_port = 3080;
 var path = require('path');
 
 var sequelize_sync = require(path.resolve(__dirname, './libs/sync'));
-var websocketHandlers = require(path.resolve(__dirname, './websocket_handlers/main'));
+var websocketHandlers = require(path.resolve(__dirname, './websocket_handlers/foreman'));
 
 sequelize_sync
 	.then(() => {
