@@ -12,6 +12,7 @@ RESTFUL URL:
 簡易總結
 --------------------
 - GET
+  - ```/api/user/使用者UID/chatroom```
   - ```/api/goods/物品GID/comment```
   - ```/api/user/使用者UID/comment```
   - ```/api/exchange/交換EID```
@@ -31,6 +32,7 @@ RESTFUL URL:
   - ```/api/user/使用者UID/star```
   - ```/api/user/使用者UID```
 - POST
+  - ```/api/chatroom```
   - ```/api/comment```
   - ```/api/exchange```
   - ```/api/follow```
@@ -39,6 +41,8 @@ RESTFUL URL:
   - ```/api/star```
   - ```/api/user```
 - PUT
+  - ```/api/chatroom/聊天室CID/join```
+  - ```/api/chatroom/聊天室CID/leave```
   - ```/api/comment/評論CID```
   - ```/api/exchange/交換EID/drop```
   - ```/api/exchange/交換EID/agree```
@@ -47,6 +51,7 @@ RESTFUL URL:
   - ```/api/user/使用者UID```
   - ```/api/user/使用者UID/photo```
 - DELETE
+ - ```/api/chatroom/聊天室CID```
  - ```/api/comment/評論CID```
  - ```/api/exchange/交換EID```
  - ```/api/follow/使用者GID/to/被追隨的使用者GID```
@@ -58,6 +63,11 @@ RESTFUL URL:
 --------------------
 
 - GET
+  - chatroom:
+    1. 這個使用者的聊天室資訊
+	  - ```/api/user/使用者UID/chatroom```
+
+
   - comment:
     1. 這個物品的評論們
       - ```/api/goods/物品GID/comment```
@@ -114,6 +124,7 @@ RESTFUL URL:
 > (但原本 body 裡面需要包括的東西 沒有變)
 
 
+  - ```/api/chatroom```
   - ```/api/comment```
   - ```/api/exchange```
   - ```/api/follow```
@@ -125,6 +136,12 @@ RESTFUL URL:
 
 - PUT (編輯)
 > (但原本 body 裡面需要包括的東西 沒有變)
+
+  - chatroom:
+    1. 拉人進來這個聊天室
+	  - ```/api/chatroom/聊天室CID/join```
+	2. 離開這個聊天室
+	  - ```/api/chatroom/聊天室CID/leave```
 
   - comment:
     1. 編輯這個評論
@@ -152,6 +169,7 @@ RESTFUL URL:
 - DELETE:
 > (部份物件 還沒有 純粹 以ID 操作的方法)
 
+  - ```/api/chatroom/聊天室CID```
   - ```/api/comment/評論CID```
   - ```/api/exchange/交換EID```
   - ```/api/follow/使用者GID/to/被追隨的使用者GID```
@@ -163,6 +181,24 @@ RESTFUL URL:
 
 以物件分
 --------------------
+
+###chatroom:
+- GET:
+  1. 這個使用者的聊天室資訊
+    - ```/api/user/使用者UID/chatroom```
+
+- POST:
+  - ```/api/chatroom```
+
+- PUT:
+  1. 拉人進來這個聊天室
+    - ```/api/chatroom/聊天室CID/join```
+  2. 離開這個聊天室
+    - ```/api/chatroom/聊天室CID/leave```
+
+- DELETE:
+  - ```/api/chatroom/聊天室CID```
+
 
 ###comment:
 - GET:
