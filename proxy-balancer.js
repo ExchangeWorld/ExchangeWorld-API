@@ -111,69 +111,69 @@ if (cluster.isMaster) {
 	proxyHttpBalancer.listen(cluster_port);
 
 	// EXPRESS TEST
-	if (env.NODE_ENV === 'development') {
-		var express = require('express');
-
-		var bodyParser = require('body-parser');
-		var compression = require('compression');
-		var helmet = require('helmet');
-		var morgan = require('morgan');
-		var server = express();
-		// Protect server from some well-known web vulnerabilities
-		server.use(helmet());
-
-		// Compress req before all middlewares
-		server.use(compression());
-
-		// Log all requests to the console
-		server.use(morgan('dev'));
-
-		// Setting for bodyparser
-		var bodyParserSetting = {
-			limit: '64mb',
-			extended: true
-		};
-
-		// For parsing application/json
-		server.post('*', bodyParser.json(bodyParserSetting));
-		server.put('*', bodyParser.json(bodyParserSetting));
-		server.options('*', bodyParser.json(bodyParserSetting));
-
-		// For parsing application/x-www-form-urlencoded
-		server.post('*', bodyParser.urlencoded(bodyParserSetting));
-		server.put('*', bodyParser.urlencoded(bodyParserSetting));
-		server.options('*', bodyParser.urlencoded(bodyParserSetting));
-
-		server.all('*', (req, res, next) => {
-			res.header('Access-Control-Allow-Origin', '*');
-			res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-			res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-			next();
-		});
-
-		server.all('*', (req, res) => {
-			res.json({
-				query: req.query,
-				body: req.body
-			});
-		});
-
-		var serverContainer = http.createServer(server);
-		serverContainer.on('error', err => {
-			if (err.code === 'EADDRINUSE') {
-				console.log('Development server is already started');
-			} else {
-				throw err;
-			}
-		});
-
-		serverContainer.listen(3003);
-		serverContainer.listen(3004);
-		serverContainer.listen(3005);
-		serverContainer.listen(3006);
-		serverContainer.listen(3007);
-
-		server.setMaxListeners(0);
-		serverContainer.setMaxListeners(0);
-	}
+	// if (env.NODE_ENV === 'development') {
+	// 	var express = require('express');
+	//
+	// 	var bodyParser = require('body-parser');
+	// 	var compression = require('compression');
+	// 	var helmet = require('helmet');
+	// 	var morgan = require('morgan');
+	// 	var server = express();
+	// 	// Protect server from some well-known web vulnerabilities
+	// 	server.use(helmet());
+	//
+	// 	// Compress req before all middlewares
+	// 	server.use(compression());
+	//
+	// 	// Log all requests to the console
+	// 	server.use(morgan('dev'));
+	//
+	// 	// Setting for bodyparser
+	// 	var bodyParserSetting = {
+	// 		limit: '64mb',
+	// 		extended: true
+	// 	};
+	//
+	// 	// For parsing application/json
+	// 	server.post('*', bodyParser.json(bodyParserSetting));
+	// 	server.put('*', bodyParser.json(bodyParserSetting));
+	// 	server.options('*', bodyParser.json(bodyParserSetting));
+	//
+	// 	// For parsing application/x-www-form-urlencoded
+	// 	server.post('*', bodyParser.urlencoded(bodyParserSetting));
+	// 	server.put('*', bodyParser.urlencoded(bodyParserSetting));
+	// 	server.options('*', bodyParser.urlencoded(bodyParserSetting));
+	//
+	// 	server.all('*', (req, res, next) => {
+	// 		res.header('Access-Control-Allow-Origin', '*');
+	// 		res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+	// 		res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	// 		next();
+	// 	});
+	//
+	// 	server.all('*', (req, res) => {
+	// 		res.json({
+	// 			query: req.query,
+	// 			body: req.body
+	// 		});
+	// 	});
+	//
+	// 	var serverContainer = http.createServer(server);
+	// 	serverContainer.on('error', err => {
+	// 		if (err.code === 'EADDRINUSE') {
+	// 			console.log('Development server is already started');
+	// 		} else {
+	// 			throw err;
+	// 		}
+	// 	});
+	//
+	// 	serverContainer.listen(3003);
+	// 	serverContainer.listen(3004);
+	// 	serverContainer.listen(3005);
+	// 	serverContainer.listen(3006);
+	// 	serverContainer.listen(3007);
+	//
+	// 	server.setMaxListeners(0);
+	// 	serverContainer.setMaxListeners(0);
+	// }
 }
