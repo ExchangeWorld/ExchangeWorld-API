@@ -23,7 +23,7 @@ var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
  * @param  {Integer} user_uid The uid who wants the meta (But session-based, so not required in normal mode)
  * @param  {Integer=0} offset Retrive from which number of chatrooms (Like database offset)
  * @param  {Integer=20} limit How many chatrooms to retrive (Like database limit)
- * @return {JSON} Chatrooms meta
+ * @return {Array} Chatrooms meta
  * @example
 <pre>
 [{
@@ -173,7 +173,7 @@ router.put('/join', (req, res) => {
  * @method PUT api/chatroom/leave
  * @param  {Integer} cid The id of the room wanna leave from
  * @param  {Integer} user_uid The id of the user who will leave the chatroom
- * @return {Integer} The number of handled chatroom(s) (Should be 1)
+ * @return {JSON} Modified chatroom object
  */
 router.put('/leave', (req, res) => {
 	var _cid = parseInt(req.body.cid, 10);
