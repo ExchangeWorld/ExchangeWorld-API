@@ -16,7 +16,6 @@
 */
 
 var path = require('path');
-// var querystring = require('querystring');
 var url = require('url');
 
 var redis = require(path.resolve(__dirname, '../libs/redis'));
@@ -24,6 +23,8 @@ var redis = require(path.resolve(__dirname, '../libs/redis'));
 var messages = require(path.resolve(__dirname, '../ORM/Messages'));
 var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
 
+// 取得 websocket 在 websocketServer.clients 中的位置，為了更快的速度所以必須快取為辭典
+var websocketClientsInIndex = {};
 var indexOf = (arr, item) => {
 	if (item === undefined || item === null) {
 		return -1;
@@ -41,16 +42,18 @@ var indexOf = (arr, item) => {
 	return answer;
 };
 
+// Message 專用的 WebSocket 處理中樞個體
 var webSocketServerInstance_message = require(path.resolve(__dirname, './foreman')).webSocketServerInstance_message;
 
-var websocketClientsInIndex = {};
-
+// WebSocket 在被成立的時候，做的初始化動作
 var websocketInitialize = websocket => {
 	websocket.exwd_authorized = false;
 	var tmpQuery = url.parse(websocket.upgradeReq.url, true).query;
 	websocket.exwd_token = tmpQuery.token;
 };
 
+// WebSocket 初始化過程中的最後一步，就是認證是否為合法使用者，並且知道是誰
+// 然後 callbacks 會在認證成功之後，依序執行
 var websocketAuthorize = (websocket, callbacks) => {
 	var _token = websocket.exwd_token;
 
@@ -98,6 +101,8 @@ var websocketAuthorize = (websocket, callbacks) => {
 	});
 };
 
+// 當 WebSocket 要被加入 sessions 的時候的操作
+// 使用者會對應一個 Array，然後 Array 會存著使用者的各個上線個體
 var websocketAddSession = websocket => {
 	var uid = websocket.exwd_uid;
 
@@ -108,6 +113,7 @@ var websocketAddSession = websocket => {
 	}
 };
 
+// 當 WebSocket 要被刪除時，要做的動作
 var websocketDelSession = websocket => {
 	var uid = websocket.exwd_uid;
 	var tmpIndex = indexOf(webSocketServerInstance_message.clients, websocket);
@@ -117,13 +123,12 @@ var websocketDelSession = websocket => {
 	}
 };
 
+// 當使用者推了一句訊息時
 var websocketClientPushMessage = (websocket, msg) => {
-	msg.sender_uid = websocket.exwd_uid;
-
 	messages
 		.create({
 			chatroom_cid: msg.chatroom_cid,
-			sender_uid: msg.sender_uid,
+			sender_uid: websocket.exwd_uid,
 			content: msg.content
 		})
 		.then(msg => {
@@ -142,8 +147,8 @@ var websocketClientPushMessage = (websocket, msg) => {
 					result.members
 						.filter(member => member !== msg.sender_uid)
 						.map(member => websocketClientsInIndex[member])
-						.forEach(user => {
-							user.forEach(client => webSocketServerInstance_message.clients[client].send(JSON.stringify(msg)));
+						.forEach(onlineClients => {
+							onlineClients.forEach(client => webSocketServerInstance_message.clients[client].send(JSON.stringify(msg)));
 						});
 				})
 				.catch(err => {
