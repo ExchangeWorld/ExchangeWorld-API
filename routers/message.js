@@ -6,217 +6,100 @@
 
 'use strict';
 
+var path = require('path');
+
 var express = require('express');
 var router = express.Router();
 
 // Including tables
-var messages = require('../ORM/Messages');
-var users = require('../ORM/Users');
+var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
+var messages = require(path.resolve(__dirname, '../ORM/Messages'));
 
 /**
- * Get messages by given receiver_uid and sender_uid
+ * Get messages in a chatroom
  *
- * @method GET api/message
- * @param  {Integer} receiver_uid
- * @param  {Integer} sender_uid It can be not provided, will ignore sender
- * @param  {Integer=0} from
- * @param  {Integer=10} number
- * @return {JSON} The messages including two users
+ * @method GET api/message/of/chatroom
+ * @param  {Integer} chatroom_cid
+ * @param  {Integer=0} offset
+ * @param  {Integer=20} limit
+ * @return {Array} The messages including two users
  */
-router.get('/', (req, res) => {
+router.get('/of/chatroom', (req, res) => {
+	var _chatroom_cid = parseInt(req.query.chatroom_cid, 10);
+	var _offset = parseInt(req.query.offset || 0, 10);
+	var _limit = parseInt(req.query.limit || 20, 10);
 
-	var _receiver_uid = parseInt(req.query.receiver_uid, 10);
-	var _sender_uid = parseInt(req.query.sender_uid, 10);
-	var _from = parseInt(req.query.from, 10);
-	var _number = parseInt(req.query.number, 10);
+	var _requester_uid;
 
-	_sender_uid = (_sender_uid == _sender_uid ? _sender_uid : null);
-	_from = (_from == _from ? _from : 0);
-	_number = (_number == _number ? _number : 10);
-
-	if (_sender_uid == null) {
-		messages
-			.findAll({
-				where: {
-					receiver_uid: _receiver_uid,
-					chatroom_cid: 0
-				},
-				order: [
-					['mid', 'DESC']
-				],
-				include: [{
-					model: users,
-					as: 'sender',
-					required: true
-				}, {
-					model: users,
-					as: 'receiver',
-					required: true
-				}],
-				// logging: true,
-				offset: _from,
-				limit: _number
-			})
-			.then(result => {
-				res.json(result);
-			})
-			.catch(err => {
-				res.send({
-					error: err
-				});
-			});
-	} else {
-		messages
-			.findAll({
-				where: {
-					receiver_uid: _receiver_uid,
-					sender_uid: _sender_uid,
-					chatroom_cid: 0
-				},
-				order: [
-					['mid', 'DESC']
-				],
-				include: [{
-					model: users,
-					as: 'sender',
-					attributes: ['name'],
-					required: true
-				}, {
-					model: users,
-					as: 'receiver',
-					attributes: ['name'],
-					required: true
-				}],
-				// logging: true,
-				offset: _from,
-				limit: _number
-			})
-			.then(result => {
-				res.json(result);
-			})
-			.catch(err => {
-				res.send({
-					error: err
-				});
-			});
+	if (!_chatroom_cid) {
+		res.status(400).json({
+			error: 'chatroom_cid is not given'
+		});
+		return;
 	}
-});
 
-/**
- * Get messages between two users
- *
- * @method GET api/message/between
- * @param  {Integer} user1_uid
- * @param  {Integer} user2_uid
- * @param  {Integer=0} from
- * @param  {Integer=10} number
- * @return {JSON} The messages including two users
- */
-router.get('/between', (req, res) => {
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		console.log('Nothing');
+	} else if (req.exwd.anonymous) {
+		res.status(403).json({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_requester_uid = req.exwd.uid;
+	} else {
+		res.status(403).json({
+			error: 'Permission denied'
+		});
+		return;
+	}
 
-	var _user1_uid = parseInt(req.query.user1_uid, 10);
-	var _user2_uid = parseInt(req.query.user2_uid, 10);
-	var _from = parseInt(req.query.from, 10);
-	var _number = parseInt(req.query.number, 10);
-
-	_from = (_from == _from ? _from : 0);
-	_number = (_number == _number ? _number : 10);
-
-	messages
-		.findAll({
-			where: {
-				$or: [{
-					receiver_uid: _user1_uid,
-					sender_uid: _user2_uid
-				}, {
-					receiver_uid: _user2_uid,
-					sender_uid: _user1_uid
-				}],
-				chatroom_cid: 0
-			},
+	var queryTmp = (req.exwd.admin ? {
+		where: {
+			cid: _chatroom_cid
+		},
+		include: [{
+			model: messages,
+			as: 'messages',
+			required: true,
+			offset: _offset,
+			limit: _limit,
 			order: [
 				['mid', 'DESC']
-			],
-			include: [{
-				model: users,
-				as: 'sender',
-				attributes: ['name'],
-				required: true
-			}, {
-				model: users,
-				as: 'receiver',
-				attributes: ['name'],
-				required: true
-			}],
-			offset: _from,
-			limit: _number
-		})
+			]
+		}],
+		attributes: ['cid', 'messages']
+	} : {
+		where: {
+			cid: _chatroom_cid,
+			members: {
+				$contains: [_requester_uid]
+			}
+		},
+		include: [{
+			model: messages,
+			as: 'messages',
+			required: true,
+			offset: _offset,
+			limit: _limit,
+			order: [
+				['mid', 'DESC']
+			]
+		}]
+	});
+
+	chatrooms
+		.findOne(queryTmp)
 		.then(result => {
-			res.json(result);
-		})
-		.catch(err => {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Post messages by given receiver and sender
- *
- * @method POST api/message/post
- * @param  {Integer} receiver_uid The receiver
- * @param  {Integer} sender_uid The sender
- * @param  {String} content The content
- * @return {JSON} New created message object
- */
-router.post('/post', (req, res) => {
-
-	var _receiver_uid = parseInt(req.body.receiver_uid, 10);
-	var _sender_uid = parseInt(req.body.sender_uid, 10);
-	var _content = req.body.content;
-
-	messages
-		.create({
-			receiver_uid: _receiver_uid,
-			sender_uid: _sender_uid,
-			content: _content,
-			chatroom_cid: 0
-		})
-		.then(result => {
-			res.json(result);
-		})
-		.catch(err => {
-			res.send({
-				error: err
-			});
-		});
-});
-
-/**
- * Read a message
- *
- * @method PUT api/message/read
- * @param  {Integer} mid The ID of message
- * @return {JSON} Updated message object
- */
-router.put('/read', (req, res) => {
-
-	var _mid = parseInt(req.body.mid, 10);
-
-	messages
-		.update({
-			unread: false
-		}, {
-			where: {
-				mid: _mid
+			if (result) {
+				res.status(200).json(result.messages);
+			} else {
+				res.status(200).json([]);
 			}
 		})
-		.then(result => {
-			res.json(result);
-		})
 		.catch(err => {
-			res.send({
+			res.status(500).json({
 				error: err
 			});
 		});
