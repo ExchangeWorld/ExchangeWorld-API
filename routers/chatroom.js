@@ -13,8 +13,6 @@ var router = express.Router();
 
 // Including tables
 var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
-// var messages = require(path.resolve(__dirname, '../ORM/Messages'));
-// var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 /**
  * Get a chatrooms meta of a user

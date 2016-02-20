@@ -12,6 +12,7 @@ RESTFUL URL:
 簡易總結
 --------------------
 - GET
+  - ```/api/chatroom/聊天室CID/message```
   - ```/api/user/使用者UID/chatroom```
   - ```/api/goods/物品GID/comment```
   - ```/api/user/使用者UID/comment```
@@ -98,6 +99,11 @@ RESTFUL URL:
       - ```/api/user/使用者UID/goods```
     4. 這個使用者的這個物品 (其實等於 /api/goods/物品GID )
       - ```/api/user/使用者UID/goods/物品GID```
+
+  - message:
+    1. 這個聊天室的聊天訊息
+ 	 - ```/api/chatroom/聊天室CID/message```
+
 
   - queue:
     1. 去排 這個物品 的 排們
@@ -277,6 +283,12 @@ RESTFUL URL:
 - DELETE:
   - ```/api/goods/物品GID```
 
+
+###message:
+- GET:
+  1. 這個聊天室的聊天訊息
+    - ```/api/chatroom/聊天室CID/message```
+
 ###queue:
 - GET:
   1. 去排 這個物品 的 排們
@@ -335,8 +347,9 @@ Chatroom and Message:
 
 1. WebSocket 的新功能只提供了「訊息的推送」以及「訊息的即時接收」
 2. 所以一開始的聊天室 meta 取得，跟一開始點進去聊天室看訊息，「不需要 WebSocket唷！」
-3. 通常是放著不動，有新訊息才會有 WebSocket 利用的價值唷
-4. 初始 WebSocket 連結為 ```ws://exwd.csie.org:43002/message?token=TOKEN```
+3. 也就是 ```/api/user/UID/chatroom``` 跟 ```/api/chatroom/CID/message```
+4. 通常是放著不動，有新訊息才會有 WebSocket 利用的價值唷
+5. 初始 WebSocket 連結為 ```ws://exwd.csie.org:43002/message?token=TOKEN```
 
 使用方法
 --------------------
