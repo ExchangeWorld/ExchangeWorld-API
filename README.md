@@ -102,7 +102,7 @@ RESTFUL URL:
 
   - message:
     1. 這個聊天室的聊天訊息
- 	 - ```/api/chatroom/聊天室CID/message```
+      - ```/api/chatroom/聊天室CID/message```
 
 
   - queue:
