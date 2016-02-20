@@ -336,7 +336,7 @@ Chatroom and Message:
 1. WebSocket 的新功能只提供了「訊息的推送」以及「訊息的即時接收」
 2. 所以一開始的聊天室 meta 取得，跟一開始點進去聊天室看訊息，「不需要 WebSocket唷！」
 3. 通常是放著不動，有新訊息才會有 WebSocket 利用的價值唷
-4. 初始 WebSocket 連結為 ws://exwd.csie.org:43002/message?token=TOKEN
+4. 初始 WebSocket 連結為 ```ws://exwd.csie.org:43002/message?token=TOKEN```
 
 使用方法
 --------------------
