@@ -46,7 +46,8 @@ var Users = sequelize.define('users', {
 	},
 	wishlist: {
 		type: Sequelize.ARRAY(Sequelize.TEXT),
-		allowNull: true
+		defaultValue: [],
+		allowNull: false
 	},
 	extra_json: {
 		type: Sequelize.JSONB,
