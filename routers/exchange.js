@@ -25,7 +25,7 @@ var exchanges_of_user_one = require(path.resolve(__dirname, '../queries/exchange
  * Get all of exchanges
  *
  * @method GET api/exchange/all
- * @return {JSON} Exchanges including goods and owners
+ * @return {Array} Exchanges including goods and owners
  */
 router.get('/all', (req, res) => {
 	if (!req.exwd.admin) {
@@ -80,7 +80,7 @@ router.get('/all', (req, res) => {
  *
  * @method GET api/exchange/of/user/all
  * @param  {Integer} owner_uid The owner
- * @return {JSON} Exchanges incluing goods( owner_goods, other_goods )
+ * @return {Array} Exchanges incluing goods( owner_goods, other_goods )
  */
 router.get('/of/user/all', (req, res) => {
 	var _owner_uid;

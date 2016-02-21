@@ -23,7 +23,7 @@ var users = require(path.resolve(__dirname, '../ORM/Users'));
  *
  * @method GET api/queue/of/goods
  * @param  {Integer} host_goods_gid
- * @return {JSON} The queues including goods and owners (ASC)
+ * @return {Array} The queues including goods and owners (ASC)
  */
 router.get('/of/goods', (req, res) => {
 	var _owner_uid;
@@ -102,7 +102,7 @@ router.get('/of/goods', (req, res) => {
  *
  * @method GET api/queue/by/goods
  * @param  {Integer} queuer_goods_gid
- * @return {JSON} The queues including goods and owners (DESC)
+ * @return {Array} The queues including goods and owners (DESC)
  */
 router.get('/by/goods', (req, res) => {
 	var _owner_uid;
@@ -181,7 +181,7 @@ router.get('/by/goods', (req, res) => {
  *
  * @method GET api/queue/of/person
  * @param  {Integer} host_user_uid Who owns the host_goods
- * @return {JSON} The queues including goods and owners
+ * @return {Array} The queues including goods and owners
  */
 router.get('/of/person', (req, res) => {
 	var _host_user_uid;
@@ -248,7 +248,7 @@ router.get('/of/person', (req, res) => {
  *
  * @method GET api/queue/by/person
  * @param  {Integer} queuer_user_uid Who owns the queuer_goods
- * @return {JSON} The queues including goods and owners
+ * @return {Array} The queues including goods and owners
  */
 router.get('/by/person', (req, res) => {
 	var _queuer_user_uid;

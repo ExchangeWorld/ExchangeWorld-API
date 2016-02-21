@@ -22,7 +22,7 @@ var users = require(path.resolve(__dirname, '../ORM/Users'));
  *
  * @method GET api/follow/followers/of
  * @param  {Integer} followed_uid The one be followed
- * @return {JSON} Users following given followed_uid
+ * @return {Array} Users following given followed_uid
  */
 router.get('/followers/of', (req, res) => {
 	var _followed_uid = parseInt(req.query.followed_uid, 10);
@@ -65,7 +65,7 @@ router.get('/followers/of', (req, res) => {
  *
  * @method GET api/follow/followed/by
  * @param  {Integer} follower_uid The follower
- * @return {JSON} Users followed by given follower_uid
+ * @return {Array} Users followed by given follower_uid
  */
 router.get('/followed/by', (req, res) => {
 	var _follower_uid = parseInt(req.query.follower_uid, 10);

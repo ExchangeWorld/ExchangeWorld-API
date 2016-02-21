@@ -80,7 +80,7 @@ router.get('/', (req, res) => {
  *
  * @method GET api/goods/of
  * @param  {Integer} owner_uid The owner
- * @return {JSON} The goods including comments and stars
+ * @return {Array} The goods including comments and stars
  */
 router.get('/of', (req, res) => {
 	var _owner_uid = parseInt(req.query.owner_uid, 10);

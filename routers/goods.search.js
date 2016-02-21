@@ -25,19 +25,16 @@ var stars = require(path.resolve(__dirname, '../ORM/Stars'));
  * @param  {String=''} category
  * @param  {Float=-1.0} position_x
  * @param  {Float=-1.0} position_y
- * @param  {Integer=-1} from
- * @param  {Integer=-1} to
- * @return {JSON} The goods including users and stars
+ * @param  {Integer=0} offset
+ * @param  {Integer=100} limit
+ * @return {Array} The goods including users and stars
  */
 router.get('/', (req, res) => {
 	var name = req.query.name || '';
-	// var wishlist = req.query.wishlist || '';
 	var category = req.query.category || '';
-	// var position_x = parseFloat(req.query.position_x) || -1.0;
-	// var position_y = parseFloat(req.query.position_y) || -1.0;
 	var bound = req.query.bound || '-90,0,90,180';
-	// var from = parseInt(req.query.from, 10) || -1;
-	// var to = parseInt(req.query.to, 10) || -1;
+	var offset = parseInt(req.query.offset || 0, 10);
+	var limit = parseInt(req.query.limit || 100, 10);
 
 	/*
 	 * [ lat_lo, lng_lo, lat_hi, lng_hi ] for this bounds,
@@ -89,7 +86,9 @@ router.get('/', (req, res) => {
 			attributes: ['gid', 'name', 'photo_path', 'category', 'position_x', 'position_y'],
 			order: [
 				['gid', 'DESC']
-			]
+			],
+			offset: offset,
+			limit: limit
 		})
 		.then(result => {
 			var _result = result.map(_goods => _goods.toJSON());
