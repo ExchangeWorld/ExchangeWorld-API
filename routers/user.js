@@ -111,6 +111,58 @@ router.get('/', (req, res) => {
 		});
 });
 
+router.get('/me', (req, res) => {
+	var myId = req.exwd.uid || -1;
+
+	// Emit a find operation with orm in table `users`
+	users
+		.findOne({
+			where: {
+				uid: myId
+			},
+			include: [{
+				model: goods,
+				as: 'goods',
+				where: {
+					deleted: 0
+				},
+				required: false
+			}, {
+				model: follows,
+				as: 'follows_followed',
+				required: false,
+				attributes: ['fid']
+			}, {
+				model: follows,
+				as: 'follows_follower',
+				required: false,
+				attributes: ['fid']
+			}, {
+				model: stars,
+				as: 'star_starring_user',
+				include: [{
+					model: goods,
+					as: 'goods',
+					where: {
+						deleted: 0
+					},
+					required: false,
+					attributes: ['gid', 'name', 'photo_path', 'category']
+				}],
+				required: false,
+				attributes: ['sid']
+			}]
+		})
+		.then(result => {
+			res.status(200).json(result);
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});
+});
+
 /**
  * Edit a user's profile, need token
  *
