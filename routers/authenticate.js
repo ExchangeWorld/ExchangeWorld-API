@@ -60,9 +60,9 @@ router.post('/register', (req, res) => {
 	}
 
 	// Check if the _password is not valid
-	if (_password === '') {
+	if (_password.length < 4) {
 		res.status(400).json({
-			error: 'Password must be specified'
+			error: 'Password must be specified and it must contain at least 4 characters'
 		});
 
 		return;
