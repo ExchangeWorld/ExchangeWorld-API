@@ -79,6 +79,8 @@ if (cluster.isMaster) {
 			req.urlObj.host = 'localhost:3006';
 		} else if (/\/api\/upload\/?/.test(_url)) {
 			req.urlObj.host = 'localhost:3007';
+		} else if (/\/api\/admin\/?/.test(_url)) {
+			req.urlObj.host = 'localhost:6666';
 		} else {
 			req.urlObj.host = 'localhost:3003';
 		}
