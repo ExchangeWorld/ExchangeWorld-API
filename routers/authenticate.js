@@ -88,7 +88,7 @@ router.post('/register', (req, res) => {
 	}
 
 	// Check Email
-	if (_email !== '' && validator.isEmail(_email) !== false) {
+	if (_email !== '' && validator.isEmail(_email) === false) {
 		res.status(400).json({
 			error: 'Email is wrong'
 		});
