@@ -11,6 +11,7 @@ var crypto = require('crypto');
 
 var express = require('express');
 var sec_ran = require('secure-random');
+var validator = require('validator');
 var redis = require(path.resolve(__dirname, '../libs/redis'));
 var router = express.Router();
 
@@ -81,6 +82,15 @@ router.post('/register', (req, res) => {
 	if (_name === '') {
 		res.status(400).json({
 			error: 'Name must be specified'
+		});
+
+		return;
+	}
+
+	// Check Email
+	if (_email !== '' && validator.isEmail(_email) !== false) {
+		res.status(400).json({
+			error: 'Email is wrong'
 		});
 
 		return;
