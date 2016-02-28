@@ -33,6 +33,10 @@ var getSHA1 = strToEncrypt => {
 	return sha1.digest('hex');
 };
 
+
+// Token expire time
+const TOKEN_EXPIRE_TIME = 604800;
+
 /**
  * Register a new user
  *
@@ -198,7 +202,7 @@ var login_function = (req, res) => {
 				var _salt = JSON.stringify(sec_ran.randomArray(7));
 				var tmpToken = getSHA1(test_user.user_identity + _salt);
 
-				redis.pipeline().set(tmpToken, test_user.user_uid).expire(tmpToken, 1200).exec((err, result) => {
+				redis.pipeline().set(tmpToken, test_user.user_uid).expire(tmpToken, TOKEN_EXPIRE_TIME).exec((err, result) => {
 					if (err) {
 						res.status(500).json({
 							error: err
@@ -268,7 +272,7 @@ var token_function = (req, res, next) => {
 
 				next();
 			} else {
-				redis.pipeline().set(_token, result).expire(_token, 1200).exec((err, res) => {
+				redis.pipeline().set(_token, result).expire(_token, TOKEN_EXPIRE_TIME).exec((err, res) => {
 					if (err) {
 						res.status(500).json({
 							error: err
