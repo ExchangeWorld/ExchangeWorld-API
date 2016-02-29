@@ -77,7 +77,7 @@ router.get('/', (req, res) => {
 				model: users,
 				as: 'owner',
 				required: true,
-				attributes: ['uid', 'photo_path']
+				attributes: ['uid', 'photo_path', 'name']
 			}, {
 				model: stars,
 				as: 'star_goods',
