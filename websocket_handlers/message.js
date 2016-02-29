@@ -15,6 +15,9 @@
 	}
 */
 
+// Token expire time
+const TOKEN_EXPIRE_TIME = 604800;
+
 var path = require('path');
 var url = require('url');
 
@@ -86,7 +89,7 @@ var websocketAuthorize = (websocket, callbacks) => {
 			websocket.exwd_authorized = true;
 			websocket.exwd_uid = parseInt(result, 10);
 
-			redis.pipeline().set(_token, result).expire(_token, 12000).exec((err, res) => {
+			redis.pipeline().set(_token, result).expire(_token, TOKEN_EXPIRE_TIME).exec((err, res) => {
 				if (err) {
 					websocket.send(JSON.stringify({
 						status: 'bad',
@@ -174,7 +177,7 @@ var websocketOnMessage = websocket => {
 
 		websocketClientPushMessage(websocket, msg);
 
-		redis.pipeline().set(websocket.exwd_token, websocket.exwd_uid).expire(websocket.exwd_token, 12000).exec((err, res) => {
+		redis.pipeline().set(websocket.exwd_token, websocket.exwd_uid).expire(websocket.exwd_token, TOKEN_EXPIRE_TIME).exec((err, res) => {
 			if (err) {
 				websocket.send(JSON.stringify({
 					status: 'bad',
