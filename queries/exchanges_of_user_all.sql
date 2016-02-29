@@ -13,6 +13,8 @@ u1.photo_path as "goods_one.owner.photo_path",
 u2.photo_path as "goods_two.owner.photo_path",
 u1.uid as "goods_one.owner.uid",
 u2.uid as "goods_two.owner.uid"
+u1.uid as "goods_one.owner.name",
+u2.uid as "goods_two.owner.name"
 
 from
 ((((exchanges as e inner join goods as g1 on e.goods_one_gid = g1.gid)
