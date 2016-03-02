@@ -11,8 +11,11 @@ var path = require('path');
 var express = require('express');
 var router = express.Router();
 
+var async = require('async');
+
 // Including tables
 var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
+var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 /**
  * Get a chatrooms meta of a user
@@ -77,13 +80,49 @@ router.get('/of/user', (req, res) => {
 			limit: _limit,
 			offset: _offset
 		})
-		.then(result => {
-			res.status(200).json(result);
-		})
-		.catch(err => {
-			res.status(500).json({
-				error: err
-			});
+		.then(_chatrooms => {
+
+			async
+			.map(_chatrooms.map(c => c.toJSON()),
+				(_chatroom, callback) => {
+					users
+						.findAll({
+							where: {
+								uid: {
+									$in: _chatroom.members
+								}
+							},
+							attributes: ['uid', 'name', 'photo_path']
+						})
+						.then(_users => {
+							var members_info = {};
+
+							_users.forEach(_user => {
+								members_info[_user.uid] = {
+									name: _user.name,
+									photo_path: _user.photo_path
+								};
+							});
+
+							_chatroom.members_info = members_info;
+
+							return _chatroom;
+						})
+						.then(result => {
+							callback(null, result);
+						})
+						.catch(err => {
+							callback(err, null);
+						});
+				},
+				(err, results) => {
+					if (err) {
+						res.status(500).json({
+							error: err
+						});
+					}
+					res.status(200).json(results);
+				});
 		});
 });
 
