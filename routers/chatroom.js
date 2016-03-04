@@ -211,6 +211,7 @@ router.get('/one', (req, res) => {
 		})
 		.then(_chatroom => {
 			if (_chatroom) {
+				var __chatroom = _chatroom.toJSON();
 
 				return users
 					.findAll({
@@ -231,9 +232,9 @@ router.get('/one', (req, res) => {
 							};
 						});
 
-						_chatroom.members_info = members_info;
+						__chatroom.members_info = members_info;
 
-						return _chatroom;
+						return __chatroom;
 					});
 			}
 
