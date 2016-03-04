@@ -239,7 +239,9 @@ router.get('/one', (req, res) => {
 
 			return null;
 		})
-		.then(result => res.status(200).json(result))
+		.then(result => {
+			res.status(200).json(result);
+		})
 		.catch(err => {
 			res.status(500).json({
 				error: err
