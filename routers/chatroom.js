@@ -18,7 +18,7 @@ var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
 var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 /**
- * Get a chatrooms meta of a user
+ * Get chatrooms meta of a user
  *
  * @method GET api/chatroom/of/user
  * @param  {Integer} user_uid The uid who wants the meta (But session-based, so not required in normal mode)
@@ -30,11 +30,32 @@ var users = require(path.resolve(__dirname, '../ORM/Users'));
 [{
 	cid: 1,
 	lastmessage: 'Hello?',
-	members: [1, 3]
+	members: [1, 3],
+	members_info : {
+		'1': {
+			name: 'Jhon',
+			photo_path: 'http://a.b.c/jhon.jpg'
+		},
+		'3': {
+			name: 'Bob',
+			photo_path: 'http://a.b.c/bob.jpg'
+		}
+	}
 }, {
 	cid: 2,
 	lastmessage: 'Bye!',
-	members: [2, 4, 6, 8]
+	members: [2, 4, 6, 8],
+	members_info : {
+		'2': {
+			name: 'Kate',
+			photo_path: 'http://a.b.c/kate.jpg'
+		},
+		'4': {
+			name: 'George',
+			photo_path: 'http://a.b.c/george.jpg'
+		},
+		.....
+	}
 }];
 </pre>
  */
@@ -123,6 +144,109 @@ router.get('/of/user', (req, res) => {
 					}
 					res.status(200).json(results);
 				});
+		});
+});
+
+/**
+ * Get a chatroom meta by given cid
+ *
+ * @method GET api/chatroom/one
+ * @param  {Integer} cid The chatroom's cid
+ * @return {Json} Chatroom meta
+ * @example
+<pre>
+{
+	cid: 1,
+	lastmessage: 'Hello?',
+	members: [1, 3],
+	members_info : {
+		'1': {
+			name: 'Jhon',
+			photo_path: 'http://a.b.c/jhon.jpg'
+		},
+		'3': {
+			name: 'Bob',
+			photo_path: 'http://a.b.c/bob.jpg'
+		}
+	}
+}
+</pre>
+ */
+router.get('/one', (req, res) => {
+	var _user_uid;
+	var _cid = parseInt((req.query.cid || 0), 10);
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_user_uid = parseInt(req.query.user_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.status(403).json({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_user_uid = req.exwd.uid;
+	} else {
+		res.status(403).json({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if (!_cid) {
+		res.status(400).json({
+			error: 'cid is not given'
+		});
+		return;
+	}
+
+	chatrooms
+		.findOne({
+			where: {
+				cid: _cid,
+				members: {
+					$contains: [_user_uid]
+				}
+			}
+		})
+		.then(_chatroom => {
+			if (_chatroom) {
+				var __chatroom = _chatroom.toJSON();
+
+				return users
+					.findAll({
+						where: {
+							uid: {
+								$in: _chatroom.members
+							}
+						},
+						attributes: ['uid', 'name', 'photo_path']
+					})
+					.then(_users => {
+						var members_info = {};
+
+						_users.forEach(_user => {
+							members_info[_user.uid] = {
+								name: _user.name,
+								photo_path: _user.photo_path
+							};
+						});
+
+						__chatroom.members_info = members_info;
+
+						return __chatroom;
+					});
+			}
+
+			return null;
+		})
+		.then(result => {
+			res.status(200).json(result);
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
 		});
 });
 
