@@ -148,6 +148,106 @@ router.get('/of/user', (req, res) => {
 });
 
 /**
+ * Get a chatroom meta by given cid
+ *
+ * @method GET api/chatroom/one
+ * @param  {Integer} cid The chatroom's cid
+ * @return {Json} Chatroom meta
+ * @example
+<pre>
+{
+	cid: 1,
+	lastmessage: 'Hello?',
+	members: [1, 3],
+	members_info : {
+		'1': {
+			name: 'Jhon',
+			photo_path: 'http://a.b.c/jhon.jpg'
+		},
+		'3': {
+			name: 'Bob',
+			photo_path: 'http://a.b.c/bob.jpg'
+		}
+	}
+}
+</pre>
+ */
+router.get('/one', (req, res) => {
+	var _user_uid;
+	var _cid = parseInt((req.query.cid || 0), 10);
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_user_uid = parseInt(req.query.user_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.status(403).json({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_user_uid = req.exwd.uid;
+	} else {
+		res.status(403).json({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if (!_cid) {
+		res.status(400).json({
+			error: 'cid is not given'
+		});
+		return;
+	}
+
+	chatrooms
+		.findOne({
+			where: {
+				cid: _cid,
+				members: {
+					$contains: [_user_uid]
+				}
+			}
+		})
+		.then(_chatroom => {
+			if (_chatroom) {
+
+				return users
+					.findAll({
+						where: {
+							uid: {
+								$in: _chatroom.members
+							}
+						},
+						attributes: ['uid', 'name', 'photo_path']
+					})
+					.then(_users => {
+						var members_info = {};
+
+						_users.forEach(_user => {
+							members_info[_user.uid] = {
+								name: _user.name,
+								photo_path: _user.photo_path
+							};
+						});
+
+						_chatroom.members_info = members_info;
+
+						return _chatroom;
+					});
+			}
+
+			return null;
+		})
+		.then(result => res.status(200).json(result))
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});
+});
+
+/**
  * Let a user join a chatroom
  *
  * @method PUT api/chatroom/join
