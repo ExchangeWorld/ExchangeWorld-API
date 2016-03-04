@@ -18,7 +18,7 @@ var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
 var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 /**
- * Get a chatrooms meta of a user
+ * Get chatrooms meta of a user
  *
  * @method GET api/chatroom/of/user
  * @param  {Integer} user_uid The uid who wants the meta (But session-based, so not required in normal mode)
@@ -30,11 +30,32 @@ var users = require(path.resolve(__dirname, '../ORM/Users'));
 [{
 	cid: 1,
 	lastmessage: 'Hello?',
-	members: [1, 3]
+	members: [1, 3],
+	members_info : {
+		'1': {
+			name: 'Jhon',
+			photo_path: 'http://a.b.c/jhon.jpg'
+		},
+		'3': {
+			name: 'Bob',
+			photo_path: 'http://a.b.c/bob.jpg'
+		}
+	}
 }, {
 	cid: 2,
 	lastmessage: 'Bye!',
-	members: [2, 4, 6, 8]
+	members: [2, 4, 6, 8],
+	members_info : {
+		'2': {
+			name: 'Kate',
+			photo_path: 'http://a.b.c/kate.jpg'
+		},
+		'4': {
+			name: 'George',
+			photo_path: 'http://a.b.c/george.jpg'
+		},
+		.....
+	}
 }];
 </pre>
  */
