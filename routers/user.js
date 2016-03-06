@@ -79,12 +79,12 @@ router.get('/', (req, res) => {
 				model: follows,
 				as: 'follows_followed',
 				required: false,
-				attributes: ['fid']
+				attributes: ['followed_uid']
 			}, {
 				model: follows,
 				as: 'follows_follower',
 				required: false,
-				attributes: ['fid']
+				attributes: ['follower_uid']
 			}, {
 				model: stars,
 				as: 'star_starring_user',
