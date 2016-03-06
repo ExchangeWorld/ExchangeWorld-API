@@ -68,7 +68,12 @@ router.get('/by', (req, res) => {
 				where: {
 					deleted: 0
 				},
-				attributes: ['gid', 'name', 'photo_path', 'category', 'description']
+				attributes: ['gid', 'name', 'photo_path', 'category', 'description'],
+				include: [{
+					model: users,
+					as: 'owner',
+					attributes: ['uid', 'name', 'photo_path']
+				}]
 			}]
 		})
 		.then(result => {
