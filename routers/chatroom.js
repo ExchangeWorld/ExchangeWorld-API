@@ -323,6 +323,33 @@ router.get('/with', (req, res) => {
 				return chatrooms
 					.create({
 						members: [_user_uid, _chatter_uid]
+					})
+					.then(_chatroom => {
+						var __chatroom = _chatroom.toJSON();
+
+						return users
+							.findAll({
+								where: {
+									uid: {
+										$in: _chatroom.members
+									}
+								},
+								attributes: ['uid', 'name', 'photo_path']
+							})
+							.then(_users => {
+								var members_info = {};
+
+								_users.forEach(_user => {
+									members_info[_user.uid] = {
+										name: _user.name,
+										photo_path: _user.photo_path
+									};
+								});
+
+								__chatroom.members_info = members_info;
+
+								return __chatroom;
+							});
 					});
 			}
 		})
