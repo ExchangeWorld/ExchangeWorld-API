@@ -1,19 +1,41 @@
 'use strict';
 
-/*
-	{
-		chatroom_cid: chatroom_cid,
-		content: CONTENT
-	}
-*/
+/* Client sends to back-end:
+ *
+ * 1. Send a message
+ * {
+ *     type: 'message',
+ *     chatroom_cid: chatroom_cid,
+ *     content: CONTENT
+ * }
+ *
+ * 2. Read a message
+ * {
+ *     type: 'read',
+ *     read_chatroom: chatroom_cid
+ * }
+ *
+ */
 
-/*
-	{
-		sender_uid: sender_uid,
-		chatroom_cid: chatroom_cid,
-		content: CONTENT
-	}
-*/
+/* Server sends to fron-end:
+ *
+ * 1. New message
+ * {
+ *     type: 'message',
+ *     sender_uid: sender_uid,
+ *     chatroom_cid: chatroom_cid,
+ *     content: CONTENT
+ * }
+ *
+ *
+ *  2. New read_members data
+ * {
+ *     type: 'read',
+ *     read_chatroom: chatroom_cid,
+ *     read_members: [1, 2, 3]
+ * }
+ *
+ */
 
 // Token expire time
 const TOKEN_EXPIRE_TIME = 604800;
@@ -127,14 +149,17 @@ var websocketDelSession = websocket => {
 };
 
 // 當使用者推了一句訊息時
-var websocketClientPushMessage = (websocket, msg) => {
+var websocketClientPushMessage = (websocket, msgObj) => {
 	messages
 		.create({
-			chatroom_cid: msg.chatroom_cid,
+			chatroom_cid: msgObj.chatroom_cid,
 			sender_uid: websocket.exwd_uid,
-			content: msg.content
+			content: msgObj.content
 		})
-		.then(msg => {
+		.then(_msg => {
+			var msg = _msg.toJSON();
+			msg.type = 'mesage';
+
 			chatrooms
 				.findOne({
 					where: {
@@ -165,17 +190,59 @@ var websocketClientPushMessage = (websocket, msg) => {
 	console.log(websocketClientsInIndex);
 };
 
+// 當使用者讀了聊天室時
+var websocketClientReadChatroom = (websocket, msgObj) => {
+	chatrooms
+		.findOne({
+			where: {
+				cid: msgObj.read_chatroom
+			}
+		})
+		.then(result => {
+			// Set operation
+			var _set = new Set(result.read_members);
+			_set.add(websocket.exwd_uid);
+			result.read_members = Array.from(_set);
+
+			return result.save();
+		})
+		.then(result => {
+			result.members
+				.filter(member => member !== websocket.exwd_uid)
+				.map(member => websocketClientsInIndex[member])
+				.forEach(onlineClients => {
+					onlineClients.forEach(client => webSocketServerInstance_message.clients[client].send(JSON.stringify({
+						type: 'read',
+						read_chatroom: result.cid,
+						read_members: result.read_members
+					})));
+				});
+		})
+		.catch(err => {
+			websocket.send(JSON.stringify(err));
+		});
+};
+
 var websocketOnMessage = websocket => {
 	websocket.on('message', buffer => {
-		var msg = JSON.parse(buffer.toString());
+		var msgObj = JSON.parse(buffer.toString());
 
 		if (websocket.exwd_authorized !== true) {
 			websocket.close();
 		}
 
-		console.log('message open ->', msg);
+		var _type = msgObj.type;
 
-		websocketClientPushMessage(websocket, msg);
+		if (_type === 'message') {
+			console.log('message open ->', msgObj);
+			websocketClientPushMessage(websocket, msgObj);
+		} else if (_type === 'read') {
+			console.log('chatroom read ->', msgObj);
+			websocketClientReadChatroom(websocket, msgObj);
+		} else {
+			console.log('no type QAQ default to type:message');
+			websocketClientPushMessage(websocket, msgObj);
+		}
 
 		redis.pipeline().set(websocket.exwd_token, websocket.exwd_uid).expire(websocket.exwd_token, TOKEN_EXPIRE_TIME).exec((err, res) => {
 			if (err) {
