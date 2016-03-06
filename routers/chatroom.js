@@ -251,6 +251,98 @@ router.get('/one', (req, res) => {
 });
 
 /**
+ * Get a chatroom meta by given whom you want to chat with <br>
+ * If it doesn't exist then will be created new
+ *
+ * @method GET api/chatroom/with
+ * @param  {Integer} chatter_uid Whom you want to chat with
+ * @return {Json} Chatroom meta
+ * @example
+<pre>
+{
+	cid: 1,
+	lastmessage: 'Nice!',
+	members: [2, 4],
+	members_info : {
+		'1': {
+			name: 'Huff',
+			photo_path: 'http://a.b.c/jhon.jpg'
+		},
+		'3': {
+			name: 'Ramsay',
+			photo_path: 'http://a.b.c/bob.jpg'
+		}
+	}
+}
+</pre>
+ */
+router.get('/with', (req, res) => {
+	var _user_uid;
+	var _chatter_uid = parseInt((req.query.chatter_uid || 0), 10);
+
+	// REQ EXWD CHECK
+	if (req.exwd.admin) {
+		_user_uid = parseInt(req.query.user_uid, 10);
+	} else if (req.exwd.anonymous) {
+		res.status(403).json({
+			error: 'Permission denied'
+		});
+		return;
+	} else if (req.exwd.registered) {
+		_user_uid = req.exwd.uid;
+	} else {
+		res.status(403).json({
+			error: 'Permission denied'
+		});
+		return;
+	}
+
+	if (!_chatter_uid) {
+		res.status(400).json({
+			error: 'chatter_uid is not given'
+		});
+		return;
+	}
+
+	chatrooms
+		.findAll({
+			where: {
+				members: {
+					$contains: [_user_uid, _chatter_uid]
+				}
+			},
+			order: [
+				['cid', 'ASC']
+			]
+		})
+		.then(result => {
+			if (result.length > 0) {
+				return result
+					.filter(_r => _r.members.length === 2);
+			} else {
+				return chatrooms
+					.create({
+						members: [_user_uid, _chatter_uid]
+					});
+			}
+		})
+		.then(result => {
+			if (result.length !== undefined && result.length === 1) {
+				res.status(200).json(result[0]);
+			} else if (result.length === undefined) {
+				res.status(201).json(result);
+			} else {
+				throw 'Something is wrong at line 329-335';
+			}
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});
+});
+
+/**
  * Let a user join a chatroom
  *
  * @method PUT api/chatroom/join

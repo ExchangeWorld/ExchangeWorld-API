@@ -4,6 +4,10 @@ restfulMappingRule.GET = [
 		req.urlObj.query.cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 		req.urlObj.pathname = '/api/chatroom/one';
 	}],
+	[/\/api\/chatroom\/with\/([0-9]+)\/?$/, (regex, req) => {
+		req.urlObj.query.chatter_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+		req.urlObj.pathname = '/api/chatroom/with';
+	}],
 	[/\/api\/chatroom\/([0-9]+)\/message\/?$/, (regex, req) => {
 		req.urlObj.query.chatroom_cid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 		req.urlObj.pathname = '/api/message/of/chatroom';
