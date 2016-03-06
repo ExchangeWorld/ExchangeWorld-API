@@ -310,7 +310,10 @@ router.get('/with', (req, res) => {
 				members: {
 					$contains: [_user_uid, _chatter_uid]
 				}
-			}
+			},
+			order: [
+				['cid', 'ASC']
+			]
 		})
 		.then(result => {
 			if (result.length > 0) {
@@ -329,7 +332,7 @@ router.get('/with', (req, res) => {
 			} else if (result.length === undefined) {
 				res.status(201).json(result);
 			} else {
-				throw 'Something is wrong at line 327-333';
+				throw 'Something is wrong at line 329-335';
 			}
 		})
 		.catch(err => {
