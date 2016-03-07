@@ -91,14 +91,14 @@ module.exports = () => {
 	});
 
 	// Exchange & Chatrooms
-	Exchanges.belongsTo(Chatrooms, {
-		as: 'chatroom',
-		foreignKey: 'chatroom_cid'
-	});
-	Chatrooms.hasOne(Exchanges, {
-		as: 'exchange',
-		foreignKey: 'chatroom_cid'
-	});
+	// Exchanges.belongsTo(Chatrooms, {
+	// 	as: 'chatroom',
+	// 	foreignKey: 'chatroom_cid'
+	// });
+	// Chatrooms.hasOne(Exchanges, {
+	// 	as: 'exchange',
+	// 	foreignKey: 'chatroom_cid'
+	// });
 
 	// Follows & Users
 	// follower -[follow]-> followed
