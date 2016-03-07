@@ -8,7 +8,9 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
  * Define Chatrooms schema
  * @param  {Sequelize.INTEGER} cid Chatroom's ID
  * @param  {Sequelize.ARRAY(Sequelize.INTEGER)} members The members (user_uid) in this chatroom
+ * @param  {Sequelize.ARRAY(Sequelize.INTEGER)} read_members The members (user_uid) that have read the last message
  * @param  {Sequelize.TEXT} last_message The last_message of this chatroom
+ * @param  {Sequelize.DATE} last_message_time last_message updated time
  */
 var Chatrooms = sequelize.define('chatrooms', {
 	cid: {
@@ -32,6 +34,11 @@ var Chatrooms = sequelize.define('chatrooms', {
 		type: Sequelize.TEXT,
 		defaultValue: '',
 		allowNull: false
+	},
+	last_message_time: {
+		type: Sequelize.DATE,
+		defaultValue: (new Date()),
+		allowNull: false
 	}
 }, {
 	indexes: [{
@@ -46,6 +53,9 @@ var Chatrooms = sequelize.define('chatrooms', {
 		fields: ['read_members'],
 		using: 'gin',
 		operator: '_int4_ops'
+	}, {
+		fields: ['last_message_time'],
+		method: 'BTREE'
 	}]
 });
 

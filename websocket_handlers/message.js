@@ -168,6 +168,7 @@ var websocketClientPushMessage = (websocket, msgObj) => {
 				})
 				.then(result => {
 					result.last_message = msg.content;
+					result.last_message_time = (new Date());
 					result.read_members = [msg.sender_uid];
 					return result.save();
 				})

@@ -96,7 +96,7 @@ router.get('/of/user', (req, res) => {
 				}
 			},
 			order: [
-				['updated_at', 'DESC']
+				['last_message_time', 'DESC']
 			],
 			limit: _limit,
 			offset: _offset
