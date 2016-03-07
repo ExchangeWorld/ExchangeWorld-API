@@ -37,7 +37,7 @@ var Chatrooms = sequelize.define('chatrooms', {
 	},
 	last_message_time: {
 		type: Sequelize.DATE,
-		defaultValue: (new Date()),
+		defaultValue: Sequelize.NOW,
 		allowNull: false
 	}
 }, {
