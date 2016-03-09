@@ -44,6 +44,11 @@ restfulMappingRule.GET = [
 		req.urlObj.pathname = '/api/star/to';
 	}],
 
+	[/\/api\/notification\/([0-9]+)\/?$/, (regex, req) => {
+		req.urlObj.query.nid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+		req.urlObj.pathname = '/api/notification';
+	}],
+
 	[/\/api\/queue\/goods\/([0-9]+)\/?$/, (regex, req) => {
 		req.urlObj.query.queuer_goods_gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 		req.urlObj.pathname = '/api/queue/by/goods';
@@ -86,6 +91,10 @@ restfulMappingRule.GET = [
 	[/\/api\/user\/([0-9]+)\/goods\/([0-9]+)\/?$/, (regex, req) => {
 		req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[2], 10);
 		req.urlObj.pathname = '/api/goods';
+	}],
+	[/\/api\/user\/([0-9]+)\/notification\/?$/, (regex, req) => {
+		req.urlObj.query.receiver_uid = parseInt(regex.exec(req.urlObj.pathname)[2], 10);
+		req.urlObj.pathname = 'api/notification/belongsTo';
 	}],
 	[/\/api\/user\/([0-9]+)\/queue\/?$/, (regex, req) => {
 		req.urlObj.query.host_user_uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
@@ -152,6 +161,10 @@ restfulMappingRule.PUT = [
 	[/\/api\/goods\/([0-9]+)\/rate\/?$/, (regex, req) => {
 		req.urlObj.query.gid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
 		req.urlObj.pathname = '/api/goods/rate';
+	}],
+	[/\/api\/notification\/([0-9]+)\/read\/?$/, (regex, req) => {
+		req.urlObj.query.nid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);
+		req.urlObj.pathname = 'api/notification/read';
 	}],
 	[/\/api\/user\/([0-9]+)\/?$/, (regex, req) => {
 		req.urlObj.query.uid = parseInt(regex.exec(req.urlObj.pathname)[1], 10);

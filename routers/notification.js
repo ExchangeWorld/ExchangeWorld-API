@@ -137,7 +137,10 @@ router.get('/', (req, res) => {
  * @return {JSON} Updated notification object
  */
 router.put('/read', (req, res) => {
-	var _nid = parseInt(req.query.nid, 10);
+	var _nid = parseInt(req.body.nid, 10);
+	if (!_nid) {
+		_nid = parseInt(req.query.nid, 10);
+	}
 
 	var _requester_uid;
 
