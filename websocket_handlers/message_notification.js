@@ -28,13 +28,21 @@
  * }
  *
  *
- *  2. New read_members data
+ * 2. New read_members data
  * {
  *     type: 'read',
  *     read_chatroom: chatroom_cid,
  *     read_members: [1, 2, 3]
  * }
  *
+ * 3. New notification
+ * {
+ *     type: 'notification',
+ *     codeType: statusCode,
+ *     payload: {
+ *         ....
+ *     }
+ * }
  */
 
 // Token expire time
@@ -68,7 +76,7 @@ var indexOf = (arr, item) => {
 };
 
 // Message 專用的 WebSocket 處理中樞個體
-var webSocketServerInstance_message = require(path.resolve(__dirname, './foreman')).webSocketServerInstance_message;
+var webSocketServerInstance = require(path.resolve(__dirname, './foreman')).webSocketServerInstance;
 
 // WebSocket 在被成立的時候，做的初始化動作
 var websocketInitialize = websocket => {
@@ -118,7 +126,6 @@ var websocketAuthorize = (websocket, callbacks) => {
 						error: err
 					}));
 				} else {
-					// websocket.send('{status:"good",message:"Let\'s websocket!"}');
 					callbacks.forEach(cbf => cbf(websocket));
 				}
 			});
@@ -132,16 +139,16 @@ var websocketAddSession = websocket => {
 	var uid = websocket.exwd_uid;
 
 	if (uid in websocketClientsInIndex) {
-		websocketClientsInIndex[uid].push(indexOf(webSocketServerInstance_message.clients, websocket));
+		websocketClientsInIndex[uid].push(indexOf(webSocketServerInstance.clients, websocket));
 	} else {
-		websocketClientsInIndex[uid] = [indexOf(webSocketServerInstance_message.clients, websocket)];
+		websocketClientsInIndex[uid] = [indexOf(webSocketServerInstance.clients, websocket)];
 	}
 };
 
 // 當 WebSocket 要被刪除時，要做的動作
 var websocketDelSession = websocket => {
 	var uid = websocket.exwd_uid;
-	var tmpIndex = indexOf(webSocketServerInstance_message.clients, websocket);
+	var tmpIndex = indexOf(webSocketServerInstance.clients, websocket);
 
 	if (uid in websocketClientsInIndex) {
 		websocketClientsInIndex[uid].splice(tmpIndex, 1);
@@ -158,7 +165,7 @@ var websocketClientPushMessage = (websocket, msgObj) => {
 		})
 		.then(_msg => {
 			var msg = _msg.toJSON();
-			msg.type = 'mesage';
+			msg.type = 'message';
 
 			chatrooms
 				.findOne({
@@ -177,7 +184,7 @@ var websocketClientPushMessage = (websocket, msgObj) => {
 						.filter(member => member !== msg.sender_uid)
 						.map(member => websocketClientsInIndex[member])
 						.forEach(onlineClients => {
-							onlineClients.forEach(client => webSocketServerInstance_message.clients[client].send(JSON.stringify(msg)));
+							onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(msg)));
 						});
 				})
 				.catch(err => {
@@ -212,7 +219,7 @@ var websocketClientReadChatroom = (websocket, msgObj) => {
 				.filter(member => member !== websocket.exwd_uid)
 				.map(member => websocketClientsInIndex[member])
 				.forEach(onlineClients => {
-					onlineClients.forEach(client => webSocketServerInstance_message.clients[client].send(JSON.stringify({
+					onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify({
 						type: 'read',
 						read_chatroom: result.cid,
 						read_members: result.read_members
@@ -224,6 +231,7 @@ var websocketClientReadChatroom = (websocket, msgObj) => {
 		});
 };
 
+// 當前端送了一個 message 時
 var websocketOnMessage = websocket => {
 	websocket.on('message', buffer => {
 		var msgObj = JSON.parse(buffer.toString());
@@ -263,10 +271,10 @@ var websocketOnClose = websocket => {
 	});
 };
 
-var handleMessageConnection = websocket => {
+var handleConnection = websocket => {
 	websocketOnClose(websocket);
 	websocketInitialize(websocket);
 	websocketAuthorize(websocket, [websocketAddSession, websocketOnMessage]);
 };
 
-module.exports = handleMessageConnection;
+module.exports = handleConnection;

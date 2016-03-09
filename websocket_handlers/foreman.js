@@ -11,33 +11,23 @@ var webSocketServerContainer = http.createServer((req, res) => {
 
 var webSocketServerClass = websocket.Server;
 var webSocketServerOption = {
-	message: {
+	general: {
 		server: webSocketServerContainer,
 		clientTracking: true,
-		path: '/message'
-	},
-	notification: {
-		server: webSocketServerContainer,
-		clientTracking: true,
-		path: '/notification'
+		path: '/'
 	}
 };
 
-
-var webSocketServerInstance_message = new webSocketServerClass(webSocketServerOption.message);
-// var webSocketServerInstance_notification = new webSocketServerClass(webSocketServerOption.notification);
+var webSocketServerInstance = new webSocketServerClass(webSocketServerOption.general);
 
 module.exports = {
 	webSocketServerContainer: webSocketServerContainer,
-	webSocketServerInstance_message: webSocketServerInstance_message
+	webSocketServerInstance: webSocketServerInstance
 };
 
-var messageHandler = require(path.resolve(__dirname, './message'));
+var general_Handler = require(path.resolve(__dirname, './message_notification'));
 
-webSocketServerInstance_message.on('connection', messageHandler);
-// webSocketServerInstance_notification.on('connection');
-
-webSocketServerInstance_message.setMaxListeners(0);
-// webSocketServerInstance_notification.setMaxListeners(0);
+webSocketServerInstance.on('connection', general_Handler);
+webSocketServerInstance.setMaxListeners(0);
 
 webSocketServerContainer.setMaxListeners(0);
