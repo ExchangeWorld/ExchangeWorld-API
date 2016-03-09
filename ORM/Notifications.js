@@ -8,7 +8,7 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
  * Define Notifications schema
  * @param  {Sequelize.INTEGER} nid Notification's ID
  * @param  {Sequelize.INTEGER} receiver_uid Receiver's uid
- * @param  {Sequelize.JSONB} json The notification itself
+ * @param  {Sequelize.JSONB} body The notification itself
  * @param  {Sequelize.BOOLEAN} read If this notification is read
  */
 var Notifications = sequelize.define('notifications', {
@@ -19,7 +19,7 @@ var Notifications = sequelize.define('notifications', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	json: {
+	body: {
 		type: Sequelize.JSONB,
 		defaultValue: {},
 		allowNull: false
