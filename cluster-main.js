@@ -35,14 +35,14 @@ if (cluster.isMaster) {
 
 	var routers = {
 		authenticate: require(path.resolve(__dirname, './routers/authenticate')),
-		follow: require(path.resolve(__dirname, './routers/follow')),
 		chatroom: require(path.resolve(__dirname, './routers/chatroom')),
 		comment: require(path.resolve(__dirname, './routers/comment')),
-		message: require(path.resolve(__dirname, './routers/message')),
-		star: require(path.resolve(__dirname, './routers/star')),
-		queue: require(path.resolve(__dirname, './routers/queue')),
 		exchange: require(path.resolve(__dirname, './routers/exchange')),
+		follow: require(path.resolve(__dirname, './routers/follow')),
+		message: require(path.resolve(__dirname, './routers/message')),
 		notification: require(path.resolve(__dirname, './routers/notification'))
+		queue: require(path.resolve(__dirname, './routers/queue')),
+		star: require(path.resolve(__dirname, './routers/star')),
 	};
 
 	sequelize_sync
@@ -92,19 +92,14 @@ if (cluster.isMaster) {
 				next();
 			});
 
-			server.use('/api/follow', routers.follow);
-
-			server.use('/api/message', routers.message);
 			server.use('/api/chatroom', routers.chatroom);
-
 			server.use('/api/comment', routers.comment);
-
-			server.use('/api/star', routers.star);
-
-			server.use('/api/queue', routers.queue);
-
 			server.use('/api/exchange', routers.exchange);
+			server.use('/api/follow', routers.follow);
+			server.use('/api/message', routers.message);
 			server.use('/api/notification', routers.notification);
+			server.use('/api/queue', routers.queue);
+			server.use('/api/star', routers.star);
 
 			// catch 404 and forward to error handler
 			server.use((req, res, next) => {
