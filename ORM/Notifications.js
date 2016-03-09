@@ -5,13 +5,11 @@ var Sequelize = require('sequelize');
 var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
 
 /**
-* Define Notifications schema
-* @param  {Sequelize.INTEGER} nid Notification's ID
-* @param  {Sequelize.INTEGER} sender_uid Sender's uid
-* @param  {Sequelize.INTEGER} receiver_uid Receiver's uid
-* @param  {Sequelize.TEXT} trigger_url The URL of the notification trigger object
-* @param  {Sequelize.TEXT} content The content of the notification
-* @param  {Sequelize.BOOLEAN} unread If this notification is not read
+ * Define Notifications schema
+ * @param  {Sequelize.INTEGER} nid Notification's ID
+ * @param  {Sequelize.INTEGER} receiver_uid Receiver's uid
+ * @param  {Sequelize.JSONB} json The notification itself
+ * @param  {Sequelize.BOOLEAN} read If this notification is read
  */
 var Notifications = sequelize.define('notifications', {
 	nid: {
@@ -21,24 +19,32 @@ var Notifications = sequelize.define('notifications', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	trigger_url: {
-		type: Sequelize.TEXT,
+	json: {
+		type: Sequelize.JSONB,
+		defaultValue: {},
 		allowNull: false
 	},
-	content: {
-		type: Sequelize.TEXT,
-		allowNull: false
-	},
-	unread: {
+	read: {
 		type: Sequelize.BOOLEAN,
-		defaultValue: true,
+		defaultValue: false,
 		allowNull: false
 	}
+}, {
+	indexes: [{
+		unique: true,
+		fields: ['nid'],
+		method: 'BTREE'
+	}, {
+		fields: ['read'],
+		method: 'BTREE'
+	}, {
+		fields: ['receiver_uid'],
+		method: 'BTREE'
+	}]
 });
 
 // Other cols in relationships :
 //
-// sender_uid
 // receiver_uid
 
 module.exports = Notifications;
