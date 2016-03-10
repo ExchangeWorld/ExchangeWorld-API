@@ -15,6 +15,9 @@ var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 // There can be new comments, new exchanges, new follows, new goods, new queues, new stars.
 
+// 當新的 comment 產生的時候
+// 20001 為 物品主人被推播
+// 20004 為 關注物品的人們被推播
 var handleComments = msgObj => {
 	return comments
 		.findOne({
@@ -64,6 +67,10 @@ var handleComments = msgObj => {
 		});
 };
 
+// 當新的 exchange 產生的時候，或者完成、被放棄的時後
+// 30001 為 被接受排的人被推播
+// 30002 (pending) 為 有人放棄了 exchange 的時候
+// 30003 (pending) 為 exchange 被完成的時候
 var handleExchanges = msgObj => {
 	// msgObj.whoNeedsNotification
 
@@ -101,6 +108,9 @@ var handleExchanges = msgObj => {
 		});
 };
 
+// 當新的 follow 產生的時候
+// 10003 (pending)
+// 10004 為 被追隨的人被推播
 var handleFollows = msgObj => {
 	return follows
 		.findOne({
@@ -134,6 +144,9 @@ var handleFollows = msgObj => {
 		});
 };
 
+// 當新的 goods 產生的時後
+// 10001 為 追隨這個物品主人的人們被推播
+// 10002 (pending)
 var handleGoods = msgObj => {
 	return goods
 		.findOne({
@@ -167,6 +180,8 @@ var handleGoods = msgObj => {
 		});
 };
 
+// 當新的 queue 產生的時候
+// 20002 為 被排的物品的主人被推播
 var handleQueues = msgObj => {
 	return queues
 		.findOne({
@@ -195,6 +210,8 @@ var handleQueues = msgObj => {
 		});
 };
 
+// 當新的 star 產生的時候
+// 20003 為 被關注的物品的主人被推播
 var handleStars = msgObj => {
 	return stars
 		.findOne({
