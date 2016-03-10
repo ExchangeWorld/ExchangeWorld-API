@@ -13,6 +13,13 @@ var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 // There can be new comments, new exchanges, new follows, new goods, new queues, new stars.
 
+// msgObj looks like:
+// {
+// 	model: ,
+// 	id: ,
+// 	whoNeedsNotification:
+// }
+
 // 當新的 comment 產生的時候
 // 20001 為 物品主人被推播
 // 20004 為 關注物品的人們被推播

@@ -54,6 +54,7 @@ var url = require('url');
 var redis = require(path.resolve(__dirname, '../libs/redis'));
 
 
+// Notification chain subscribing redis client
 // 訂閱 redis 的 notifications 頻道
 var redis_sub = require(path.resolve(__dirname, '../libs/redis_sub'));
 var notificationChannelHandler = require(path.resolve(__dirname, './notification_dispatcher'));
