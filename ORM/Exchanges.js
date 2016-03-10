@@ -11,7 +11,6 @@ var sequelize = require(path.resolve(__dirname, '../libs/sequelize'));
  * @param  {Sequelize.INTEGER} goods_two_gid Larger goods gid
  * @param  {Sequelize.BOOLEAN} goods_one_agree Agreement of goods_one
  * @param  {Sequelize.BOOLEAN} goods_two_agree Agreement of goods_two
- * @param  {Sequelize.INTEGER} chatroom_cid The chatroom id for this exchange
  * @param  {Sequelize.STRING} status The status of this exchange: 'initiated', 'dropped', 'completed'
  */
 var Exchanges = sequelize.define('exchanges', {
@@ -64,6 +63,5 @@ var Exchanges = sequelize.define('exchanges', {
 //
 // goods_one_gid
 // goods_two_gid
-// chatroom_cid
 
 module.exports = Exchanges;
