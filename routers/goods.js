@@ -11,6 +11,9 @@ var path = require('path');
 var express = require('express');
 var router = express.Router();
 
+// Notification chain publishing redis client
+var redis_pub = require(path.resolve(__dirname, '../libs/redis_pub'));
+
 // Including tables
 var goods = require(path.resolve(__dirname, '../ORM/Goods'));
 var users = require(path.resolve(__dirname, '../ORM/Users'));
@@ -181,6 +184,13 @@ router.post('/post', (req, res) => {
 		})
 		.then(result => {
 			res.status(201).json(result);
+			return result;
+		})
+		.then(result => {
+			redis_pub.publish('notifications', JSON.stringify({
+				model: 'goods',
+				id: result.gid
+			}));
 		})
 		.catch(err => {
 			res.status(500).json({
@@ -384,9 +394,8 @@ router.delete('/delete', (req, res) => {
 					}, queryGoodsTmp)
 					.then(result => {
 						res.status(200).json(result);
-						return result;
 					})
-					.then(result => {
+					.then(() => {
 						console.log('After checking exchange, delete queue');
 						return queues
 							.destroy({
