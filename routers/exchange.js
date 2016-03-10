@@ -11,9 +11,11 @@ var path = require('path');
 var express = require('express');
 var router = express.Router();
 
+// Notification chain publishing redis client
+var redis_pub = require(path.resolve(__dirname, '../libs/redis_pub'));
+
 // Including tables
 var exchanges = require(path.resolve(__dirname, '../ORM/Exchanges'));
-var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
 var users = require(path.resolve(__dirname, '../ORM/Users'));
 var goods = require(path.resolve(__dirname, '../ORM/Goods'));
 
@@ -298,11 +300,8 @@ router.post('/create', (req, res) => {
 	exchanges
 		.findOne({
 			where: {
-				$and: [{
-					goods_one_gid: _goods_one_gid
-				}, {
-					goods_two_gid: _goods_two_gid
-				}]
+				goods_one_gid: _goods_one_gid,
+				goods_two_gid: _goods_two_gid
 			}
 		})
 		.then(isThereAlready => {
@@ -320,7 +319,30 @@ router.post('/create', (req, res) => {
 								isThereAlready.status = 'initiated';
 								isThereAlready.goods_one_agree = false;
 								isThereAlready.goods_two_agree = false;
-								g1.save().then(() => g2.save().then(() => isThereAlready.save().then(() => res.status(200).json(isThereAlready))));
+								g1.save().then(() => {
+									g2.save().then(() => {
+										isThereAlready.save()
+											.then(() => {
+												res.status(200).json(isThereAlready);
+												return isThereAlready;
+											})
+											.then(_isThereAlready => {
+												if (g1.owner_uid === _owner_uid) {
+													redis_pub.publish('notifications', JSON.stringify({
+														model: 'exchanges',
+														id: _isThereAlready.eid,
+														whoNeedsNotification: g2.owner_uid
+													}));
+												} else {
+													redis_pub.publish('notifications', JSON.stringify({
+														model: 'exchanges',
+														id: _isThereAlready.eid,
+														whoNeedsNotification: g1.owner_uid
+													}));
+												}
+											});
+									});
+								});
 							} else {
 								res.status(403).json({
 									error: 'The exchange cannot be created, one of goods is not available'
@@ -333,50 +355,58 @@ router.post('/create', (req, res) => {
 				}
 			} else {
 				// Check two goods' status
-				goods.findOne(queryGoodsOneTmp).then(g1 => {
+				goods
+					.findOne(queryGoodsOneTmp)
+					.then(g1 => {
 						// If goods_one's status is ok
 						if (g1) {
-							goods.findOne(queryGoodsTwoTmp).then(g2 => {
-								// If goods_two's status is ok
-								// And one of them is owner's goods
-								// Or it's operated by admin
-								if (g2 && (g1.owner_uid === _owner_uid || g2.owner_uid === _owner_uid || _owner_uid === null)) {
-									g1.exchanged = 2;
-									g2.exchanged = 2;
-									g1.save();
-									g2.save();
+							goods
+								.findOne(queryGoodsTwoTmp)
+								.then(g2 => {
+									// If goods_two's status is ok
+									// And one of them is owner's goods
+									// Or it's operated by admin
+									if (g2 && (g1.owner_uid === _owner_uid || g2.owner_uid === _owner_uid || _owner_uid === null)) {
+										g1.exchanged = 2;
+										g2.exchanged = 2;
+										g1.save();
+										g2.save();
 
-									chatrooms
-										.create()
-										.then(the_chatroom => {
-											exchanges
-												.create({
-													goods_one_gid: g1.gid,
-													goods_two_gid: g2.gid,
-													chatroom_cid: the_chatroom.cid
-												})
-												.then(the_exchange => {
-													res.status(201).json(the_exchange);
-												})
-												.catch(err => {
-													console.log(err);
-													res.status(500).json({
-														error: err
-													});
+										exchanges
+											.create({
+												goods_one_gid: g1.gid,
+												goods_two_gid: g2.gid
+											})
+											.then(the_exchange => {
+												res.status(201).json(the_exchange);
+												return the_exchange;
+											})
+											.then(the_exchange => {
+												if (g1.owner_uid === _owner_uid) {
+													redis_pub.publish('notifications', JSON.stringify({
+														model: 'exchanges',
+														id: the_exchange.eid,
+														whoNeedsNotification: g2.owner_uid
+													}));
+												} else {
+													redis_pub.publish('notifications', JSON.stringify({
+														model: 'exchanges',
+														id: the_exchange.eid,
+														whoNeedsNotification: g1.owner_uid
+													}));
+												}
+											})
+											.catch(err => {
+												res.status(500).json({
+													error: err
 												});
-										})
-										.catch(err => {
-											console.log(err);
-											res.status(500).json({
-												error: err
 											});
+									} else {
+										res.status(403).json({
+											error: 'The exchange cannot be created'
 										});
-								} else {
-									res.status(403).json({
-										error: 'The exchange cannot be created'
-									});
-								}
-							});
+									}
+								});
 						} else {
 							res.status(403).json({
 								error: 'The exchange cannot be created'
@@ -384,7 +414,6 @@ router.post('/create', (req, res) => {
 						}
 					})
 					.catch(err => {
-						console.log(err);
 						res.status(500).json({
 							error: err
 						});
@@ -580,7 +609,7 @@ router.put('/agree', (req, res) => {
 															}
 														}
 													})
-													.then(uuu => res.status(200).json(result))
+													.then(() => res.status(200).json(result))
 													.catch(err => {
 														console.log(err);
 														res.status(500).json({
