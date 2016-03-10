@@ -65,7 +65,7 @@ var handleComments = msgObj => {
 		});
 };
 
-// 當新的 exchange 產生的時候，或者完成、被放棄的時後
+// 當新的 exchange 產生的時候，或者完成、被放棄的時候
 // 30001 為 被接受排的人被推播
 // 30002 (pending) 為 有人放棄了 exchange 的時候
 // 30003 (pending) 為 exchange 被完成的時候
@@ -142,7 +142,7 @@ var handleFollows = msgObj => {
 		});
 };
 
-// 當新的 goods 產生的時後
+// 當新的 goods 產生的時候
 // 10001 為 追隨這個物品主人的人們被推播
 // 10002 (pending)
 var handleGoods = msgObj => {
