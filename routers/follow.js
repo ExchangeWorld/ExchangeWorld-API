@@ -166,7 +166,7 @@ router.post('/post', (req, res) => {
 		.then(result => {
 			redis_pub.publish('notifications', JSON.stringify({
 				model: 'follows',
-				id: result.fid
+				id: result[0].fid
 			}));
 		})
 		.catch(err => {
