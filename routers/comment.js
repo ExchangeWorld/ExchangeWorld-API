@@ -10,6 +10,9 @@ var path = require('path');
 var express = require('express');
 var router = express.Router();
 
+// Notification chain publishing redis client
+var redis_pub = require(path.resolve(__dirname, '../libs/redis_pub'));
+
 // Including tables
 var comments = require(path.resolve(__dirname, '../ORM/Comments'));
 var users = require(path.resolve(__dirname, '../ORM/Users'));
@@ -201,6 +204,13 @@ router.post('/post', (req, res) => {
 		})
 		.then(result => {
 			res.status(201).json(result);
+			return result;
+		})
+		.then(result => {
+			redis_pub.publish('notifications', JSON.stringify({
+				model: 'comments',
+				id: result.cid
+			}));
 		})
 		.catch(err => {
 			res.status(500).json({
