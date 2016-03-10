@@ -131,7 +131,7 @@ router.post('/post', (req, res) => {
 		})
 		.then(result => {
 			redis_pub.publish('notifications', JSON.stringify({
-				model: 'queues',
+				model: 'stars',
 				id: result[0].sid
 			}));
 		})
