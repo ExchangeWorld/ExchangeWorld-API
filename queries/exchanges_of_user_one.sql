@@ -3,7 +3,6 @@ e.eid as eid,
 e.status as status,
 e.goods_one_agree as goods_one_agree,
 e.goods_two_agree as goods_two_agree,
-e.chatroom_cid as chatroom_cid,
 
 g1.gid as "goods_one.gid",
 g2.gid as "goods_two.gid",
