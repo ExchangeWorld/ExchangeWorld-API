@@ -12,6 +12,9 @@ var path = require('path');
 var express = require('express');
 var router = express.Router();
 
+// Notification chain publishing redis client
+var redis_pub = require(path.resolve(__dirname, '../libs/redis_pub'));
+
 // Including tables
 var queues = require(path.resolve(__dirname, '../ORM/Queues'));
 var goods = require(path.resolve(__dirname, '../ORM/Goods'));
@@ -378,6 +381,16 @@ router.post('/post', (req, res) => {
 				});
 			} else {
 				res.status(200).json(result[0]);
+			}
+
+			return result;
+		})
+		.then(result => {
+			if (result !== '') {
+				redis_pub.publish('notifications', JSON.stringify({
+					model: 'queues',
+					id: result[0].qid
+				}));
 			}
 		})
 		.catch(err => {
