@@ -258,7 +258,7 @@ var modelHandlers = {
 var subscribedMessageHandler = msg => {
 	var msgObj = JSON.parse(msg);
 
-	return modelHandlers[msgObj.model]
+	return (modelHandlers[msgObj.model](msgObj))
 		.then(pushingTargetsAndPayloads => {
 			if (pushingTargetsAndPayloads.length > 0) {
 				var _tmp = pushingTargetsAndPayloads
