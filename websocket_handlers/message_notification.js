@@ -72,9 +72,11 @@ redis_sub.on('message', (channel, msg) => {
 					})
 					.forEach(_arr => {
 						var targeClients = websocketClientsInIndex[_arr[0]];
-						targeClients.forEach(onlineClients => {
-							onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(_arr[1])));
-						});
+						if (targeClients !== null && targeClients !== undefined) {
+							targeClients.forEach(onlineClients => {
+								onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(_arr[1])));
+							});
+						}
 					});
 			})
 			.catch(err => {
@@ -215,6 +217,7 @@ var websocketClientPushMessage = (websocket, msgObj) => {
 					result.members
 						.filter(member => member !== msg.sender_uid)
 						.map(member => websocketClientsInIndex[member])
+						.filter(c => c !== null && c !== undefined)
 						.forEach(onlineClients => {
 							onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(msg)));
 						});
@@ -250,6 +253,7 @@ var websocketClientReadChatroom = (websocket, msgObj) => {
 			result.members
 				.filter(member => member !== websocket.exwd_uid)
 				.map(member => websocketClientsInIndex[member])
+				.filter(c => c !== null && c !== undefined)
 				.forEach(onlineClients => {
 					onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify({
 						type: 'read',
