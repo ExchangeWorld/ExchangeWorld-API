@@ -65,12 +65,17 @@ redis_sub.on('message', (channel, msg) => {
 		// 會回傳需要被推播的 payloads 陣列們，繼續推進 promises
 		notificationChannelHandler(msg)
 			.then(pushingTargetsAndPayloads => {
-				pushingTargetsAndPayloads.forEach(_arr => {
-					var targeClients = websocketClientsInIndex[_arr[0]];
-					targeClients.forEach(onlineClients => {
-						onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(_arr[1])));
+				pushingTargetsAndPayloads
+					.map(_arr => {
+						_arr[1].type = 'notification';
+						return _arr;
+					})
+					.forEach(_arr => {
+						var targeClients = websocketClientsInIndex[_arr[0]];
+						targeClients.forEach(onlineClients => {
+							onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(_arr[1])));
+						});
 					});
-				});
 			})
 			.catch(err => {
 				console.log('In notification_dispatcher chain:\n', err);
