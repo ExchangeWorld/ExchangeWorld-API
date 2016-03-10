@@ -40,9 +40,9 @@ if (cluster.isMaster) {
 		exchange: require(path.resolve(__dirname, './routers/exchange')),
 		follow: require(path.resolve(__dirname, './routers/follow')),
 		message: require(path.resolve(__dirname, './routers/message')),
-		notification: require(path.resolve(__dirname, './routers/notification'))
+		notification: require(path.resolve(__dirname, './routers/notification')),
 		queue: require(path.resolve(__dirname, './routers/queue')),
-		star: require(path.resolve(__dirname, './routers/star')),
+		star: require(path.resolve(__dirname, './routers/star'))
 	};
 
 	sequelize_sync
