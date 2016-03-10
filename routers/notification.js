@@ -12,8 +12,8 @@ var express = require('express');
 var router = express.Router();
 
 // Including tables
-var notifications = require(path(__dirname, '../ORM/Notifications'));
-var users = require(path(__dirname, '../ORM/Users'));
+var notifications = require(path.resolve(__dirname, '../ORM/Notifications'));
+var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 /**
  * Get notifications belong to a user
