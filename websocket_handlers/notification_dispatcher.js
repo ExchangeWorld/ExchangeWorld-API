@@ -17,7 +17,8 @@ var users = require(path.resolve(__dirname, '../ORM/Users'));
 // {
 // 	model: ,
 // 	id: ,
-// 	whoNeedsNotification:
+// 	whoNeedsNotification: (exchanges only)
+// 	situation: (exchanges only)
 // }
 
 // 當新的 comment 產生的時候
