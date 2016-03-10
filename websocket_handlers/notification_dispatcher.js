@@ -174,7 +174,7 @@ var handleGoods = msgObj => {
 		.then(result => {
 			var _tmp = [];
 
-			_tmp = _tmp.concat(result.owner.follows_follower.map(f => [f.follower_uid, {
+			_tmp = _tmp.concat(result.owner.follows_followed.map(f => [f.follower_uid, {
 				codeType: 10001,
 				payload: {
 					goods: result.toJSON()
