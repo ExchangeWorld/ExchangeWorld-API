@@ -11,8 +11,6 @@ var queues = require(path.resolve(__dirname, '../ORM/Queues'));
 var stars = require(path.resolve(__dirname, '../ORM/Stars'));
 var users = require(path.resolve(__dirname, '../ORM/Users'));
 
-// var redis_sub = require(path.resolve(__dirname, '../libs/redis_sub'));
-
 // There can be new comments, new exchanges, new follows, new goods, new queues, new stars.
 
 // 當新的 comment 產生的時候
@@ -249,38 +247,27 @@ var modelHandlers = {
 	stars: handleStars
 };
 
-var subscribedMessageHandler = (channel, msg) => {
-	if (channel === 'notifications') {
-		var msgObj = JSON.parse(msg);
+var subscribedMessageHandler = msg => {
+	var msgObj = JSON.parse(msg);
 
-		return modelHandlers[msgObj.model]
-			.then(pushingTargetsAndPayloads => {
-				if (pushingTargetsAndPayloads.length > 0) {
-					var _tmp = pushingTargetsAndPayloads
-						.map(_arr => ({
-							receiver_uid: _arr[0],
-							body: _arr[1]
-						}));
+	return modelHandlers[msgObj.model]
+		.then(pushingTargetsAndPayloads => {
+			if (pushingTargetsAndPayloads.length > 0) {
+				var _tmp = pushingTargetsAndPayloads
+					.map(_arr => ({
+						receiver_uid: _arr[0],
+						body: _arr[1]
+					}));
 
-					return notifications
-						.bulkCreate(_tmp)
-						.then(() => {
-							return pushingTargetsAndPayloads;
-						});
-				}
+				return notifications
+					.bulkCreate(_tmp)
+					.then(() => {
+						return pushingTargetsAndPayloads;
+					});
+			}
 
-				return pushingTargetsAndPayloads;
-			});
-	} else {
-		console.log(channel, 'is not subscribed ...');
-	}
+			return pushingTargetsAndPayloads;
+		});
 };
-
-// redis_sub.subscribe('notifications');
-// redis_sub.on('message', (channel, msg) => {
-// 	if (channel === 'notifications') {
-// 		return;
-// 	}
-// });
 
 module.exports = subscribedMessageHandler;

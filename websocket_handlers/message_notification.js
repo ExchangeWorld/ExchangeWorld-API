@@ -53,6 +53,32 @@ var url = require('url');
 
 var redis = require(path.resolve(__dirname, '../libs/redis'));
 
+
+// 訂閱 redis 的 notifications 頻道
+var redis_sub = require(path.resolve(__dirname, '../libs/redis_sub'));
+var notificationChannelHandler = require(path.resolve(__dirname, './notification_dispatcher'));
+
+redis_sub.subscribe('notifications');
+redis_sub.on('message', (channel, msg) => {
+	if (channel === 'notifications') {
+		// 會回傳需要被推播的 payloads 陣列們，繼續推進 promises
+		notificationChannelHandler(msg)
+			.then(pushingTargetsAndPayloads => {
+				pushingTargetsAndPayloads.forEach(_arr => {
+					var targeClients = websocketClientsInIndex[_arr[0]];
+					targeClients.forEach(onlineClients => {
+						onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(_arr[1])));
+					});
+				});
+			})
+			.catch(err => {
+				console.log('In notification_dispatcher chain:\n', err);
+			});
+	} else {
+		console.log(channel, 'is not subscribed yet...');
+	}
+});
+
 var messages = require(path.resolve(__dirname, '../ORM/Messages'));
 var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
 
