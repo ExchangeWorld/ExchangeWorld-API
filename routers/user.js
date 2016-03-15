@@ -95,7 +95,12 @@ router.get('/', (req, res) => {
 						deleted: 0
 					},
 					required: false,
-					attributes: ['gid', 'name', 'photo_path', 'category']
+					attributes: ['gid', 'name', 'photo_path', 'category'],
+					include: [{
+						model: users,
+						as: 'owner',
+						attributes: ['uid', 'name', 'photo_path']
+					}]
 				}],
 				required: false,
 				attributes: ['sid']
@@ -131,12 +136,12 @@ router.get('/me', (req, res) => {
 				model: follows,
 				as: 'follows_followed',
 				required: false,
-				attributes: ['fid']
+				attributes: ['follower_uid']
 			}, {
 				model: follows,
 				as: 'follows_follower',
 				required: false,
-				attributes: ['fid']
+				attributes: ['follower_uid']
 			}, {
 				model: stars,
 				as: 'star_starring_user',
@@ -147,7 +152,12 @@ router.get('/me', (req, res) => {
 						deleted: 0
 					},
 					required: false,
-					attributes: ['gid', 'name', 'photo_path', 'category']
+					attributes: ['gid', 'name', 'photo_path', 'category'],
+					include: [{
+						model: users,
+						as: 'owner',
+						attributes: ['uid', 'name', 'photo_path']
+					}]
 				}],
 				required: false,
 				attributes: ['sid']
