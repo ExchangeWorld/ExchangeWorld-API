@@ -1,21 +1,24 @@
 'use strict';
 
 var path = require('path');
+
 var goods = require(path.resolve(__dirname, '../ORM/Goods'));
 
 var templateHTML =
-	'<meta property="fb:app_id" content="376506855853722">\
+	'<meta property="fb:app_id" content="376506855853722"/>\
 	<meta property="og:type" content="article"/>\
 	<meta property="og:description" content="ExchangeWorld 提供一個每個人都可以進行物品交換的平台，讓人們可以將自己用不到但還可以利用的物品與其他人進行交換。交換樂趣！交換世界！" />';
 
-var defaultHTML = '<meta property="og:title" content="ExchangeWorld - 交換樂趣！交換世界！" >\
-<meta property="fb:app_id" content="376506855853722">\
+var defaultHTML = '<meta property="og:title" content="ExchangeWorld - 交換樂趣！交換世界！" />\
+<meta property="fb:app_id" content="376506855853722"/>\
 <meta property="og:type" content="article"/>\
 <meta property="og:url" content="http://exwd.csie.org/"/>\
 <meta property="og:image" content="http://exwd.csie.org/images/exchange-img.jpg"/>\
 <meta property="og:description" content="ExchangeWorld 提供一個每個人都可以進行物品交換的平台，讓人們可以將自己用不到但還可以利用的物品與其他人進行交換。交換樂趣！交換世界！" />';
 
 // When the Static Server encounters a bot, will send a message to this .js
+
+var img250 = ff => 'http://exwd.csie.org/images/' + path.basename(ff).split(path.extname(ff))[0] + '-250' + path.extname(ff);
 
 // var msg = process.argv[2];
 // var _path = msg.split('/');
@@ -31,10 +34,14 @@ process.on('message', msg => {
 				}
 			})
 			.then(result => {
-				if (result == null) {
+				if (result === null) {
 					process.send(defaultHTML);
 				} else {
-					process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + (JSON.parse(result.photo_path))[0] + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
+					if (result.description.includes('<p>禮物')) {
+						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + '神秘聖誕禮物' + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="http://exwd.csie.org/images/gift-fbbot.jpg"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
+					} else {
+						process.send(templateHTML + '<meta property="og:title" content="來跟我交換 ' + result.name + ' 吧! - ExchangeWorld 交換世界" >' + '<meta property="og:image" content="' + img250((JSON.parse(result.photo_path))[0]) + '"/>' + '<meta property="og:url" content="http://exwd.csie.org/seek/' + _gid + '"/>');
+					}
 				}
 			})
 			.catch(err => {
