@@ -44,13 +44,6 @@ if (cluster.isMaster) {
 		res.end('ERROR');
 	});
 
-	proxyWebSocket.on('error', (err, req, res) => {
-		res.writeHead(500, {
-			'Content-Type': 'text/plain'
-		});
-		res.end('ERROR');
-	});
-
 	var urlParsing = (req, res, callback) => {
 		req.urlObj = url.parse(req.url, true);
 		req.urlObj.protocol = 'http:';
