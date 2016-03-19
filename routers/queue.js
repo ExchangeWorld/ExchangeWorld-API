@@ -462,7 +462,7 @@ router.delete('/delete', (req, res) => {
 					error: 'Opertaion denied, not your goods'
 				});
 			} else {
-				result.destroy().then(_tmp => res.status(200).json(1));
+				result.destroy().then(() => res.status(200).json(1));
 			}
 		})
 		.catch(err => {
