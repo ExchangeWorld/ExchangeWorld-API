@@ -197,7 +197,10 @@ router.get('/me/goods/queue', (req, res) => {
 		.findAll({
 			where: {
 				owner_uid: myId,
-				deleted: 0
+				deleted: 0,
+				exchanged: {
+					$ne: 1
+				}
 			},
 			order: [
 				['gid', 'DESC']
