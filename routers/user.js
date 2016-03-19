@@ -173,7 +173,7 @@ router.get('/me', (req, res) => {
 		})
 		.then(result => {
 			var _result = result.toJSON();
-			_result.extra_json.notification_numbers.message = _result.extra_json.notification_numbers.message.length;
+			_result.extra_json.notification_numbers.message = (new Set(_result.extra_json.notification_numbers.message)).size;
 
 			res.status(200).json(_result);
 		})
