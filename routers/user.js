@@ -16,6 +16,7 @@ var users = require(path.resolve(__dirname, '../ORM/Users'));
 var goods = require(path.resolve(__dirname, '../ORM/Goods'));
 var follows = require(path.resolve(__dirname, '../ORM/Follows'));
 var stars = require(path.resolve(__dirname, '../ORM/Stars'));
+var queues = require(path.resolve(__dirname, '../ORM/Queues'));
 
 /**
  * Get a user by given uid or identity
@@ -119,6 +120,14 @@ router.get('/', (req, res) => {
 router.get('/me', (req, res) => {
 	var myId = req.exwd.uid || -1;
 
+	if (myId === -1) {
+		res.status(500).json({
+			error: 'who are you?'
+		});
+
+		return;
+	}
+
 	// Emit a find operation with orm in table `users`
 	users
 		.findOne({
@@ -165,6 +174,57 @@ router.get('/me', (req, res) => {
 		})
 		.then(result => {
 			res.status(200).json(result);
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});
+});
+
+router.get('/me/goods/queue', (req, res) => {
+	var myId = req.exwd.uid || -1;
+
+	if (myId === -1) {
+		res.status(500).json({
+			error: 'who are you?'
+		});
+
+		return;
+	}
+
+	goods
+		.findAll({
+			where: {
+				owner_uid: myId,
+				deleted: 0
+			},
+			order: [
+				['gid', 'DESC']
+			],
+			attributes: ['gid', 'name', 'photo_path', 'category'],
+			include: [{
+				model: queues,
+				as: 'queues_host_goods',
+				attributes: ['qid'],
+				required: false,
+				include: [{
+					model: goods,
+					as: 'queuer_goods',
+					required: false
+				}]
+			}]
+		})
+		.then(result => {
+			var _result = result
+				.map(r => r.toJSON())
+				.filter(r => r.queues_host_goods.length > 0)
+				.map(r => {
+					r.queue = r.queues_host_goods;
+					delete r.queues_host_goods;
+					return r;
+				});
+			res.status(200).json(_result);
 		})
 		.catch(err => {
 			res.status(500).json({
