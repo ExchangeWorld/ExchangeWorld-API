@@ -198,9 +198,7 @@ router.get('/me/goods/queue', (req, res) => {
 			where: {
 				owner_uid: myId,
 				deleted: 0,
-				exchanged: {
-					$ne: 1
-				}
+				exchanged: 0
 			},
 			order: [
 				['gid', 'DESC']
@@ -214,7 +212,10 @@ router.get('/me/goods/queue', (req, res) => {
 				include: [{
 					model: goods,
 					as: 'queuer_goods',
-					required: false,
+					where: {
+						deleted: 0,
+						exchanged: 0
+					},
 					include: [{
 						model: users,
 						as: 'owner',
