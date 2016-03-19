@@ -261,7 +261,8 @@ var subscribedMessageHandler = msg => {
 	return (modelHandlers[msgObj.model](msgObj))
 		.then(pushingTargetsAndPayloads => {
 			if (pushingTargetsAndPayloads.length > 0) {
-				var _tmp = pushingTargetsAndPayloads
+				var __tmp = pushingTargetsAndPayloads.filter(_arr => _arr.length === 2);
+				var _tmp = __tmp
 					.map(_arr => ({
 						receiver_uid: _arr[0],
 						body: _arr[1]
@@ -270,11 +271,11 @@ var subscribedMessageHandler = msg => {
 				return notifications
 					.bulkCreate(_tmp)
 					.then(() => {
-						return pushingTargetsAndPayloads;
+						return __tmp;
 					});
 			}
 
-			return pushingTargetsAndPayloads;
+			return null;
 		});
 };
 

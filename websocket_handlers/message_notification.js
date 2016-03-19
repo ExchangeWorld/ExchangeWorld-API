@@ -65,19 +65,19 @@ redis_sub.on('message', (channel, msg) => {
 		// 會回傳需要被推播的 payloads 陣列們，繼續推進 promises
 		notificationChannelHandler(msg)
 			.then(pushingTargetsAndPayloads => {
-				pushingTargetsAndPayloads
-					.map(_arr => {
-						_arr[1].type = 'notification';
-						return _arr;
-					})
-					.forEach(_arr => {
-						var targeClients = websocketClientsInIndex[_arr[0]];
-						if (targeClients !== null && targeClients !== undefined) {
-							targeClients.forEach(onlineClients => {
-								onlineClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(_arr[1])));
-							});
-						}
-					});
+				if (pushingTargetsAndPayloads !== null) {
+					pushingTargetsAndPayloads
+						.map(_arr => {
+							_arr[1].type = 'notification';
+							return _arr;
+						})
+						.forEach(_arr => {
+							var targeClients = websocketClientsInIndex[_arr[0]];
+							if (targeClients !== null && targeClients !== undefined) {
+								targeClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(_arr[1])));
+							}
+						});
+				}
 			})
 			.catch(err => {
 				console.log('In notification_dispatcher chain:\n', err);
@@ -153,7 +153,7 @@ var websocketAuthorize = (websocket, callbacks) => {
 			websocket.exwd_authorized = true;
 			websocket.exwd_uid = parseInt(result, 10);
 
-			redis.pipeline().set(_token, result).expire(_token, TOKEN_EXPIRE_TIME).exec((err, res) => {
+			redis.pipeline().set(_token, result).expire(_token, TOKEN_EXPIRE_TIME).exec(err => {
 				if (err) {
 					websocket.send(JSON.stringify({
 						status: 'bad',
@@ -177,6 +177,8 @@ var websocketAddSession = websocket => {
 	} else {
 		websocketClientsInIndex[uid] = [indexOf(webSocketServerInstance.clients, websocket)];
 	}
+
+	console.log(uid, 'online!');
 };
 
 // 當 WebSocket 要被刪除時，要做的動作
@@ -229,8 +231,6 @@ var websocketClientPushMessage = (websocket, msgObj) => {
 		.catch(err => {
 			websocket.send(JSON.stringify(err));
 		});
-
-	console.log(websocketClientsInIndex);
 };
 
 // 當使用者讀了聊天室時
@@ -285,24 +285,26 @@ var websocketOnMessage = websocket => {
 			console.log('chatroom read ->', msgObj);
 			websocketClientReadChatroom(websocket, msgObj);
 		} else {
-			console.log('no type QAQ default to type:message');
+			console.log('no type, default to type:message');
 			websocketClientPushMessage(websocket, msgObj);
 		}
 
-		redis.pipeline().set(websocket.exwd_token, websocket.exwd_uid).expire(websocket.exwd_token, TOKEN_EXPIRE_TIME).exec((err, res) => {
+		redis.pipeline().set(websocket.exwd_token, websocket.exwd_uid).expire(websocket.exwd_token, TOKEN_EXPIRE_TIME).exec(err => {
 			if (err) {
 				websocket.send(JSON.stringify({
 					status: 'bad',
 					error: err
 				}));
 			}
+
+			console.log('onlineClients:', websocketClientsInIndex);
 		});
 	});
 };
 
 var websocketOnClose = websocket => {
 	websocket.on('close', (code, buffer) => {
-		console.log(code, buffer.toString());
+		console.log(websocket.exwd_uid, 'offline with code', code, buffer.toString());
 		websocketDelSession(websocket);
 	});
 };
