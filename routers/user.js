@@ -211,7 +211,12 @@ router.get('/me/goods/queue', (req, res) => {
 				include: [{
 					model: goods,
 					as: 'queuer_goods',
-					required: false
+					required: false,
+					include: [{
+						model: users,
+						as: 'owner',
+						required: false
+					}]
 				}]
 			}]
 		})
