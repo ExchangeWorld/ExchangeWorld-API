@@ -173,9 +173,18 @@ router.get('/me', (req, res) => {
 		})
 		.then(result => {
 			var _result = result.toJSON();
-			_result.extra_json.notification_numbers.message = (new Set(_result.extra_json.notification_numbers.message)).size;
-
-			res.status(200).json(_result);
+			if (_result.extra_json.notification_numbers !== undefined) {
+				_result.extra_json.notification_numbers.message = (new Set(_result.extra_json.notification_numbers.message)).size;
+			} else {
+				_result.extra_json.notification_numbers = {
+					message: 0,
+					notification: 0
+				};
+			}
+			return _result;
+		})
+		.then(result => {
+			res.status(200).json(result);
 		})
 		.catch(err => {
 			res.status(500).json({
