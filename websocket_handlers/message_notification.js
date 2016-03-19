@@ -76,6 +76,8 @@ redis_sub.on('message', (channel, msg) => {
 							if (targeClients !== null && targeClients !== undefined) {
 								targeClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(_arr[1])));
 							}
+
+							console.log(_arr[0], 'receiving', 'notification', _arr[1]);
 						});
 				}
 			})
@@ -210,6 +212,8 @@ var websocketClientPushMessage = (websocket, msgObj) => {
 					}
 				})
 				.then(result => {
+					console.log(websocket.exwd_uid, 'message to', 'chatroom', msgObj.read_chatroom);
+
 					result.last_message = msg.content;
 					result.last_message_time = (new Date());
 					result.read_members = [msg.sender_uid];
@@ -246,6 +250,8 @@ var websocketClientReadChatroom = (websocket, msgObj) => {
 			var _set = new Set(result.read_members);
 			_set.add(websocket.exwd_uid);
 			result.read_members = Array.from(_set);
+
+			console.log(websocket.exwd_uid, 'read', 'chatroom', msgObj.read_chatroom);
 
 			return result.save();
 		})
