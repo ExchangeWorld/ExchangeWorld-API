@@ -160,7 +160,6 @@ router.get('/me', (req, res) => {
 					where: {
 						deleted: 0
 					},
-					required: false,
 					attributes: ['gid', 'name', 'photo_path', 'category'],
 					include: [{
 						model: users,
@@ -173,7 +172,10 @@ router.get('/me', (req, res) => {
 			}]
 		})
 		.then(result => {
-			res.status(200).json(result);
+			var _result = result.toJSON();
+			_result.extra_json.notification_numbers.message = _result.extra_json.notification_numbers.message.length;
+
+			res.status(200).json(_result);
 		})
 		.catch(err => {
 			res.status(500).json({

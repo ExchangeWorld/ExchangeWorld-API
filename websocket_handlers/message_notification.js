@@ -75,6 +75,27 @@ redis_sub.on('message', (channel, msg) => {
 							var targeClients = websocketClientsInIndex[_arr[0]];
 							if (targeClients !== null && targeClients !== undefined) {
 								targeClients.forEach(client => webSocketServerInstance.clients[client].send(JSON.stringify(_arr[1])));
+
+								users
+									.findOne({
+										where: {
+											uid: _arr[0]
+										}
+									})
+									.then(_user => {
+										if (_user) {
+											if (_user.extra_json.notification_numbers !== undefined) {
+												_user.extra_json.notification_numbers.notification += 1;
+											} else {
+												_user.extra_json.notification_numbers = {
+													message: [],
+													notification: 1
+												};
+											}
+
+											_user.save();
+										}
+									});
 							}
 
 							console.log(_arr[0], 'receiving', 'notification', _arr[1]);
@@ -91,6 +112,7 @@ redis_sub.on('message', (channel, msg) => {
 
 var messages = require(path.resolve(__dirname, '../ORM/Messages'));
 var chatrooms = require(path.resolve(__dirname, '../ORM/Chatrooms'));
+var users = require(path.resolve(__dirname, '../ORM/Users'));
 
 // 取得 websocket 在 websocketServer.clients 中的位置，為了更快的速度所以必須快取為辭典
 var websocketClientsInIndex = {};
@@ -222,6 +244,28 @@ var websocketClientPushMessage = (websocket, msgObj) => {
 				.then(result => {
 					result.members
 						.filter(member => member !== msg.sender_uid)
+						.map(member => {
+							users
+								.findOne({
+									where: {
+										uid: member
+									}
+								})
+								.then(_user => {
+									if (_user.extra_json.notification_numbers !== undefined) {
+										_user.extra_json.notification_numbers.message.push(result.cid);
+									} else {
+										_user.extra_json.notification_numbers = {
+											message: [result.cid],
+											notification: 0
+										};
+									}
+
+									_user.save();
+								});
+
+							return member;
+						})
 						.map(member => websocketClientsInIndex[member])
 						.filter(c => c !== null && c !== undefined)
 						.forEach(onlineClients => {
@@ -253,7 +297,27 @@ var websocketClientReadChatroom = (websocket, msgObj) => {
 
 			console.log(websocket.exwd_uid, 'read', 'chatroom', msgObj.read_chatroom);
 
-			return result.save();
+			return users
+				.findOne({
+					where: {
+						uid: websocket.exwd_uid
+					}
+				})
+				.then(_user => {
+					if (_user.extra_json.notification_numbers !== undefined) {
+						_user.extra_json.notification_numbers.message = [];
+					} else {
+						_user.extra_json.notification_numbers = {
+							message: [],
+							notification: 0
+						};
+					}
+
+					return _user.save();
+				})
+				.then(() => {
+					return result.save();
+				});
 		})
 		.then(result => {
 			result.members

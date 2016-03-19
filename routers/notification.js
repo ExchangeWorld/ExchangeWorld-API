@@ -190,6 +190,33 @@ router.put('/read', (req, res) => {
 			return result;
 		})
 		.then(result => {
+			if (result === null) {
+				return null;
+			} else {
+				return users
+					.findOne({
+						where: {
+							uid: _requester_uid
+						}
+					})
+					.then(_user => {
+						if (_user.extra_json.notification_numbers !== undefined) {
+							_user.extra_json.notification_numbers.notification = 0;
+						} else {
+							_user.extra_json.notification_numbers = {
+								message: [],
+								notification: 0
+							};
+						}
+
+						return _user.save();
+					})
+					.then(() => {
+						return result;
+					});
+			}
+		})
+		.then(result => {
 			res.status(200).json(result);
 		})
 		.catch(err => {
