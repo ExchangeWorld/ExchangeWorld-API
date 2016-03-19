@@ -24,11 +24,11 @@ if (cluster.isMaster) {
 	var http = require('http');
 	var httpProxy = require('http-proxy');
 	var async = require('async');
-	var env = require(path.resolve(__dirname, './libs/env'));
+	// var env = require(path.resolve(__dirname, './libs/env'));
 
 	var restfulMappingRule = require(path.resolve(__dirname, './libs/restfulMappingRule'));
 
-	var proxy = httpProxy.createProxyServer();
+	var proxyServer = httpProxy.createProxyServer();
 	var proxyWebSocket = new httpProxy.createProxyServer({
 		target: {
 			host: 'localhost',
@@ -37,7 +37,14 @@ if (cluster.isMaster) {
 		ws: true
 	});
 
-	proxy.on('error', (err, req, res) => {
+	proxyServer.on('error', (err, req, res) => {
+		res.writeHead(500, {
+			'Content-Type': 'text/plain'
+		});
+		res.end('ERROR');
+	});
+
+	proxyWebSocket.on('error', (err, req, res) => {
 		res.writeHead(500, {
 			'Content-Type': 'text/plain'
 		});
@@ -94,7 +101,7 @@ if (cluster.isMaster) {
 			resfulMapping,
 			routeCluster
 		], (err, req, res) => {
-			proxy.web(req, res, {
+			proxyServer.web(req, res, {
 				target: url.format(req.urlObj),
 				prependPath: true,
 				ignorePath: true
@@ -102,7 +109,7 @@ if (cluster.isMaster) {
 		});
 	});
 
-	proxy.setMaxListeners(0);
+	proxyServer.setMaxListeners(0);
 	proxyWebSocket.setMaxListeners(0);
 	proxyHttpBalancer.setMaxListeners(0);
 
