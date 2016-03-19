@@ -160,6 +160,7 @@ router.get('/me', (req, res) => {
 					where: {
 						deleted: 0
 					},
+					required: false,
 					attributes: ['gid', 'name', 'photo_path', 'category'],
 					include: [{
 						model: users,
@@ -173,6 +174,7 @@ router.get('/me', (req, res) => {
 		})
 		.then(result => {
 			var _result = result.toJSON();
+
 			if (_result.extra_json.notification_numbers !== undefined) {
 				_result.extra_json.notification_numbers.message = (new Set(_result.extra_json.notification_numbers.message)).size;
 			} else {
@@ -181,6 +183,9 @@ router.get('/me', (req, res) => {
 					notification: 0
 				};
 			}
+
+			_result.star_starring_user = _result.star_starring_user.filter(star => star.goods !== null);
+
 			return _result;
 		})
 		.then(result => {
