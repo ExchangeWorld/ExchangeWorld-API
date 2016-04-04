@@ -99,9 +99,40 @@ router.get('/:id', (req, res) => {
 });
 
 // Read by Query
-router.get('/:id', (req, res) => {
-	console.log(req.restful_id);
-	res.status(200).json(req.restful_id);
+router.get('/', (req, res) => {
+	let query;
+	let offset = parseInt(req.query.offset, 10);
+	let limit = parseInt(req.query.limit, 10);
+
+	req.query.order = req.query.order || 'ASC';
+	let order = (req.query.order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
+
+	try {
+		query = JSON.parse(req.query.q);
+	} catch (err) {
+		res.status(400).json({
+			error: 'query json is mal-formed'
+		});
+		return;
+	}
+
+	users
+		.findAll({
+			where: query,
+			order: [
+				['uid', order]
+			],
+			offset: offset,
+			limit: limit
+		})
+		.then(result => {
+			res.status(200).json(result);
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});
 });
 
 // Update
