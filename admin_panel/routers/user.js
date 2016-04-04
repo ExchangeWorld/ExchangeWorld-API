@@ -246,6 +246,12 @@ router.put('/:id', (req, res) => {
 				}
 			}
 
+			for (let item in req.body) {
+				if (item in _result) {
+					result[item] = req.body[item];
+				}
+			}
+
 			return result.save();
 		})
 		.then(() => {
