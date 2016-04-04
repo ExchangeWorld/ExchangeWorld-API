@@ -24,7 +24,8 @@ module.exports = () => {
 	});
 	Users.hasOne(Auths, {
 		as: 'auth',
-		foreignKey: 'user_uid'
+		foreignKey: 'user_uid',
+		onDelete: 'cascade'
 	});
 
 	// Chatrooms & Messages
@@ -37,7 +38,8 @@ module.exports = () => {
 			plural: 'messages',
 			singular: 'messages'
 		},
-		foreignKey: 'chatroom_cid'
+		foreignKey: 'chatroom_cid',
+		onDelete: 'cascade'
 	});
 
 	// Comments & Goods
@@ -50,7 +52,8 @@ module.exports = () => {
 			plural: 'comments',
 			singular: 'comments'
 		},
-		foreignKey: 'goods_gid'
+		foreignKey: 'goods_gid',
+		onDelete: 'cascade'
 	});
 
 	// Comments & Users
@@ -63,7 +66,8 @@ module.exports = () => {
 			plural: 'comments',
 			singular: 'comments'
 		},
-		foreignKey: 'commenter_uid'
+		foreignKey: 'commenter_uid',
+		onDelete: 'cascade'
 	});
 
 	// Exchanges & Goods
@@ -80,25 +84,17 @@ module.exports = () => {
 			plural: 'exchange_goods_one',
 			singular: 'exchange_goods_one'
 		},
-		foreignKey: 'goods_one_gid'
+		foreignKey: 'goods_one_gid',
+		onDelete: 'cascade'
 	});
 	Goods.hasMany(Exchanges, {
 		as: {
 			plural: 'exchange_goods_two',
 			singular: 'exchange_goods_two'
 		},
-		foreignKey: 'goods_two_gid'
+		foreignKey: 'goods_two_gid',
+		onDelete: 'cascade'
 	});
-
-	// Exchange & Chatrooms
-	// Exchanges.belongsTo(Chatrooms, {
-	// 	as: 'chatroom',
-	// 	foreignKey: 'chatroom_cid'
-	// });
-	// Chatrooms.hasOne(Exchanges, {
-	// 	as: 'exchange',
-	// 	foreignKey: 'chatroom_cid'
-	// });
 
 	// Follows & Users
 	// follower -[follow]-> followed
@@ -115,14 +111,16 @@ module.exports = () => {
 			plural: 'follows_followed',
 			singular: 'follows_followed'
 		},
-		foreignKey: 'followed_uid'
+		foreignKey: 'followed_uid',
+		onDelete: 'cascade'
 	});
 	Users.hasMany(Follows, {
 		as: {
 			plural: 'follows_follower',
 			singular: 'follows_follower'
 		},
-		foreignKey: 'follower_uid'
+		foreignKey: 'follower_uid',
+		onDelete: 'cascade'
 	});
 
 	// Goods & Users
@@ -135,7 +133,8 @@ module.exports = () => {
 			plural: 'goods',
 			singular: 'goods'
 		},
-		foreignKey: 'owner_uid'
+		foreignKey: 'owner_uid',
+		onDelete: 'cascade'
 	});
 
 	// Messages & Users
@@ -148,7 +147,8 @@ module.exports = () => {
 			plural: 'messages_sender',
 			singular: 'messages_sender'
 		},
-		foreignKey: 'sender_uid'
+		foreignKey: 'sender_uid',
+		onDelete: 'cascade'
 	});
 
 	// Notifications & Users
@@ -161,7 +161,8 @@ module.exports = () => {
 			plural: 'notifications_receiver',
 			singular: 'notifications_receiver'
 		},
-		foreignKey: 'receiver_uid'
+		foreignKey: 'receiver_uid',
+		onDelete: 'cascade'
 	});
 
 	// Queues & Goods
@@ -178,14 +179,16 @@ module.exports = () => {
 			plural: 'queues_host_goods',
 			singular: 'queues_host_goods'
 		},
-		foreignKey: 'host_goods_gid'
+		foreignKey: 'host_goods_gid',
+		onDelete: 'cascade'
 	});
 	Goods.hasMany(Queues, {
 		as: {
 			plural: 'queues_queuer_goods',
 			singular: 'queues_queuer_goods'
 		},
-		foreignKey: 'queuer_goods_gid'
+		foreignKey: 'queuer_goods_gid',
+		onDelete: 'cascade'
 	});
 
 	// Stars & Goods
@@ -198,7 +201,8 @@ module.exports = () => {
 			plural: 'star_goods',
 			singular: 'star_goods'
 		},
-		foreignKey: 'goods_gid'
+		foreignKey: 'goods_gid',
+		onDelete: 'cascade'
 	});
 
 	// Stars & Users
@@ -211,6 +215,7 @@ module.exports = () => {
 			plural: 'star_starring_user',
 			singular: 'star_starring_user'
 		},
-		foreignKey: 'starring_user_uid'
+		foreignKey: 'starring_user_uid',
+		onDelete: 'cascade'
 	});
 };
