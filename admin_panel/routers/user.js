@@ -184,6 +184,11 @@ router.get('/:id', (req, res) => {
 			}]
 		})
 		.then(result => {
+			if (result === null) {
+				res.status(404).end();
+				return;
+			}
+
 			res.status(200).json(result);
 		})
 		.catch(err => {
@@ -221,6 +226,11 @@ router.get('/', (req, res) => {
 			limit: limit
 		})
 		.then(result => {
+			if (result.length === 0) {
+				res.status(404).end();
+				return;
+			}
+
 			res.status(200).json(result);
 		})
 		.catch(err => {
@@ -239,6 +249,10 @@ router.put('/:id', (req, res) => {
 			}
 		})
 		.then(result => {
+			if (result === null) {
+				return 'null';
+			}
+
 			let _result = result.toJSON();
 			for (let item in req.query) {
 				if (item in _result) {
@@ -254,7 +268,12 @@ router.put('/:id', (req, res) => {
 
 			return result.save();
 		})
-		.then(() => {
+		.then(r => {
+			if (r === 'null') {
+				res.status(404).end();
+				return;
+			}
+
 			res.status(204).end();
 		})
 		.catch(err => {
@@ -266,8 +285,32 @@ router.put('/:id', (req, res) => {
 
 // Delete
 router.delete('/:id', (req, res) => {
-	console.log(req.restful_id);
-	res.status(200).json(req.restful_id);
+	users
+		.findOne({
+			where: {
+				uid: req.restful_id
+			}
+		})
+		.then(result => {
+			if (result === null) {
+				return 'null';
+			}
+
+			return result.destroy();
+		})
+		.then(r => {
+			if (r === 'null') {
+				res.status(404).end();
+				return;
+			}
+
+			res.status(204).end();
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});
 });
 
 module.exports = router;
