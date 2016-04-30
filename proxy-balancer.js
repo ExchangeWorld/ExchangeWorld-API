@@ -1,7 +1,7 @@
 'use strict';
 
-const cluster_port = 3002;
-const websocket_port = 3080;
+const cluster_port = 43002;
+const websocket_port = 43080;
 
 var cluster = require('cluster');
 var path = require('path');
@@ -70,19 +70,19 @@ if (cluster.isMaster) {
 		var _url = req.urlObj.pathname;
 
 		if (/\/api\/goods\/search\/?$/.test(_url)) {
-			req.urlObj.host = 'localhost:3005';
+			req.urlObj.host = 'localhost:43005';
 		} else if (/\/api\/goods\/?/.test(_url)) {
-			req.urlObj.host = 'localhost:3004';
+			req.urlObj.host = 'localhost:43004';
 		} else if (/\/api\/user\/?/.test(_url)) {
-			req.urlObj.host = 'localhost:3006';
+			req.urlObj.host = 'localhost:43006';
 		} else if (/\/api\/authenticate\/?/.test(_url)) {
-			req.urlObj.host = 'localhost:3006';
+			req.urlObj.host = 'localhost:43006';
 		} else if (/\/api\/upload\/?/.test(_url)) {
-			req.urlObj.host = 'localhost:3007';
+			req.urlObj.host = 'localhost:43007';
 		} else if (/\/api\/admin\/?/.test(_url)) {
-			req.urlObj.host = 'localhost:6666';
+			req.urlObj.host = 'localhost:46666';
 		} else {
-			req.urlObj.host = 'localhost:3003';
+			req.urlObj.host = 'localhost:43003';
 		}
 
 		callback(null, req, res);
