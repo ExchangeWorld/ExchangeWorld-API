@@ -25,7 +25,7 @@ var sequelize = new Sequelize('exchangeworld-v2', dblogin.ID, dblogin.password, 
 	// sync: { force: true },
 
 	pool: {
-		maxConnections: os.cpus().length / 2,
+		maxConnections: (os.cpus().length + 1) / 2,
 		minConnections: 1,
 		maxIdleTime: 3000
 	},
