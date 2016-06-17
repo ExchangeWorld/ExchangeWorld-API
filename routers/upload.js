@@ -73,9 +73,9 @@ router.post('/image', function (req, res, next) {
 	var hashData = getSHA256(base64Data);
 
 	// The file path pointing to the image file
-	var filePath = '../ExchangeWorld/images_global/' + hashData + '.' + imgFormat.replace(/image\//, '');
-	var filePath500 = '../ExchangeWorld/images_global/' + hashData + '-500.' + imgFormat.replace(/image\//, '');
-	var filePath250 = '../ExchangeWorld/images_global/' + hashData + '-250.' + imgFormat.replace(/image\//, '');
+	var filePath = './ExchangeWorld/images_global/' + hashData + '.' + imgFormat.replace(/image\//, '');
+	var filePath500 = './ExchangeWorld/images_global/' + hashData + '-500.' + imgFormat.replace(/image\//, '');
+	var filePath250 = './ExchangeWorld/images_global/' + hashData + '-250.' + imgFormat.replace(/image\//, '');
 	// var filePath160 = '../ExchangeWorld/images_global/' + hashData + '-160.' + imgFormat.replace(/image\//, '');
 
 	// Write to file with the filePath
