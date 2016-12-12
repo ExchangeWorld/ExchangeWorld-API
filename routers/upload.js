@@ -73,10 +73,14 @@ router.post('/image', function (req, res, next) {
 	var hashData = getSHA256(base64Data);
 
 	// The file path pointing to the image file
-	var filePath = './ExchangeWorld/images_global/' + hashData + '.' + imgFormat.replace(/image\//, '');
-	var filePath500 = './ExchangeWorld/images_global/' + hashData + '-500.' + imgFormat.replace(/image\//, '');
-	var filePath250 = './ExchangeWorld/images_global/' + hashData + '-250.' + imgFormat.replace(/image\//, '');
-	// var filePath160 = '../ExchangeWorld/images_global/' + hashData + '-160.' + imgFormat.replace(/image\//, '');
+	//var filePath = '../ExchangeWorld/images_global/' + hashData + '.' + imgFormat.replace(/image\//, '');
+	//var filePath500 = '../ExchangeWorld/images_global/' + hashData + '-500.' + imgFormat.replace(/image\//, '');
+	//var filePath250 = '../ExchangeWorld/images_global/' + hashData + '-250.' + imgFormat.replace(/image\//, '');
+	
+	// 2016/12/12 tmp fix (fixed to png format)
+	var filePath = '../ExchangeWorld/images_global/' + hashData + '.png';
+	var filePath500 = '../ExchangeWorld/images_global/' + hashData + '-500.png';
+	var filePath250 = '../ExchangeWorld/images_global/' + hashData + '-250.png';
 
 	// Write to file with the filePath
 	// And if there is another person who uploaded a same base64 image,
@@ -84,33 +88,37 @@ router.post('/image', function (req, res, next) {
 	// Finally, send the "static file path" back
 	var pipeline = sharp(dataBuffer);
 
+	// 2016/12/12 tmp fix (fixed to png format)
 	pipeline.clone()
 		.rotate()
 		.resize(500, null)
 		.withoutEnlargement()
-		.progressive()
+		.png({progressive: true})
 		.toFile(filePath500, null);
 
+	// 2016/12/12 tmp fix (fixed to png format)
 	pipeline.clone()
 		.rotate()
 		.resize(250, null)
 		.withoutEnlargement()
-		.progressive()
+		.png({progressive: true})
 		.toFile(filePath250, null);
 
+	// 2016/12/12 tmp fix (fixed to png format)
 	pipeline.clone()
 		.rotate()
 		.resize(1600, 1200)
 		.max()
 		.withoutEnlargement()
-		.progressive()
+		.png({progressive: true})
 		.toFile(filePath, (err, info) => {
 			if (err) {
 				res.status(500).json({
 					error: err
 				});
 			} else {
-				res.send('http://exwd.csie.org/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
+				//res.send('http://exwd.csie.org/images/' + hashData + '.' + imgFormat.replace(/image\//, ''));
+				res.send('http://exwd.csie.org/images/' + hashData + '.png');
 			}
 		});
 });
