@@ -1,8 +1,8 @@
 'use strict';
-const cluster_port = 3006;
+const cluster_port = 43006;
 
 var cluster = require('cluster');
-var cpus = require('os').cpus().length / 2;
+var cpus = (require('os').cpus().length + 1) / 2;
 
 cluster.setMaxListeners(0);
 

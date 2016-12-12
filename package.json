@@ -63,13 +63,14 @@
     "secure-random": "*",
     "sequelize": "*",
     "serve-favicon": "*",
-    "sharp": "*",
+    "sharp": "^0.17.0",
     "utf-8-validate": "*",
     "validator": "*",
     "ws": "*",
     "zmq": "*"
   },
   "devDependencies": {
+    "eslint": "^3.12.0",
     "eslint-plugin-react": "*"
   }
 }

@@ -1,8 +1,6 @@
 'use strict';
 
 var Redis = require('ioredis');
-var redis = new Redis({
-	password: '12241224'
-});
+var redis = new Redis();
 
 module.exports = redis;
